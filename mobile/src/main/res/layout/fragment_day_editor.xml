@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    style="@style/fragment_full_screen_with_scrollview"
+    tools:context="nl.tcilegnar.timer.fragments.DayEditorFragment"
+    tools:showIn="@layout/activity_day_editor">
+
+    <ListView
+        android:id="@+id/day_editor_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:horizontalSpacing="@dimen/day_editor_list_horizontal_spacing" />
+
+</RelativeLayout>

@@ -78,11 +78,11 @@ public class AppTest {
         // Arrange
 
         // Act
-        int actualDimension = App.getResourceDimension(R.dimen.activity_horizontal_margin);
+        int actualDimension = App.getResourceDimension(R.dimen.horizontal_margin);
 
         // Assert
         float density = getApplicationResources().getDisplayMetrics().density;
-        float dimension = getApplicationResources().getDimension(R.dimen.activity_horizontal_margin);
+        float dimension = getApplicationResources().getDimension(R.dimen.horizontal_margin);
         int expectedDimension = (int) (dimension / density);
         assertEquals(expectedDimension, actualDimension);
     }
