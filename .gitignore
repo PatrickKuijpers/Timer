@@ -57,9 +57,6 @@ captures/
 !.idea/fileTemplates/
 !.idea/codeStyleSettings.xml
 
-# Keystore data
-keystore.properties
-
 # ---
 # git rm --cached -r .
 # Removes all cached files to ensure there are no .gitignore files being tracked
