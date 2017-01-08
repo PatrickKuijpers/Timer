@@ -10,12 +10,15 @@ import java.util.Locale;
 
 import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.enums.DayEditorItem;
+import nl.tcilegnar.timer.utils.storage.Storage;
 
 import static android.view.View.OnClickListener;
 
 public class DayEditorItemView extends LinearLayout implements OnClickListener {
 
+    public static final Locale LOCALE = Locale.GERMANY;
     private final DayEditorItem dayEditorItem;
+    private final Storage storage = new Storage();
 
     private TextView label;
     private TextView value;
@@ -39,28 +42,37 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener {
 
     private void initValues(DayEditorItem dayEditorItem) {
         label.setText(dayEditorItem.name());
-        value.setText("..:..");
+        int hour = storage.loadDayEditorHour(dayEditorItem.getDayEditorHourKey());
+        int minute = storage.loadDayEditorMinute(dayEditorItem.getDayEditorMinuteKey());
+        setCurrentTimeText(hour, minute);
     }
 
     @Override
     public void onClick(View view) {
         currentTime = getCurrentTime();
-        setCurrentTimeText(currentTime);
+        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = currentTime.get(Calendar.MINUTE);
+        setCurrentTimeText(hour, minute);
+        saveValues(hour, minute);
     }
 
     private Calendar getCurrentTime() {
-        Locale locale = Locale.GERMANY;
-        return Calendar.getInstance(locale);
+        return Calendar.getInstance(LOCALE);
     }
 
-    private void setCurrentTimeText(Calendar currentTime) {
-        String currentTimeText = formatToCurrentTimeText(currentTime);
+    private void setCurrentTimeText(int hour, int minute) {
+        String currentTimeText = formatToCurrentTimeText(hour, minute);
         value.setText(currentTimeText);
     }
 
-    private String formatToCurrentTimeText(Calendar currentTime) {
-        int minute = currentTime.get(Calendar.MINUTE);
-        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
-        return hour + ":" + minute;
+    private String formatToCurrentTimeText(int hour, int minute) {
+        String hourText = String.format(LOCALE, "%02d", hour);
+        String minuteText = String.format(LOCALE, "%02d", minute);
+        return hourText + ":" + minuteText;
+    }
+
+    private void saveValues(int hour, int minute) {
+        storage.saveDayEditorHour(dayEditorItem.getDayEditorHourKey(), hour);
+        storage.saveDayEditorMinute(dayEditorItem.getDayEditorMinuteKey(), minute);
     }
 }
