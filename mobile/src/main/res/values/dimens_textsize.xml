@@ -1,0 +1,11 @@
+<resources>
+    <dimen name="text_size_small">10sp</dimen>
+    <dimen name="text_size_default">14sp</dimen>
+    <dimen name="text_size_normal">16sp</dimen>
+    <dimen name="text_size_big">20sp</dimen>
+    <dimen name="text_size_very_big">24sp</dimen>
+    <dimen name="text_size_huge">28sp</dimen>
+    <dimen name="text_size_very_huge">32sp</dimen>
+
+    <dimen name="text_size_day_editor_item">@dimen/text_size_big</dimen>
+</resources>

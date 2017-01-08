@@ -10,6 +10,8 @@
         android:id="@+id/day_editor_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:horizontalSpacing="@dimen/day_editor_list_horizontal_spacing" />
+        android:layout_marginTop="@dimen/vertical_margin_big"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="16.0dp" />
 
 </RelativeLayout>
