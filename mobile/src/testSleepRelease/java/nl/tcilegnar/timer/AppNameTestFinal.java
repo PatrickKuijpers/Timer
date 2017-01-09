@@ -15,7 +15,7 @@ public class AppNameTestFinal extends AppNameTestForBuildType {
         // Arrange
 
         // Act
-        String actualAppName = App.getResourceString(R.string.app_name);
+        String actualAppName = Res.getString(R.string.app_name);
 
         // Assert
         assertTrue(actualAppName.contains("Timer sleep"));
