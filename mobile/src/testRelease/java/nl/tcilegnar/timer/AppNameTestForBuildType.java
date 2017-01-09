@@ -9,10 +9,10 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public abstract class AppNameTestForBuildType extends AppNameTestForFlavor {
     @Test
-    public void getResourceString_AppName_ShouldContainBuildType() {
-        getResourceString_AppName_ShouldBeCorrectForRelease();
+    public void getString_AppName_ShouldContainBuildType() {
+        getString_AppName_ShouldBeCorrectForRelease();
     }
 
     @Test
-    public abstract void getResourceString_AppName_ShouldBeCorrectForRelease();
+    public abstract void getString_AppName_ShouldBeCorrectForRelease();
 }

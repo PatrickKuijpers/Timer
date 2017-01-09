@@ -1,14 +1,14 @@
 package nl.tcilegnar.timer.utils;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.support.v4.content.ContextCompat;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
+import android.content.Context;
+import android.content.res.Resources;
+import android.support.v4.content.ContextCompat;
 
 import nl.tcilegnar.timer.BuildConfig;
 import nl.tcilegnar.timer.R;
@@ -31,7 +31,7 @@ public class ResTest {
     }
 
     @Test
-    public void getResourceString_ShouldContainSameStringAsGetStringFromApplicationResources() {
+    public void getString_ShouldContainSameStringAsGetStringFromApplicationResources() {
         // Arrange
 
         // Act
@@ -42,20 +42,20 @@ public class ResTest {
         assertEquals(expectedString, actualString);
     }
 
-//    @Test
-//    public void getResourceInteger_ShouldContainSameIntegerAsGetIntegerFromApplicationResources() {
-//        // Arrange
-//
-//        // Act
-//        Integer actualInteger = Res.getResourceInteger(R.integer.max_length_bronze_value);
-//
-//        // Assert
-//        Integer expectedInteger = getApplicationResources().getInteger(R.integer.max_length_bronze_value);
-//        assertEquals(expectedInteger, actualInteger);
-//    }
+    //    @Test
+    //    public void getInt_ShouldContainSameIntegerAsGetIntegerFromApplicationResources() {
+    //        // Arrange
+    //
+    //        // Act
+    //        Integer actualInteger = Res.getInt(R.integer.max_length_bronze_value);
+    //
+    //        // Assert
+    //        Integer expectedInteger = getApplicationResources().getInteger(R.integer.max_length_bronze_value);
+    //        assertEquals(expectedInteger, actualInteger);
+    //    }
 
     @Test
-    public void getResourceInteger_ShouldContainSameDimenAsGetDimensionFromApplicationResourcesDividedByDensity() {
+    public void getDimension_ShouldContainSameDimenAsGetDimensionFromApplicationResourcesDividedByDensity() {
         // Arrange
 
         // Act
@@ -69,11 +69,11 @@ public class ResTest {
     }
 
     //    @Test
-    //    public void getResourceBoolean_ShouldContainSameBooleanAsGetBooleanFromApplicationResources() {
+    //    public void getBoolean_ShouldContainSameBooleanAsGetBooleanFromApplicationResources() {
     //        // Arrange
     //
     //        // Act
-    //        boolean bool = Res.getResourceBoolean(R.bool.some_boolean);
+    //        boolean bool = Res.getBoolean(R.bool.some_boolean);
     //
     //        // Assert
     //        boolean expectedBool = getApplicationResources().getBoolean(R.bool.some_boolean);
@@ -81,7 +81,7 @@ public class ResTest {
     //    }
 
     @Test
-    public void getResourceColor_ShouldContainSameColorAsGetColorFromApplicationContext() {
+    public void getColor_ShouldContainSameColorAsGetColorFromApplicationContext() {
         // Arrange
 
         // Act
@@ -99,5 +99,4 @@ public class ResTest {
     private Context getApplicationContext() {
         return RuntimeEnvironment.application.getApplicationContext();
     }
-
 }

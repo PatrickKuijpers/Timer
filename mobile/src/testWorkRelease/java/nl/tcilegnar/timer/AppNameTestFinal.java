@@ -11,7 +11,7 @@ import static junit.framework.Assert.assertTrue;
 @Config(constants = BuildConfig.class)
 public class AppNameTestFinal extends AppNameTestForBuildType {
     @Test
-    public void getResourceString_AppName_ShouldBeCorrectForRelease() {
+    public void getString_AppName_ShouldBeCorrectForRelease() {
         // Arrange
 
         // Act

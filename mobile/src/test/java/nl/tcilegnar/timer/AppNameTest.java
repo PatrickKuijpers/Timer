@@ -13,7 +13,7 @@ import static junit.framework.Assert.assertTrue;
 @Config(constants = BuildConfig.class)
 public abstract class AppNameTest {
     @Test
-    public void getResourceString_AppName_ShouldContainBaseAppName() {
+    public void getString_AppName_ShouldContainBaseAppName() {
         // Arrange
 
         // Act
@@ -24,8 +24,8 @@ public abstract class AppNameTest {
     }
 
     @Test
-    public abstract void getResourceString_AppName_ShouldContainFlavorName();
+    public abstract void getString_AppName_ShouldContainFlavorName();
 
     @Test
-    public abstract void getResourceString_AppName_ShouldContainBuildType();
+    public abstract void getString_AppName_ShouldContainBuildType();
 }

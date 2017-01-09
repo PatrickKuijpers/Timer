@@ -13,7 +13,7 @@ import static junit.framework.Assert.assertTrue;
 @Config(constants = BuildConfig.class)
 public class AppNameTestForBuildType extends AppNameTestForFlavor {
     @Test
-    public void getResourceString_AppName_ShouldContainBuildType() {
+    public void getString_AppName_ShouldContainBuildType() {
         // Arrange
 
         // Act
