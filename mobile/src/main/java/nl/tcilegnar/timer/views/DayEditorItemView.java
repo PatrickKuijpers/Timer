@@ -2,6 +2,7 @@ package nl.tcilegnar.timer.views;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -24,17 +25,19 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     private final DayEditorItem dayEditorItem;
     private final Storage storage = new Storage();
     private final TimePickerDialogListener timePickerDialogListener;
+    private final TimeChangeListener timeChangeListener;
 
     private TextView label;
     private TextView value;
     private ImageButton valueEditButton;
 
     public DayEditorItemView(Context activityContext, DayEditorItem dayEditorItem, TimePickerDialogListener
-            timePickerDialogListener) {
+            timePickerDialogListener, TimeChangeListener timeChangeListener) {
         super(activityContext);
         inflate(activityContext, R.layout.day_editor_item_view, this);
         this.dayEditorItem = dayEditorItem;
         this.timePickerDialogListener = timePickerDialogListener;
+        this.timeChangeListener = timeChangeListener;
 
         initViews();
         initValues(dayEditorItem);
@@ -45,7 +48,6 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         value = (TextView) findViewById(R.id.day_editor_item_value);
         valueEditButton = (ImageButton) findViewById(R.id.day_editor_item_value_edit_button);
 
-        setOnClickListener(this);
         label.setOnClickListener(this);
         value.setOnClickListener(this);
         valueEditButton.setOnClickListener(this);
@@ -55,27 +57,6 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         label.setText(dayEditorItem.toString());
         int hour = storage.loadDayEditorHour(dayEditorItem.getDayEditorHourKey());
         int minute = storage.loadDayEditorMinute(dayEditorItem.getDayEditorMinuteKey());
-        setCurrentTime(hour, minute);
-    }
-
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-        if (id == R.id.day_editor_item) {
-            setCurrentTime();
-        } else if (id == R.id.day_editor_item_label) {
-            setCurrentTime();
-        } else if (id == R.id.day_editor_item_value) {
-            setCurrentTime();
-        } else if (id == R.id.day_editor_item_value_edit_button) {
-            timePickerDialogListener.showTimePickerDialog(this, TIMER_PICKER_DIALOG_TAG);
-        }
-    }
-
-    private void setCurrentTime() {
-        Calendar currentTime = TimerCalendar.getCurrentDate();
-        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
-        int minute = currentTime.get(Calendar.MINUTE);
         setCurrentTime(hour, minute);
     }
 
@@ -91,11 +72,64 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         storage.saveDayEditorMinute(dayEditorItem.getDayEditorMinuteKey(), minute);
     }
 
-    public void onTimeSet(TimePicker view, int hour, int minute) {
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+    }
+
+    @Override
+    public void onViewAdded(View child) {
+        super.onViewAdded(child);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.day_editor_item_label) {
+            updateCurrentTime();
+        } else if (id == R.id.day_editor_item_value) {
+            updateCurrentTime();
+        } else if (id == R.id.day_editor_item_value_edit_button) {
+            timePickerDialogListener.showTimePickerDialog(this, TIMER_PICKER_DIALOG_TAG);
+        }
+    }
+
+    private void updateCurrentTime() {
+        Calendar currentTime = TimerCalendar.getCurrentDate();
+        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = currentTime.get(Calendar.MINUTE);
+        updateCurrentTime(hour, minute);
+    }
+
+    private void updateCurrentTime(int hour, int minute) {
         setCurrentTime(hour, minute);
+        timeChangeListener.onTimeChanged(dayEditorItem);
+    }
+
+    public void onTimeSet(TimePicker view, int hour, int minute) {
+        updateCurrentTime(hour, minute);
+    }
+
+    public void updateEnabled() {
+        if (dayEditorItem.isEnabled()) {
+            label.setEnabled(true);
+            value.setEnabled(true);
+        } else {
+            label.setEnabled(false);
+            value.setEnabled(false);
+        }
     }
 
     public interface TimePickerDialogListener {
         void showTimePickerDialog(TimePickerDialog.OnTimeSetListener onTimeSetListener, String tag);
+    }
+
+    public interface TimeChangeListener {
+        void onTimeChanged(DayEditorItem dayEditorItem);
     }
 }

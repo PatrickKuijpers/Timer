@@ -19,6 +19,7 @@ public enum DayEditorItem {
     private final String name;
     private final Key dayEditorHour;
     private final Key dayEditorMinute;
+    private boolean enabled = true;
 
     DayEditorItem(@StringRes int nameResId, Key dayEditorHour, Key dayEditorMinute) {
         this.name = Res.getString(nameResId);
@@ -37,5 +38,17 @@ public enum DayEditorItem {
 
     public Key getDayEditorMinuteKey() {
         return dayEditorMinute;
+    }
+
+    public void enable() {
+        enabled = true;
+    }
+
+    public void disable() {
+        enabled = false;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

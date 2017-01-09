@@ -16,7 +16,7 @@ import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListene
 
 public class DayEditorFragment extends Fragment implements TimePickerDialogListener {
 
-    private ListView abilitiesGrid;
+    private ListView dayEditorList;
 
     public DayEditorFragment() {
     }
@@ -33,8 +33,8 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
     }
 
     private void initViews(View view) {
-        abilitiesGrid = (ListView) view.findViewById(R.id.day_editor_list);
-        abilitiesGrid.setAdapter(new DayEditorAdapter(getActivity(), this));
+        dayEditorList = (ListView) view.findViewById(R.id.day_editor_list);
+        dayEditorList.setAdapter(new DayEditorAdapter(getActivity(), this));
     }
 
     @Override
