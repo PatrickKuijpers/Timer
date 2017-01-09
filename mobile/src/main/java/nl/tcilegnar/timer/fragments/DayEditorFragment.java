@@ -1,5 +1,6 @@
 package nl.tcilegnar.timer.fragments;
 
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,8 +10,11 @@ import android.widget.ListView;
 
 import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.adapters.DayEditorAdapter;
+import nl.tcilegnar.timer.dialogs.TimePickerFragment;
 
-public class DayEditorFragment extends Fragment {
+import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
+
+public class DayEditorFragment extends Fragment implements TimePickerDialogListener {
 
     private ListView abilitiesGrid;
 
@@ -18,8 +22,7 @@ public class DayEditorFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_day_editor, container, false);
     }
 
@@ -31,6 +34,13 @@ public class DayEditorFragment extends Fragment {
 
     private void initViews(View view) {
         abilitiesGrid = (ListView) view.findViewById(R.id.day_editor_list);
-        abilitiesGrid.setAdapter(new DayEditorAdapter(getActivity()));
+        abilitiesGrid.setAdapter(new DayEditorAdapter(getActivity(), this));
+    }
+
+    @Override
+    public void showTimePickerDialog(TimePickerDialog.OnTimeSetListener onTimeSetListener, String tag) {
+        TimePickerFragment timePickerFragment = new TimePickerFragment();
+        timePickerFragment.setOnTimeSetListener(onTimeSetListener);
+        timePickerFragment.show(getActivity().getFragmentManager(), tag);
     }
 }

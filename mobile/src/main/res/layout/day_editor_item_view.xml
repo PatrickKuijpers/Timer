@@ -2,17 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/day_editor_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="100">
 
     <TextView
         android:id="@+id/day_editor_item_label"
         style="@style/day_editor_text_view"
-        android:layout_weight="50" />
+        android:layout_weight="60"
+        android:enabled="true"/>
 
     <TextView
         android:id="@+id/day_editor_item_value"
         style="@style/day_editor_text_view"
         android:layout_marginStart="@dimen/horizontal_margin"
-        android:layout_weight="50" />
+        android:layout_weight="25"/>
+
+    <ImageButton
+        android:id="@+id/day_editor_item_value_edit_button"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/horizontal_margin"
+        android:layout_weight="15"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/description_day_editor_item_value_edit_button"
+        android:padding="14dp"
+        android:src="@android:drawable/ic_menu_edit"/>
 </LinearLayout>
 

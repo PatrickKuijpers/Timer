@@ -8,11 +8,15 @@ import android.widget.BaseAdapter;
 import nl.tcilegnar.timer.enums.DayEditorItem;
 import nl.tcilegnar.timer.views.DayEditorItemView;
 
+import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
+
 public class DayEditorAdapter extends BaseAdapter {
     private final Context activityContext;
+    private final TimePickerDialogListener timePickerDialogListener;
 
-    public DayEditorAdapter(Context activityContext) {
+    public DayEditorAdapter(Context activityContext, TimePickerDialogListener timePickerDialogListener) {
         this.activityContext = activityContext;
+        this.timePickerDialogListener = timePickerDialogListener;
     }
 
     @Override
@@ -36,7 +40,7 @@ public class DayEditorAdapter extends BaseAdapter {
 
         if (convertView == null) {
             DayEditorItem dayEditorItem = getDayEditorList()[position];
-            dayEditorItemView = new DayEditorItemView(activityContext, dayEditorItem);
+            dayEditorItemView = new DayEditorItemView(activityContext, dayEditorItem, timePickerDialogListener);
         } else {
             dayEditorItemView = (DayEditorItemView) convertView;
         }
