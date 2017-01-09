@@ -5,6 +5,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import nl.tcilegnar.timer.utils.Res;
+
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -15,7 +17,7 @@ public abstract class AppNameTest {
         // Arrange
 
         // Act
-        String actualAppName = App.getResourceString(R.string.app_name);
+        String actualAppName = Res.getString(R.string.app_name);
 
         // Assert
         assertTrue(actualAppName.contains("Timer"));
