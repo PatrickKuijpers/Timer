@@ -45,6 +45,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         value = (TextView) findViewById(R.id.day_editor_item_value);
         valueEditButton = (ImageButton) findViewById(R.id.day_editor_item_value_edit_button);
 
+        setOnClickListener(this);
         label.setOnClickListener(this);
         value.setOnClickListener(this);
         valueEditButton.setOnClickListener(this);
@@ -60,7 +61,9 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if (id == R.id.day_editor_item_label) {
+        if (id == R.id.day_editor_item) {
+            setCurrentTime();
+        } else if (id == R.id.day_editor_item_label) {
             setCurrentTime();
         } else if (id == R.id.day_editor_item_value) {
             setCurrentTime();
