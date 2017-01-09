@@ -6,6 +6,7 @@
     <color name="colorAccentLight">#dddddf</color>
 
     <color name="black">#000</color>
+    <color name="grey_very_dark">#333</color>
     <color name="grey_dark">#666</color>
     <color name="grey_medium">#999</color>
     <color name="grey_medium_light">#bbb</color>
