@@ -22,8 +22,6 @@ public class DayEditorAdapter extends BaseAdapter implements TimeChangeListener 
     public DayEditorAdapter(Context activityContext, TimePickerDialogListener timePickerDialogListener) {
         this.activityContext = activityContext;
         this.timePickerDialogListener = timePickerDialogListener;
-
-        startNewDay();
     }
 
     @Override
@@ -56,7 +54,7 @@ public class DayEditorAdapter extends BaseAdapter implements TimeChangeListener 
         return dayEditorItemView;
     }
 
-    private void startNewDay() {
+    public void startNewDay() {
         DayEditorItem start = getDayEditorItemStart();
         DayEditorItem breakStart = getDayEditorItemBreakStart();
         DayEditorItem breakEnd = getDayEditorItemBreakEnd();

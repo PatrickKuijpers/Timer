@@ -9,4 +9,11 @@ public class TimerCalendar {
     public static Calendar getCurrentDate() {
         return Calendar.getInstance(LOCALE);
     }
+
+    public static Calendar getCurrentDateWithTime(int hour, int minute) {
+        Calendar currentDate = getCurrentDate();
+        currentDate.set(Calendar.HOUR_OF_DAY, hour);
+        currentDate.set(Calendar.MINUTE, minute);
+        return currentDate;
+    }
 }

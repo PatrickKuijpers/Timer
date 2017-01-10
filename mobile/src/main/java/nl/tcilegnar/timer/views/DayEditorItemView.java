@@ -14,15 +14,14 @@ import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.enums.DayEditorItem;
 import nl.tcilegnar.timer.utils.CalendarFormat;
 import nl.tcilegnar.timer.utils.TimerCalendar;
-import nl.tcilegnar.timer.utils.storage.Storage;
 
 import static android.view.View.OnClickListener;
 
 public class DayEditorItemView extends LinearLayout implements OnClickListener, TimePickerDialog.OnTimeSetListener {
     private static final String TIMER_PICKER_DIALOG_TAG = "TIMER_PICKER_DIALOG_TAG";
+    public static final int NO_TIME = -1;
 
     private final DayEditorItem dayEditorItem;
-    private final Storage storage = new Storage();
     private final TimePickerDialogListener timePickerDialogListener;
     private final TimeChangeListener timeChangeListener;
 
@@ -54,21 +53,22 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
 
     private void initValues(DayEditorItem dayEditorItem) {
         label.setText(dayEditorItem.toString());
-        int hour = storage.loadDayEditorHour(dayEditorItem.getDayEditorHourKey());
-        int minute = storage.loadDayEditorMinute(dayEditorItem.getDayEditorMinuteKey());
-        setCurrentTime(hour, minute);
+        setCurrentTimeText(dayEditorItem);
     }
 
-    private void setCurrentTime(int hour, int minute) {
-        String currentTimeText = CalendarFormat.get24hTimeString(hour, minute);
-        value.setText(currentTimeText);
-
-        saveValues(hour, minute);
+    private void setCurrentTimeText(DayEditorItem dayEditorItem) {
+        int hour = dayEditorItem.getHour();
+        int minute = dayEditorItem.getMinute();
+        setCurrentTimeText(hour, minute);
     }
 
-    private void saveValues(int hour, int minute) {
-        storage.saveDayEditorHour(dayEditorItem.getDayEditorHourKey(), hour);
-        storage.saveDayEditorMinute(dayEditorItem.getDayEditorMinuteKey(), minute);
+    private void setCurrentTimeText(int hour, int minute) {
+        if (hour == NO_TIME || minute == NO_TIME) {
+            value.setText("..:..");
+        } else {
+            String currentTimeText = CalendarFormat.get24hTimeString(hour, minute);
+            value.setText(currentTimeText);
+        }
     }
 
     @Override
@@ -85,18 +85,18 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
 
     private void updateCurrentTime() {
         Calendar currentTime = TimerCalendar.getCurrentDate();
-        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
-        int minute = currentTime.get(Calendar.MINUTE);
-        updateCurrentTime(hour, minute);
+        updateTime(currentTime);
     }
 
-    private void updateCurrentTime(int hour, int minute) {
-        setCurrentTime(hour, minute);
+    private void updateTime(Calendar newTime) {
+        dayEditorItem.setCurrentTime(newTime);
+        setCurrentTimeText(dayEditorItem);
         timeChangeListener.onTimeChanged(dayEditorItem);
     }
 
     public void onTimeSet(TimePicker view, int hour, int minute) {
-        updateCurrentTime(hour, minute);
+        Calendar newTime = TimerCalendar.getCurrentDateWithTime(hour, minute);
+        updateTime(newTime);
     }
 
     public void updateEnabled() {
@@ -110,7 +110,8 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     }
 
     public void reset() {
-        setCurrentTime(0, 0);
+        dayEditorItem.setCurrentTime(NO_TIME, NO_TIME);
+        setCurrentTimeText(NO_TIME, NO_TIME);
     }
 
     public interface TimePickerDialogListener {
