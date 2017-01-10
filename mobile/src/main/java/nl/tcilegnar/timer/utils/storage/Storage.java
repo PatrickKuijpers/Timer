@@ -13,8 +13,8 @@ public class Storage extends SharedPrefs {
         // Deze enums nooit veranderen!
         DayEditorStartHour(DayEditorItem.DEFAULT_HOUR_VALUE),
         DayEditorStartMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
-        DayEditorBreakHour(DayEditorItem.DEFAULT_HOUR_VALUE),
-        DayEditorBreakMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
+        DayEditorBreakStartHour(DayEditorItem.DEFAULT_HOUR_VALUE),
+        DayEditorBreakStartMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
         DayEditorBreakEndHour(DayEditorItem.DEFAULT_HOUR_VALUE),
         DayEditorBreakEndMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
         DayEditorEndHour(DayEditorItem.DEFAULT_HOUR_VALUE),

@@ -1,7 +1,7 @@
 <resources>
 
     <string name="day_editor_item_start">Start werkdag</string>
-    <string name="day_editor_item_break">Start pauze</string>
+    <string name="day_editor_item_break_start">Start pauze</string>
     <string name="day_editor_item_break_end">Einde pauze</string>
     <string name="day_editor_item_end">Einde werkdag</string>
 

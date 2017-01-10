@@ -9,7 +9,7 @@ import static nl.tcilegnar.timer.utils.storage.Storage.Key;
 
 public enum DayEditorItem {
     Start(R.string.day_editor_item_start, Key.DayEditorStartHour, Key.DayEditorStartMinute),
-    Break(R.string.day_editor_item_break, Key.DayEditorBreakHour, Key.DayEditorBreakMinute),
+    BreakStart(R.string.day_editor_item_break_start, Key.DayEditorBreakStartHour, Key.DayEditorBreakStartMinute),
     BreakEnd(R.string.day_editor_item_break_end, Key.DayEditorBreakEndHour, Key.DayEditorBreakEndMinute),
     End(R.string.day_editor_item_end, Key.DayEditorEndHour, Key.DayEditorEndMinute);
 
@@ -17,14 +17,14 @@ public enum DayEditorItem {
     public static final int DEFAULT_MINUTE_VALUE = 0;
 
     private final String name;
-    private final Key dayEditorHour;
-    private final Key dayEditorMinute;
+    private final Key dayEditorHourKey;
+    private final Key dayEditorMinuteKey;
     private boolean enabled = true;
 
-    DayEditorItem(@StringRes int nameResId, Key dayEditorHour, Key dayEditorMinute) {
+    DayEditorItem(@StringRes int nameResId, Key dayEditorHourKey, Key dayEditorMinuteKey) {
         this.name = Res.getString(nameResId);
-        this.dayEditorHour = dayEditorHour;
-        this.dayEditorMinute = dayEditorMinute;
+        this.dayEditorHourKey = dayEditorHourKey;
+        this.dayEditorMinuteKey = dayEditorMinuteKey;
     }
 
     @Override
@@ -33,11 +33,11 @@ public enum DayEditorItem {
     }
 
     public Key getDayEditorHourKey() {
-        return dayEditorHour;
+        return dayEditorHourKey;
     }
 
     public Key getDayEditorMinuteKey() {
-        return dayEditorMinute;
+        return dayEditorMinuteKey;
     }
 
     public void enable() {

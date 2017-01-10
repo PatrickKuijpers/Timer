@@ -2,7 +2,6 @@ package nl.tcilegnar.timer.views;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -73,21 +72,6 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
-    }
-
-    @Override
-    public void onViewAdded(View child) {
-        super.onViewAdded(child);
-    }
-
-    @Override
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.day_editor_item_label) {
@@ -123,6 +107,10 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
             label.setEnabled(false);
             value.setEnabled(false);
         }
+    }
+
+    public void reset() {
+        setCurrentTime(0, 0);
     }
 
     public interface TimePickerDialogListener {

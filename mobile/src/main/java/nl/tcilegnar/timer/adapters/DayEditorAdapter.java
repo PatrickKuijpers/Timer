@@ -23,14 +23,7 @@ public class DayEditorAdapter extends BaseAdapter implements TimeChangeListener 
         this.activityContext = activityContext;
         this.timePickerDialogListener = timePickerDialogListener;
 
-        DayEditorItem dayEditorItemStart = getItem(0);
-        DayEditorItem dayEditorItemBreak = getItem(1);
-        DayEditorItem dayEditorItemBreakEnd = getItem(2);
-        DayEditorItem dayEditorItemEnd = getItem(3);
-        dayEditorItemStart.enable();
-        dayEditorItemBreak.disable();
-        dayEditorItemBreakEnd.disable();
-        dayEditorItemEnd.disable();
+        startNewDay();
     }
 
     @Override
@@ -53,7 +46,7 @@ public class DayEditorAdapter extends BaseAdapter implements TimeChangeListener 
         DayEditorItemView dayEditorItemView;
 
         if (convertView == null) {
-            DayEditorItem dayEditorItem = getDayEditorList()[position];
+            DayEditorItem dayEditorItem = getItem(position);
             dayEditorItemView = new DayEditorItemView(activityContext, dayEditorItem, timePickerDialogListener, this);
             allDayEditorItemViews.add(dayEditorItemView);
         } else {
@@ -63,45 +56,86 @@ public class DayEditorAdapter extends BaseAdapter implements TimeChangeListener 
         return dayEditorItemView;
     }
 
-    private DayEditorItem[] getDayEditorList() {
-        return DayEditorItem.values();
+    private void startNewDay() {
+        DayEditorItem start = getDayEditorItemStart();
+        DayEditorItem breakStart = getDayEditorItemBreakStart();
+        DayEditorItem breakEnd = getDayEditorItemBreakEnd();
+        DayEditorItem end = getDayEditorItemEnd();
+        start.enable();
+        breakStart.disable();
+        breakEnd.disable();
+        end.disable();
+
+        updateViews();
+    }
+
+    private void updateViews() {
+        for (DayEditorItemView dayEditorItemView : allDayEditorItemViews) {
+            dayEditorItemView.updateEnabled();
+        }
     }
 
     @Override
     public void onTimeChanged(DayEditorItem dayEditorItem) {
-        DayEditorItem dayEditorItemStart = getItem(0);
-        DayEditorItem dayEditorItemBreak = getItem(1);
-        DayEditorItem dayEditorItemBreakEnd = getItem(2);
-        DayEditorItem dayEditorItemEnd = getItem(3);
+        DayEditorItem start = getDayEditorItemStart();
+        DayEditorItem breakStart = getDayEditorItemBreakStart();
+        DayEditorItem breakEnd = getDayEditorItemBreakEnd();
+        DayEditorItem end = getDayEditorItemEnd();
         switch (dayEditorItem) {
             case Start:
-                dayEditorItemStart.disable();
-                dayEditorItemBreak.enable();
-                dayEditorItemBreakEnd.disable();
-                dayEditorItemEnd.enable();
+                start.disable();
+                breakStart.enable();
+                breakEnd.disable();
+                end.enable();
                 break;
-            case Break:
-                dayEditorItemStart.disable();
-                dayEditorItemBreak.disable();
-                dayEditorItemBreakEnd.enable();
-                dayEditorItemEnd.disable();
+            case BreakStart:
+                start.disable();
+                breakStart.disable();
+                breakEnd.enable();
+                end.disable();
                 break;
             case BreakEnd:
-                dayEditorItemStart.disable();
-                dayEditorItemBreak.enable();
-                dayEditorItemBreakEnd.disable();
-                dayEditorItemEnd.enable();
+                start.disable();
+                breakStart.enable();
+                breakEnd.disable();
+                end.enable();
                 break;
             case End:
-                dayEditorItemStart.disable();
-                dayEditorItemBreak.disable();
-                dayEditorItemBreakEnd.disable();
-                dayEditorItemEnd.disable();
+                start.disable();
+                breakStart.disable();
+                breakEnd.disable();
+                end.disable();
                 break;
         }
 
+        updateViews();
+    }
+
+    private DayEditorItem getDayEditorItemStart() {
+        return getItem(0);
+    }
+
+    private DayEditorItem getDayEditorItemBreakStart() {
+        return getItem(1);
+    }
+
+    private DayEditorItem getDayEditorItemBreakEnd() {
+        return getItem(2);
+    }
+
+    private DayEditorItem getDayEditorItemEnd() {
+        return getItem(3);
+    }
+
+    private DayEditorItem[] getDayEditorList() {
+        return DayEditorItem.values();
+    }
+
+    public void reset() {
+        startNewDay();
+
         for (DayEditorItemView dayEditorItemView : allDayEditorItemViews) {
-            dayEditorItemView.updateEnabled();
+            dayEditorItemView.reset();
         }
     }
 }
