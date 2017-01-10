@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_main"
     style="@style/fragment_full_screen_with_scrollview"
-    tools:context="nl.tcilegnar.timer.fragments.DayEditorFragment"
-    tools:showIn="@layout/activity_day_editor">
+    tools:context="nl.tcilegnar.timer.fragments.DayEditorFragment">
 
     <ListView
         android:id="@+id/day_editor_list"
@@ -12,6 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/vertical_margin_big"
         android:divider="@android:color/transparent"
-        android:dividerHeight="16.0dp" />
+        android:dividerHeight="16.0dp"/>
 
 </RelativeLayout>

@@ -1,37 +1,20 @@
 package nl.tcilegnar.timer.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.GridView;
+import android.support.v4.app.FragmentTransaction;
 
 import nl.tcilegnar.timer.R;
-import nl.tcilegnar.timer.adapters.DayEditorAdapter;
+import nl.tcilegnar.timer.fragments.DayEditorFragment;
 
-public class DayEditorActivity extends AppCompatActivity {
+public class DayEditorActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_day_editor);
 
-        initViews();
-    }
-
-    private void initViews() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        if (savedInstanceState == null) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.activity_content, new DayEditorFragment()).commit();
+        }
     }
 }
