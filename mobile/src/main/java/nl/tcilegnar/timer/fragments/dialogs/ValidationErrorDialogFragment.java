@@ -12,21 +12,21 @@ import android.support.v4.app.FragmentActivity;
 import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.utils.Res;
 
-public class ValidationErrorDialogFragment extends DialogFragment {
+public abstract class ValidationErrorDialogFragment extends DialogFragment {
     private String titleText;
     private String messageText;
     private String positiveButtonText;
 
     public ValidationErrorDialogFragment() {
-        this(R.string.empty_string);
-    }
-
-    public ValidationErrorDialogFragment(@StringRes int messageResId) {
         super();
         titleText = Res.getString(R.string.invalid_input);
-        messageText = Res.getString(messageResId);
+        messageText = Res.getString(getMessageResId());
         positiveButtonText = Res.getString(R.string.ok);
     }
+
+    protected abstract
+    @StringRes
+    int getMessageResId();
 
     @NonNull
     @Override
