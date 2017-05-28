@@ -19,6 +19,7 @@ import nl.tcilegnar.timer.adapters.DayEditorAdapter;
 import nl.tcilegnar.timer.dialogs.TimePickerFragment;
 import nl.tcilegnar.timer.enums.DayEditorItem;
 
+import static nl.tcilegnar.timer.views.DayEditorItemView.NO_TIME;
 import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
 
 public class DayEditorFragment extends Fragment implements TimePickerDialogListener {
@@ -38,29 +39,56 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        calculateTotalTime();
+        setTotalTime();
     }
 
-    private void calculateTotalTime() {
-        Calendar startTime = DayEditorItem.Start.getCurrentTime();
-        Calendar endTime = DayEditorItem.End.getCurrentTime();
-        long workingDayTime = getDateDiff(startTime, endTime, TimeUnit.MINUTES);
+    private void setTotalTime() {
+        int workingDayTimeInMinutes = getWorkingDayTimeInMinutes();
+        int breakTimeInMinutes = getBreakTimeInMinutes();
 
-        Calendar breakStartTime = DayEditorItem.BreakStart.getCurrentTime();
-        Calendar breakEndTime = DayEditorItem.BreakEnd.getCurrentTime();
-        long breakTime = getDateDiff(breakStartTime, breakEndTime, TimeUnit.MINUTES);
-
-        long totalTime = workingDayTime - breakTime;
-        String timeString = getReadableTimeString((int) totalTime);
-        totalValueView.setText(timeString);
+        if (workingDayTimeInMinutes != NO_TIME) {
+            int totalTimeInMinutes = getTotalTimeInMinutes(workingDayTimeInMinutes, breakTimeInMinutes);
+            String timeString = getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
+            totalValueView.setText(timeString);
+        } else {
+            totalValueView.setText("");
+        }
     }
 
-    public static long getDateDiff(Calendar cal1, Calendar cal2, TimeUnit timeUnit) {
+    private int getWorkingDayTimeInMinutes() {
+        try {
+            Calendar startTime = DayEditorItem.Start.getCurrentTime();
+            Calendar endTime = DayEditorItem.End.getCurrentTime();
+            return getDateDiff(startTime, endTime, TimeUnit.MINUTES);
+        } catch (DayEditorItem.TimeNotSetException e) {
+            return NO_TIME;
+        }
+    }
+
+    private int getBreakTimeInMinutes() {
+        try {
+            Calendar breakStartTime = DayEditorItem.BreakStart.getCurrentTime();
+            Calendar breakEndTime = DayEditorItem.BreakEnd.getCurrentTime();
+            return getDateDiff(breakStartTime, breakEndTime, TimeUnit.MINUTES);
+        } catch (DayEditorItem.TimeNotSetException e) {
+            return NO_TIME;
+        }
+    }
+
+    private int getTotalTimeInMinutes(int workingDayTimeInMinutes, int breakTimeInMinutes) {
+        if (breakTimeInMinutes != NO_TIME) {
+            return workingDayTimeInMinutes - breakTimeInMinutes;
+        } else {
+            return workingDayTimeInMinutes;
+        }
+    }
+
+    public static int getDateDiff(Calendar cal1, Calendar cal2, TimeUnit timeUnit) {
         long diffInMillis = cal2.getTimeInMillis() - cal1.getTimeInMillis();
-        return timeUnit.convert(diffInMillis, TimeUnit.MILLISECONDS);
+        return (int) timeUnit.convert(diffInMillis, TimeUnit.MILLISECONDS);
     }
 
-    public String getReadableTimeString(int timeInMinutes) {
+    public static String getReadableTimeStringHoursAndMinutes(int timeInMinutes) {
         int hours = timeInMinutes / 60;
         int minutes = timeInMinutes % 60;
         return String.format(Locale.getDefault(), "%d:%02d", hours, minutes);
