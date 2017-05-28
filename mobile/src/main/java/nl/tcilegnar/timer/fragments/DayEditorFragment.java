@@ -18,17 +18,15 @@ import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.adapters.DayEditorAdapter;
 import nl.tcilegnar.timer.dialogs.TimePickerFragment;
 import nl.tcilegnar.timer.enums.DayEditorItem;
+import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
 
 import static nl.tcilegnar.timer.views.DayEditorItemView.NO_TIME;
 import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
 
-public class DayEditorFragment extends Fragment implements TimePickerDialogListener {
+public class DayEditorFragment extends Fragment implements TimePickerDialogListener, TimeChangedListener {
     private ListView dayEditorList;
     private DayEditorAdapter dayEditorAdapter;
     private TextView totalValueView;
-
-    public DayEditorFragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -98,7 +96,7 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
         totalValueView = (TextView) view.findViewById(R.id.total_value);
 
         dayEditorList = (ListView) view.findViewById(R.id.day_editor_list);
-        dayEditorAdapter = new DayEditorAdapter(getActivity(), this);
+        dayEditorAdapter = new DayEditorAdapter(getActivity(), this, this);
         dayEditorList.setAdapter(dayEditorAdapter);
 
         initFab(view);
@@ -123,5 +121,10 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
 
     private void resetCurrentDay() {
         dayEditorAdapter.reset();
+    }
+
+    @Override
+    public void onTimeChanged() {
+        setTotalTime();
     }
 }

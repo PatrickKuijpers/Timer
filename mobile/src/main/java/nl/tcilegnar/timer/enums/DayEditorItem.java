@@ -85,8 +85,13 @@ public enum DayEditorItem {
         enabled = false;
     }
 
-    public Calendar getCurrentTime() {
-        return TimerCalendar.getCurrentDateWithTime(getHour(), getMinute());
+    public Calendar getCurrentTime() throws TimeNotSetException {
+        int hour = getHour();
+        int minute = getMinute();
+        if (hour == DEFAULT_HOUR_VALUE || minute == DEFAULT_MINUTE_VALUE) {
+            throw new TimeNotSetException();
+        }
+        return TimerCalendar.getCurrentDateWithTime(hour, minute);
     }
 
     public int getHour() {
@@ -106,5 +111,11 @@ public enum DayEditorItem {
     public void setCurrentTime(int hour, int minute) {
         storage.saveDayEditorHour(getDayEditorHourKey(), hour);
         storage.saveDayEditorMinute(getDayEditorMinuteKey(), minute);
+    }
+
+    public class TimeNotSetException extends Exception {
+        public TimeNotSetException() {
+            super("Time is not set, so cannot be used to calculate time or create a Calendar instance");
+        }
     }
 }

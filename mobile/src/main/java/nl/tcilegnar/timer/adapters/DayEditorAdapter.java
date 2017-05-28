@@ -10,19 +10,23 @@ import java.util.ArrayList;
 import nl.tcilegnar.timer.enums.DayEditorItem;
 import nl.tcilegnar.timer.utils.storage.Storage;
 import nl.tcilegnar.timer.views.DayEditorItemView;
+import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
 
-import static nl.tcilegnar.timer.views.DayEditorItemView.ActiveChangeListener;
+import static nl.tcilegnar.timer.views.DayEditorItemView.ActiveItemChangeListener;
 import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
 
-public class DayEditorAdapter extends BaseAdapter implements ActiveChangeListener {
+public class DayEditorAdapter extends BaseAdapter implements ActiveItemChangeListener {
     private final Context activityContext;
     private final TimePickerDialogListener timePickerDialogListener;
+    private final TimeChangedListener timeChangedListener;
 
     private ArrayList<DayEditorItemView> allDayEditorItemViews = new ArrayList<>();
 
-    public DayEditorAdapter(Context activityContext, TimePickerDialogListener timePickerDialogListener) {
+    public DayEditorAdapter(Context activityContext, TimePickerDialogListener timePickerDialogListener,
+                            TimeChangedListener timeChangedListener) {
         this.activityContext = activityContext;
         this.timePickerDialogListener = timePickerDialogListener;
+        this.timeChangedListener = timeChangedListener;
     }
 
     @Override
@@ -46,7 +50,8 @@ public class DayEditorAdapter extends BaseAdapter implements ActiveChangeListene
 
         DayEditorItem dayEditorItem = getItem(position);
         if (convertView == null) {
-            dayEditorItemView = new DayEditorItemView(activityContext, dayEditorItem, timePickerDialogListener, this);
+            dayEditorItemView = new DayEditorItemView(activityContext, dayEditorItem, timePickerDialogListener,
+                    timeChangedListener, this);
             allDayEditorItemViews.add(dayEditorItemView);
 
             // Om de een of andere rede worden sommige views meerdere keren geinitialiseerd, dus >=
@@ -66,19 +71,18 @@ public class DayEditorAdapter extends BaseAdapter implements ActiveChangeListene
         boolean isAnyActive = false;
         for (DayEditorItem dayEditorItem : getDayEditorList()) {
             if (dayEditorItem.isActive()) {
-                onActiveChanged(dayEditorItem);
+                onActiveItemChanged(dayEditorItem);
                 isAnyActive = true;
                 break;
             }
         }
 
         if (!isAnyActive) {
-            onActiveChanged(null);
+            onActiveItemChanged(null);
         }
     }
 
-    @Override
-    public void onActiveChanged(DayEditorItem dayEditorItem) {
+    public void onActiveItemChanged(DayEditorItem dayEditorItem) {
         DayEditorItem start = getDayEditorItemStart();
         DayEditorItem breakStart = getDayEditorItemBreakStart();
         DayEditorItem breakEnd = getDayEditorItemBreakEnd();
@@ -147,7 +151,7 @@ public class DayEditorAdapter extends BaseAdapter implements ActiveChangeListene
 
     public void reset() {
         new Storage().deleteActiveDayEditor();
-        onActiveChanged(null);
+        onActiveItemChanged(null);
 
         for (DayEditorItemView dayEditorItemView : allDayEditorItemViews) {
             dayEditorItemView.resetTime();

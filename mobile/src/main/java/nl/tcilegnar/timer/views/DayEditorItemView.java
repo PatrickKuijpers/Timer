@@ -24,7 +24,8 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
 
     private final DayEditorItem dayEditorItem;
     private final TimePickerDialogListener timePickerDialogListener;
-    private final ActiveChangeListener activeChangeListener;
+    private final TimeChangedListener timeChangedListener;
+    private final ActiveItemChangeListener activeItemChangeListener;
 
     private ImageView imageDone;
     private TextView label;
@@ -32,12 +33,14 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     private ImageButton timeValueEditButton;
 
     public DayEditorItemView(Context activityContext, DayEditorItem dayEditorItem, TimePickerDialogListener
-            timePickerDialogListener, ActiveChangeListener activeChangeListener) {
+            timePickerDialogListener, TimeChangedListener timeChangedListener, ActiveItemChangeListener
+            activeItemChangeListener) {
         super(activityContext);
         inflate(activityContext, R.layout.day_editor_item_view, this);
         this.dayEditorItem = dayEditorItem;
         this.timePickerDialogListener = timePickerDialogListener;
-        this.activeChangeListener = activeChangeListener;
+        this.timeChangedListener = timeChangedListener;
+        this.activeItemChangeListener = activeItemChangeListener;
 
         initViews();
         initValues(dayEditorItem);
@@ -106,13 +109,13 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     private void updateTime(Calendar newTime) {
         dayEditorItem.setCurrentTime(newTime);
         setCurrentTimeText(dayEditorItem);
+        timeChangedListener.onTimeChanged();
     }
 
     private void changeDoneAndActiveItem() {
         setItemDone(true);
-
         dayEditorItem.setActive();
-        activeChangeListener.onActiveChanged(dayEditorItem);
+        activeItemChangeListener.onActiveItemChanged(dayEditorItem);
     }
 
     private void setItemDone(boolean shouldBeDone) {
@@ -138,6 +141,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     public void resetTime() {
         dayEditorItem.setCurrentTime(NO_TIME, NO_TIME);
         setCurrentTimeText(NO_TIME, NO_TIME);
+        timeChangedListener.onTimeChanged();
         setItemDone(false);
     }
 
@@ -150,7 +154,11 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         void showTimePickerDialog(TimePickerDialog.OnTimeSetListener onTimeSetListener, String tag);
     }
 
-    public interface ActiveChangeListener {
-        void onActiveChanged(DayEditorItem dayEditorItem);
+    public interface TimeChangedListener {
+        void onTimeChanged();
+    }
+
+    public interface ActiveItemChangeListener {
+        void onActiveItemChanged(DayEditorItem dayEditorItem);
     }
 }
