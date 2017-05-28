@@ -3,6 +3,8 @@ package nl.tcilegnar.timer.utils.storage;
 import nl.tcilegnar.timer.enums.DayEditorItem;
 
 public class Storage extends SharedPrefs {
+    private static final int FALSE = 0;
+
     @Override
     protected String fileName() {
         // Deze filelocatie nooit veranderen!
@@ -11,25 +13,25 @@ public class Storage extends SharedPrefs {
 
     public enum Key {
         // Deze enums nooit veranderen!
-        DayEditorStartActive(0),
         DayEditorStartHour(DayEditorItem.DEFAULT_HOUR_VALUE),
         DayEditorStartMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
-        DayEditorBreakStartActive(0),
+        DayEditorStartDone(FALSE),
         DayEditorBreakStartHour(DayEditorItem.DEFAULT_HOUR_VALUE),
         DayEditorBreakStartMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
-        DayEditorBreakEndActive(0),
+        DayEditorBreakStartDone(FALSE),
         DayEditorBreakEndHour(DayEditorItem.DEFAULT_HOUR_VALUE),
         DayEditorBreakEndMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
-        DayEditorEndActive(0),
+        DayEditorBreakEndDone(FALSE),
         DayEditorEndHour(DayEditorItem.DEFAULT_HOUR_VALUE),
-        DayEditorEndMinute(DayEditorItem.DEFAULT_MINUTE_VALUE);
+        DayEditorEndMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
+        DayEditorEndDone(FALSE);
 
         public final int defaultValue;
 
         Key(int defaultValue) {
             this.defaultValue = defaultValue;
         }
-        }
+    }
 
     /**
      * In tegenstelling tot andere save & load methoden is bij deze de key als extra parameter vereist. Dit is gedaan om
@@ -51,12 +53,12 @@ public class Storage extends SharedPrefs {
         return loadInt(key.name(), key.defaultValue);
     }
 
-    public void saveIsActiveDayEditor(Key key, boolean isActive) {
-        save(key.name(), isActive);
+    public void saveIsDayEditorDone(Key key, boolean isDone) {
+        save(key.name(), isDone);
     }
 
-    public boolean loadIsActiveDayEditor(Key key) {
-        boolean defaultValue = key.defaultValue != 0;
+    public boolean loadIsDayEditorDone(Key key) {
+        boolean defaultValue = key.defaultValue != FALSE;
         return loadBoolean(key.name(), defaultValue);
     }
 }

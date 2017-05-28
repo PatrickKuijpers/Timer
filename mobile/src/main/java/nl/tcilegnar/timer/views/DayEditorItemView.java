@@ -49,6 +49,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         timeValue = (TextView) findViewById(R.id.day_editor_item_value);
         timeValueEditButton = (ImageButton) findViewById(R.id.day_editor_item_value_edit_button);
 
+        imageDone.setOnClickListener(this);
         label.setOnClickListener(this);
         timeValue.setOnClickListener(this);
         timeValueEditButton.setOnClickListener(this);
@@ -57,7 +58,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     private void initValues(DayEditorItem dayEditorItem) {
         label.setText(dayEditorItem.toString());
         setCurrentTimeText(dayEditorItem);
-        setItemActivation(dayEditorItem);
+        setItemDone(dayEditorItem);
     }
 
     private void setCurrentTimeText(DayEditorItem dayEditorItem) {
@@ -75,18 +76,19 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         }
     }
 
-    private void setItemActivation(DayEditorItem dayEditorItem) {
-        setItemActivation(dayEditorItem.isActivated());
-    }
-
-    private void setItemActivation(boolean isActivated) {
-        dayEditorItem.activate(isActivated);
-        if (isActivated) {
+    private void setItemDone(DayEditorItem dayEditorItem) {
+        boolean isDone = dayEditorItem.isDone();
+        if (isDone) {
             imageDone.setVisibility(VISIBLE);
         } else {
             imageDone.setVisibility(INVISIBLE);
         }
-        updateEnabled();
+        activateItem(true);
+    }
+
+    private void activateItem(boolean shouldActivate) {
+        dayEditorItem.setIsDone(shouldActivate);
+        updateEnabledViews(); // TODO: klopt niet!
     }
 
     @Override
@@ -105,9 +107,13 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
 
     private void updateTime(Calendar newTime) {
         dayEditorItem.setCurrentTime(newTime);
-        timeChangeListener.onTimeChanged(dayEditorItem);
         setCurrentTimeText(dayEditorItem);
-        setItemActivation(true);
+        isTimeUpdated();
+    }
+
+    private void isTimeUpdated() {
+        timeChangeListener.onTimeChanged(dayEditorItem);
+        activateItem(true);
     }
 
     public void onTimeSet(TimePicker view, int hour, int minute) {
@@ -115,7 +121,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         updateTime(newTime);
     }
 
-    public void updateEnabled() {
+    public void updateEnabledViews() {
         if (dayEditorItem.isEnabled()) {
             imageDone.setEnabled(true);
             label.setEnabled(true);
@@ -126,9 +132,9 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     }
 
     public void reset() {
-        setItemActivation(false);
         dayEditorItem.setCurrentTime(NO_TIME, NO_TIME);
         setCurrentTimeText(NO_TIME, NO_TIME);
+        activateItem(false);
     }
 
     @Override
