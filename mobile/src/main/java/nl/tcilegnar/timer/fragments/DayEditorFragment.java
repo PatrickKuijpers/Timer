@@ -23,6 +23,7 @@ import nl.tcilegnar.timer.fragments.dialogs.TotalTimeValidationErrorDialog;
 import nl.tcilegnar.timer.fragments.dialogs.WorkingDayTimeValidationErrorDialog;
 import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
 
+import static nl.tcilegnar.timer.views.DayEditorItemView.INVALID_TIME;
 import static nl.tcilegnar.timer.views.DayEditorItemView.NO_TIME;
 import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
 
@@ -56,7 +57,8 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
 
     private String getTimeString(int workingDayTimeInMinutes, int breakTimeInMinutes) {
         String timeString;
-        if (workingDayTimeInMinutes != NO_TIME) {
+        if (workingDayTimeInMinutes != NO_TIME && workingDayTimeInMinutes != INVALID_TIME && breakTimeInMinutes !=
+                INVALID_TIME) {
             int totalTimeInMinutes = getTotalTimeInMinutes(workingDayTimeInMinutes, breakTimeInMinutes);
             if (totalTimeInMinutes < 0) {
                 new TotalTimeValidationErrorDialog().show(getActivity());
@@ -77,7 +79,7 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
             int dateDiff = getDateDiff(startTime, endTime, TimeUnit.MINUTES);
             if (dateDiff < 0) {
                 new WorkingDayTimeValidationErrorDialog().show(getActivity());
-                return NO_TIME;
+                return INVALID_TIME;
             }
             return dateDiff;
         } catch (DayEditorItem.TimeNotSetException e) {
@@ -92,7 +94,7 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
             int dateDiff = getDateDiff(breakStartTime, breakEndTime, TimeUnit.MINUTES);
             if (dateDiff < 0) {
                 new BreakTimeValidationErrorDialog().show(getActivity());
-                return NO_TIME;
+                return INVALID_TIME;
             }
             return dateDiff;
         } catch (DayEditorItem.TimeNotSetException e) {
