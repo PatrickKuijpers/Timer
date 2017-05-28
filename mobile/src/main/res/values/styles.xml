@@ -21,7 +21,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/day_editor_list_item_padding</item>
-        <item name="android:textSize">@dimen/text_size_day_editor_item</item>
+        <item name="android:background">@drawable/pressable_view</item>
+        <item name="android:textSize">@dimen/text_size_day_editor_list_item</item>
     </style>
 
 </resources>

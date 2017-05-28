@@ -7,5 +7,6 @@
     <dimen name="text_size_huge">28sp</dimen>
     <dimen name="text_size_very_huge">32sp</dimen>
 
-    <dimen name="text_size_day_editor_item">@dimen/text_size_big</dimen>
+    <dimen name="text_size_day_editor">@dimen/text_size_big</dimen>
+    <dimen name="text_size_day_editor_list_item">@dimen/text_size_day_editor</dimen>
 </resources>

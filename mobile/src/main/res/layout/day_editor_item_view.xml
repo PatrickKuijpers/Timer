@@ -18,14 +18,12 @@
         android:id="@+id/day_editor_item_label"
         style="@style/day_editor_text_view"
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:background="@drawable/pressable_view"/>
+        android:layout_weight="1"/>
 
     <TextView
         android:id="@+id/day_editor_item_value"
         style="@style/day_editor_text_view"
         android:layout_marginStart="@dimen/horizontal_margin"
-        android:background="@drawable/pressable_view"
         android:gravity="center"/>
 
     <ImageButton
