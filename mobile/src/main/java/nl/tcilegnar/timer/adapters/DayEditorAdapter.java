@@ -54,19 +54,6 @@ public class DayEditorAdapter extends BaseAdapter implements TimeChangeListener 
         return dayEditorItemView;
     }
 
-    public void startNewDay() {
-        DayEditorItem start = getDayEditorItemStart();
-        DayEditorItem breakStart = getDayEditorItemBreakStart();
-        DayEditorItem breakEnd = getDayEditorItemBreakEnd();
-        DayEditorItem end = getDayEditorItemEnd();
-        start.enable();
-        breakStart.disable();
-        breakEnd.disable();
-        end.disable();
-
-        updateViews();
-    }
-
     private void updateViews() {
         for (DayEditorItemView dayEditorItemView : allDayEditorItemViews) {
             dayEditorItemView.updateEnabled();
@@ -79,33 +66,39 @@ public class DayEditorAdapter extends BaseAdapter implements TimeChangeListener 
         DayEditorItem breakStart = getDayEditorItemBreakStart();
         DayEditorItem breakEnd = getDayEditorItemBreakEnd();
         DayEditorItem end = getDayEditorItemEnd();
-        switch (dayEditorItem) {
-            case Start:
-                start.disable();
-                breakStart.enable();
-                breakEnd.disable();
-                end.enable();
-                break;
-            case BreakStart:
-                start.disable();
-                breakStart.disable();
-                breakEnd.enable();
-                end.disable();
-                break;
-            case BreakEnd:
-                start.disable();
-                breakStart.enable();
-                breakEnd.disable();
-                end.enable();
-                break;
-            case End:
-                start.disable();
-                breakStart.disable();
-                breakEnd.disable();
-                end.disable();
-                break;
+        if (dayEditorItem == null) {
+            start.enable();
+            breakStart.disable();
+            breakEnd.disable();
+            end.disable();
+        } else {
+            switch (dayEditorItem) {
+                case Start:
+                    start.disable();
+                    breakStart.enable();
+                    breakEnd.disable();
+                    end.enable();
+                    break;
+                case BreakStart:
+                    start.disable();
+                    breakStart.disable();
+                    breakEnd.enable();
+                    end.disable();
+                    break;
+                case BreakEnd:
+                    start.disable();
+                    breakStart.enable();
+                    breakEnd.disable();
+                    end.enable();
+                    break;
+                case End:
+                    start.disable();
+                    breakStart.disable();
+                    breakEnd.disable();
+                    end.disable();
+                    break;
+            }
         }
-
         updateViews();
     }
 
@@ -130,7 +123,7 @@ public class DayEditorAdapter extends BaseAdapter implements TimeChangeListener 
     }
 
     public void reset() {
-        startNewDay();
+        onTimeChanged(null);
 
         for (DayEditorItemView dayEditorItemView : allDayEditorItemViews) {
             dayEditorItemView.reset();

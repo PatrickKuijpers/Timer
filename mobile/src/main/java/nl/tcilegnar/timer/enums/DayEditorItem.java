@@ -28,7 +28,6 @@ public enum DayEditorItem {
     private final Storage storage = new Storage();
 
     private boolean enabled = true;
-    private boolean activated = false;
 
     DayEditorItem(@StringRes int nameResId, Key dayEditorHourKey, Key dayEditorMinuteKey) {
         this.name = Res.getString(nameResId);
@@ -61,6 +60,14 @@ public enum DayEditorItem {
         enabled = false;
     }
 
+    public boolean isActivated() {
+        DayEditorItem dayEditorItem = storage.loadActiveDayEditor();
+        return this.equals(dayEditorItem);
+    }
+
+    public void activate() {
+        storage.saveActiveDayEditor(this);
+    }
 
     public Calendar getCurrentTime() {
         return TimerCalendar.getCurrentDateWithTime(getHour(), getMinute());

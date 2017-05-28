@@ -38,7 +38,7 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
         dayEditorList = (ListView) view.findViewById(R.id.day_editor_list);
         dayEditorAdapter = new DayEditorAdapter(getActivity(), this);
         dayEditorList.setAdapter(dayEditorAdapter);
-        dayEditorAdapter.startNewDay();
+        dayEditorAdapter.reset();
 
         initFab(view);
     }

@@ -90,8 +90,9 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
 
     private void updateTime(Calendar newTime) {
         dayEditorItem.setCurrentTime(newTime);
-        setCurrentTimeText(dayEditorItem);
+        dayEditorItem.activate();
         timeChangeListener.onTimeChanged(dayEditorItem);
+        setCurrentTimeText(dayEditorItem);
     }
 
     public void onTimeSet(TimePicker view, int hour, int minute) {
