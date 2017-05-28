@@ -57,9 +57,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     private void initValues(DayEditorItem dayEditorItem) {
         label.setText(dayEditorItem.toString());
         setCurrentTimeText(dayEditorItem);
-        if (dayEditorItem.isActivated()) {
-            activateItem();
-        }
+        setItemActivation(dayEditorItem);
     }
 
     private void setCurrentTimeText(DayEditorItem dayEditorItem) {
@@ -75,6 +73,20 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
             String currentTimeText = CalendarFormat.get24hTimeString(hour, minute);
             timeValue.setText(currentTimeText);
         }
+    }
+
+    private void setItemActivation(DayEditorItem dayEditorItem) {
+        setItemActivation(dayEditorItem.isActivated());
+    }
+
+    private void setItemActivation(boolean isActivated) {
+        dayEditorItem.activate(isActivated);
+        if (isActivated) {
+            imageDone.setVisibility(VISIBLE);
+        } else {
+            imageDone.setVisibility(INVISIBLE);
+        }
+        updateEnabled();
     }
 
     @Override
@@ -95,17 +107,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         dayEditorItem.setCurrentTime(newTime);
         timeChangeListener.onTimeChanged(dayEditorItem);
         setCurrentTimeText(dayEditorItem);
-        activateItem();
-    }
-
-    private void activateItem() {
-        dayEditorItem.activate(true);
-        imageDone.setVisibility(VISIBLE);
-    }
-
-    private void deActivateItem() {
-        dayEditorItem.activate(false);
-        imageDone.setVisibility(INVISIBLE);
+        setItemActivation(true);
     }
 
     public void onTimeSet(TimePicker view, int hour, int minute) {
@@ -124,7 +126,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     }
 
     public void reset() {
-        deActivateItem();
+        setItemActivation(false);
         dayEditorItem.setCurrentTime(NO_TIME, NO_TIME);
         setCurrentTimeText(NO_TIME, NO_TIME);
     }

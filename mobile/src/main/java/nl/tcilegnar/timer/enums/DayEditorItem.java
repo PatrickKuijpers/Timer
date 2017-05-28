@@ -74,6 +74,9 @@ public enum DayEditorItem {
 
     public void activate(boolean activate) {
         storage.saveIsActiveDayEditor(getDayEditorActiveKey(), activate);
+        if (activate) {
+            disable();
+        }
     }
 
     public Calendar getCurrentTime() {
