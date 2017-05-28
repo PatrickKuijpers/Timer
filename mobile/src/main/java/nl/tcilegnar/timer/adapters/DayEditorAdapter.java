@@ -87,7 +87,7 @@ public class DayEditorAdapter extends BaseAdapter implements TimeChangeListener 
                     break;
                 case BreakEnd:
                     start.disable();
-                    breakStart.enable();
+                    breakStart.disable();
                     breakEnd.disable();
                     end.enable();
                     break;

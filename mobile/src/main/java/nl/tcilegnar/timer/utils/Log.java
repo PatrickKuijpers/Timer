@@ -6,7 +6,7 @@ public class Log {
     private static final String BASE_LOGTAG = "TimerLog";
 
     public enum Type {
-        Navigation, Storage
+        NAVIGATION, STORAGE, TEST
     }
 
     public static void v(Type type, String msg) {
