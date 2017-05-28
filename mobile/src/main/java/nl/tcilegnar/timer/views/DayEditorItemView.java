@@ -24,7 +24,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
 
     private final DayEditorItem dayEditorItem;
     private final TimePickerDialogListener timePickerDialogListener;
-    private final TimeChangeListener timeChangeListener;
+    private final ActiveChangeListener activeChangeListener;
 
     private ImageView imageDone;
     private TextView label;
@@ -32,12 +32,12 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     private ImageButton timeValueEditButton;
 
     public DayEditorItemView(Context activityContext, DayEditorItem dayEditorItem, TimePickerDialogListener
-            timePickerDialogListener, TimeChangeListener timeChangeListener) {
+            timePickerDialogListener, ActiveChangeListener activeChangeListener) {
         super(activityContext);
         inflate(activityContext, R.layout.day_editor_item_view, this);
         this.dayEditorItem = dayEditorItem;
         this.timePickerDialogListener = timePickerDialogListener;
-        this.timeChangeListener = timeChangeListener;
+        this.activeChangeListener = activeChangeListener;
 
         initViews();
         initValues(dayEditorItem);
@@ -58,7 +58,10 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     private void initValues(DayEditorItem dayEditorItem) {
         label.setText(dayEditorItem.toString());
         setCurrentTimeText(dayEditorItem);
-        setItemDone(dayEditorItem);
+        setItemDoneView(dayEditorItem);
+        if (dayEditorItem.isActive()) {
+            activeChangeListener.onActiveChanged(dayEditorItem);
+        }
     }
 
     private void setCurrentTimeText(DayEditorItem dayEditorItem) {
@@ -76,19 +79,16 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         }
     }
 
-    private void setItemDone(DayEditorItem dayEditorItem) {
-        boolean isDone = dayEditorItem.isDone();
+    private void setItemDoneView(DayEditorItem dayEditorItem) {
+        setItemDoneView(dayEditorItem.isDone());
+    }
+
+    private void setItemDoneView(boolean isDone) {
         if (isDone) {
             imageDone.setVisibility(VISIBLE);
         } else {
             imageDone.setVisibility(INVISIBLE);
         }
-        activateItem(true);
-    }
-
-    private void activateItem(boolean shouldActivate) {
-        dayEditorItem.setIsDone(shouldActivate);
-        updateEnabledViews(); // TODO: klopt niet!
     }
 
     @Override
@@ -108,12 +108,19 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     private void updateTime(Calendar newTime) {
         dayEditorItem.setCurrentTime(newTime);
         setCurrentTimeText(dayEditorItem);
-        isTimeUpdated();
+        onTimeUpdated();
     }
 
-    private void isTimeUpdated() {
-        timeChangeListener.onTimeChanged(dayEditorItem);
-        activateItem(true);
+    private void onTimeUpdated() {
+        setItemDone(true);
+
+        dayEditorItem.setActive();
+        activeChangeListener.onActiveChanged(dayEditorItem);
+    }
+
+    private void setItemDone(boolean shouldBeDone) {
+        setItemDoneView(shouldBeDone);
+        dayEditorItem.setIsDone(shouldBeDone);
     }
 
     public void onTimeSet(TimePicker view, int hour, int minute) {
@@ -131,10 +138,13 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         }
     }
 
-    public void reset() {
+    public void resetTime() {
         dayEditorItem.setCurrentTime(NO_TIME, NO_TIME);
         setCurrentTimeText(NO_TIME, NO_TIME);
-        activateItem(false);
+        setItemDone(false);
+
+        // TODO
+        activeChangeListener.onActiveChanged(null);
     }
 
     @Override
@@ -146,7 +156,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         void showTimePickerDialog(TimePickerDialog.OnTimeSetListener onTimeSetListener, String tag);
     }
 
-    public interface TimeChangeListener {
-        void onTimeChanged(DayEditorItem dayEditorItem);
+    public interface ActiveChangeListener {
+        void onActiveChanged(DayEditorItem dayEditorItem);
     }
 }

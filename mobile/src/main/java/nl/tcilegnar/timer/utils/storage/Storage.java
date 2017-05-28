@@ -24,7 +24,8 @@ public class Storage extends SharedPrefs {
         DayEditorBreakEndDone(FALSE),
         DayEditorEndHour(DayEditorItem.DEFAULT_HOUR_VALUE),
         DayEditorEndMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
-        DayEditorEndDone(FALSE);
+        DayEditorEndDone(FALSE),
+        ActiveDayEditor(0);
 
         public final int defaultValue;
 
@@ -60,5 +61,21 @@ public class Storage extends SharedPrefs {
     public boolean loadIsDayEditorDone(Key key) {
         boolean defaultValue = key.defaultValue != FALSE;
         return loadBoolean(key.name(), defaultValue);
+    }
+
+    public void saveActiveDayEditor(DayEditorItem dayEditorItem) {
+        String key = Key.ActiveDayEditor.name();
+        save(key, dayEditorItem.name());
+    }
+
+    public DayEditorItem loadActiveDayEditor() {
+        String key = Key.ActiveDayEditor.name();
+        String dayEditorItemName = loadString(key);
+        for (DayEditorItem dayEditorItem : DayEditorItem.values()) {
+            if (dayEditorItem.name().equals(dayEditorItemName)) {
+                return dayEditorItem;
+            }
+        }
+        return DayEditorItem.Start; // Default
     }
 }

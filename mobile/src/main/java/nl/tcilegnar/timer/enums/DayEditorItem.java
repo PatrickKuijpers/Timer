@@ -67,6 +67,15 @@ public enum DayEditorItem {
         }
     }
 
+    public boolean isActive() {
+        DayEditorItem dayEditorItem = storage.loadActiveDayEditor();
+        return this.equals(dayEditorItem);
+    }
+
+    public void setActive() {
+        storage.saveActiveDayEditor(this);
+    }
+
     public boolean isEnabled() {
         return enabled;
     }

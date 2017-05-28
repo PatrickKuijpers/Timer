@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import nl.tcilegnar.timer.enums.DayEditorItem;
 import nl.tcilegnar.timer.views.DayEditorItemView;
 
-import static nl.tcilegnar.timer.views.DayEditorItemView.TimeChangeListener;
+import static nl.tcilegnar.timer.views.DayEditorItemView.ActiveChangeListener;
 import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
 
-public class DayEditorAdapter extends BaseAdapter implements TimeChangeListener {
+public class DayEditorAdapter extends BaseAdapter implements ActiveChangeListener {
     private final Context activityContext;
     private final TimePickerDialogListener timePickerDialogListener;
 
@@ -54,14 +54,8 @@ public class DayEditorAdapter extends BaseAdapter implements TimeChangeListener 
         return dayEditorItemView;
     }
 
-    private void updateViews() {
-        for (DayEditorItemView dayEditorItemView : allDayEditorItemViews) {
-            dayEditorItemView.updateEnabled();
-        }
-    }
-
     @Override
-    public void onTimeChanged(DayEditorItem dayEditorItem) {
+    public void onActiveChanged(DayEditorItem dayEditorItem) {
         DayEditorItem start = getDayEditorItemStart();
         DayEditorItem breakStart = getDayEditorItemBreakStart();
         DayEditorItem breakEnd = getDayEditorItemBreakEnd();
@@ -102,6 +96,12 @@ public class DayEditorAdapter extends BaseAdapter implements TimeChangeListener 
         updateViews();
     }
 
+    private void updateViews() {
+        for (DayEditorItemView dayEditorItemView : allDayEditorItemViews) {
+            dayEditorItemView.updateEnabledViews();
+        }
+    }
+
     private DayEditorItem getDayEditorItemStart() {
         return getItem(0);
     }
@@ -123,10 +123,11 @@ public class DayEditorAdapter extends BaseAdapter implements TimeChangeListener 
     }
 
     public void reset() {
-        onTimeChanged(null);
+        onActiveChanged(null);
 
         for (DayEditorItemView dayEditorItemView : allDayEditorItemViews) {
-            dayEditorItemView.reset();
+            Log.d(TEST, "reset " + dayEditorItemView.toString());
+            dayEditorItemView.resetTime();
         }
     }
 }
