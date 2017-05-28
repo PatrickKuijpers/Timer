@@ -95,28 +95,27 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     @Override
     public void onClick(View view) {
         if (view == imageDone || view == label) {
-            updateCurrentTime();
-            changeDoneAndActiveItem();
+            Calendar currentTime = TimerCalendar.getCurrentDate();
+            updateTime(currentTime);
         } else if (view == timeValue || view == timeValueEditButton) {
             timePickerDialogListener.showTimePickerDialog(this, TIMER_PICKER_DIALOG_TAG);
         }
-    }
-
-    private void updateCurrentTime() {
-        Calendar currentTime = TimerCalendar.getCurrentDate();
-        updateTime(currentTime);
     }
 
     private void updateTime(Calendar newTime) {
         dayEditorItem.setCurrentTime(newTime);
         setCurrentTimeText(dayEditorItem);
         timeChangedListener.onTimeChanged();
+
+        activateItem();
     }
 
-    private void changeDoneAndActiveItem() {
-        setItemDone(true);
-        dayEditorItem.setActive();
-        activeItemChangeListener.onActiveItemChanged(dayEditorItem);
+    private void activateItem() {
+        if (!dayEditorItem.isDone()) {
+            setItemDone(true);
+            dayEditorItem.setActive();
+            activeItemChangeListener.onActiveItemChanged(dayEditorItem);
+        }
     }
 
     private void setItemDone(boolean shouldBeDone) {
