@@ -5,4 +5,6 @@
     <string name="day_editor_item_break_end">Einde pauze</string>
     <string name="day_editor_item_end">Einde werkdag</string>
 
+    <string name="total_label">Totaal:&#160;</string>
+
 </resources>
