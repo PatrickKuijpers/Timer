@@ -57,6 +57,9 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     private void initValues(DayEditorItem dayEditorItem) {
         label.setText(dayEditorItem.toString());
         setCurrentTimeText(dayEditorItem);
+        if (dayEditorItem.isActivated()) {
+            activateItem();
+        }
     }
 
     private void setCurrentTimeText(DayEditorItem dayEditorItem) {
@@ -77,7 +80,6 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     @Override
     public void onClick(View view) {
         if (view == imageDone || view == label) {
-            imageDone.setVisibility(VISIBLE);
             updateCurrentTime();
         } else if (view == timeValue || view == timeValueEditButton) {
             timePickerDialogListener.showTimePickerDialog(this, TIMER_PICKER_DIALOG_TAG);
@@ -91,9 +93,19 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
 
     private void updateTime(Calendar newTime) {
         dayEditorItem.setCurrentTime(newTime);
-        dayEditorItem.activate();
         timeChangeListener.onTimeChanged(dayEditorItem);
         setCurrentTimeText(dayEditorItem);
+        activateItem();
+    }
+
+    private void activateItem() {
+        dayEditorItem.activate(true);
+        imageDone.setVisibility(VISIBLE);
+    }
+
+    private void deActivateItem() {
+        dayEditorItem.activate(false);
+        imageDone.setVisibility(INVISIBLE);
     }
 
     public void onTimeSet(TimePicker view, int hour, int minute) {
@@ -105,18 +117,21 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         if (dayEditorItem.isEnabled()) {
             imageDone.setEnabled(true);
             label.setEnabled(true);
-            timeValue.setEnabled(true);
         } else {
             imageDone.setEnabled(false);
             label.setEnabled(false);
-            timeValue.setEnabled(false);
         }
     }
 
     public void reset() {
-        imageDone.setVisibility(INVISIBLE);
+        deActivateItem();
         dayEditorItem.setCurrentTime(NO_TIME, NO_TIME);
         setCurrentTimeText(NO_TIME, NO_TIME);
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + " with item: " + dayEditorItem.name();
     }
 
     public interface TimePickerDialogListener {

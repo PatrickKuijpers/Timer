@@ -11,22 +11,25 @@ public class Storage extends SharedPrefs {
 
     public enum Key {
         // Deze enums nooit veranderen!
+        DayEditorStartActive(0),
         DayEditorStartHour(DayEditorItem.DEFAULT_HOUR_VALUE),
         DayEditorStartMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
+        DayEditorBreakStartActive(0),
         DayEditorBreakStartHour(DayEditorItem.DEFAULT_HOUR_VALUE),
         DayEditorBreakStartMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
+        DayEditorBreakEndActive(0),
         DayEditorBreakEndHour(DayEditorItem.DEFAULT_HOUR_VALUE),
         DayEditorBreakEndMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
+        DayEditorEndActive(0),
         DayEditorEndHour(DayEditorItem.DEFAULT_HOUR_VALUE),
-        DayEditorEndMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
-        ActiveDayEditor(0);
+        DayEditorEndMinute(DayEditorItem.DEFAULT_MINUTE_VALUE);
 
         public final int defaultValue;
 
         Key(int defaultValue) {
             this.defaultValue = defaultValue;
         }
-    }
+        }
 
     /**
      * In tegenstelling tot andere save & load methoden is bij deze de key als extra parameter vereist. Dit is gedaan om
@@ -48,19 +51,12 @@ public class Storage extends SharedPrefs {
         return loadInt(key.name(), key.defaultValue);
     }
 
-    public void saveActiveDayEditor(DayEditorItem dayEditorItem) {
-        String key = Key.ActiveDayEditor.name();
-        save(key, dayEditorItem.name());
+    public void saveIsActiveDayEditor(Key key, boolean isActive) {
+        save(key.name(), isActive);
     }
 
-    public DayEditorItem loadActiveDayEditor() {
-        String key = Key.ActiveDayEditor.name();
-        String dayEditorItemName = loadString(key);
-        for (DayEditorItem dayEditorItem : DayEditorItem.values()) {
-            if (dayEditorItem.name().equals(dayEditorItemName)) {
-                return dayEditorItem;
-            }
-        }
-        return DayEditorItem.Start; // Default
+    public boolean loadIsActiveDayEditor(Key key) {
+        boolean defaultValue = key.defaultValue != 0;
+        return loadBoolean(key.name(), defaultValue);
     }
 }
