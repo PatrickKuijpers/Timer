@@ -43,6 +43,9 @@ public class ValidationErrorDialogFragment extends DialogFragment {
     }
 
     public void show(FragmentActivity activity) {
-        show(activity.getSupportFragmentManager(), null);
+        String tag = this.getClass().getSimpleName();
+        if (activity.getSupportFragmentManager().findFragmentByTag(tag) == null) {
+            show(activity.getSupportFragmentManager(), tag);
+        }
     }
 }
