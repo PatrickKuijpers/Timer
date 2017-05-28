@@ -1,10 +1,19 @@
 <resources>
 
+    <string name="empty_string"/>
+
     <string name="day_editor_item_start">Start werkdag</string>
     <string name="day_editor_item_break_start">Start pauze</string>
     <string name="day_editor_item_break_end">Einde pauze</string>
     <string name="day_editor_item_end">Einde werkdag</string>
 
     <string name="total_label">Totaal:&#160;</string>
+
+    <string name="ok">OK</string>
+
+    <string name="invalid_input">Onjuiste invoer</string>
+    <string name="validation_error_dialog_message_break_time">De eindtijd van de pauze moet vóór de begintijd vallen</string>
+    <string name="validation_error_dialog_message_working_day_time">De eindtijd van de werkdag moet vóór de begintijd vallen</string>
+    <string name="validation_error_dialog_message_total_time">De combinatie van ingevoerde tijden zorgt voor een negatieve totaaltijd</string>
 
 </resources>

@@ -18,6 +18,9 @@ import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.adapters.DayEditorAdapter;
 import nl.tcilegnar.timer.dialogs.TimePickerFragment;
 import nl.tcilegnar.timer.enums.DayEditorItem;
+import nl.tcilegnar.timer.fragments.dialogs.BreakTimeValidationErrorDialog;
+import nl.tcilegnar.timer.fragments.dialogs.TotalTimeValidationErrorDialog;
+import nl.tcilegnar.timer.fragments.dialogs.WorkingDayTimeValidationErrorDialog;
 import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
 
 import static nl.tcilegnar.timer.views.DayEditorItemView.NO_TIME;
@@ -43,21 +46,40 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
     private void setTotalTime() {
         int workingDayTimeInMinutes = getWorkingDayTimeInMinutes();
         int breakTimeInMinutes = getBreakTimeInMinutes();
+        // TODO: validatie waarbij tijden workingDayTime vergeleken worden met breakTime
+        // het gaat nu bv. nog fout wanneer de breakTime BUITEN de workingDayTime ligt en groter is, of wanneer een
+        // van beide breakTime tijden buiten de workingDayTime tijden liggen
 
+        String timeString = getTimeString(workingDayTimeInMinutes, breakTimeInMinutes);
+        totalValueView.setText(timeString);
+    }
+
+    private String getTimeString(int workingDayTimeInMinutes, int breakTimeInMinutes) {
+        String timeString;
         if (workingDayTimeInMinutes != NO_TIME) {
             int totalTimeInMinutes = getTotalTimeInMinutes(workingDayTimeInMinutes, breakTimeInMinutes);
-            String timeString = getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
-            totalValueView.setText(timeString);
+            if (totalTimeInMinutes < 0) {
+                new TotalTimeValidationErrorDialog().show(getActivity());
+                timeString = "";
+            } else {
+                timeString = getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
+            }
         } else {
-            totalValueView.setText("");
+            timeString = "";
         }
+        return timeString;
     }
 
     private int getWorkingDayTimeInMinutes() {
         try {
             Calendar startTime = DayEditorItem.Start.getCurrentTime();
             Calendar endTime = DayEditorItem.End.getCurrentTime();
-            return getDateDiff(startTime, endTime, TimeUnit.MINUTES);
+            int dateDiff = getDateDiff(startTime, endTime, TimeUnit.MINUTES);
+            if (dateDiff < 0) {
+                new WorkingDayTimeValidationErrorDialog().show(getActivity());
+                return NO_TIME;
+            }
+            return dateDiff;
         } catch (DayEditorItem.TimeNotSetException e) {
             return NO_TIME;
         }
@@ -67,7 +89,12 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
         try {
             Calendar breakStartTime = DayEditorItem.BreakStart.getCurrentTime();
             Calendar breakEndTime = DayEditorItem.BreakEnd.getCurrentTime();
-            return getDateDiff(breakStartTime, breakEndTime, TimeUnit.MINUTES);
+            int dateDiff = getDateDiff(breakStartTime, breakEndTime, TimeUnit.MINUTES);
+            if (dateDiff < 0) {
+                new BreakTimeValidationErrorDialog().show(getActivity());
+                return NO_TIME;
+            }
+            return dateDiff;
         } catch (DayEditorItem.TimeNotSetException e) {
             return NO_TIME;
         }
