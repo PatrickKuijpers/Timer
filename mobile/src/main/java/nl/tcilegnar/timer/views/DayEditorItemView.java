@@ -59,9 +59,6 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         label.setText(dayEditorItem.toString());
         setCurrentTimeText(dayEditorItem);
         setItemDoneView(dayEditorItem);
-        if (dayEditorItem.isActive()) {
-            activeChangeListener.onActiveChanged(dayEditorItem);
-        }
     }
 
     private void setCurrentTimeText(DayEditorItem dayEditorItem) {
@@ -142,9 +139,6 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         dayEditorItem.setCurrentTime(NO_TIME, NO_TIME);
         setCurrentTimeText(NO_TIME, NO_TIME);
         setItemDone(false);
-
-        // TODO
-        activeChangeListener.onActiveChanged(null);
     }
 
     @Override

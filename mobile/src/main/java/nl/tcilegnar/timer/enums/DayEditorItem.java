@@ -62,9 +62,6 @@ public enum DayEditorItem {
 
     public void setIsDone(boolean isDone) {
         storage.saveIsDayEditorDone(getDayEditorDoneKey(), isDone);
-        if (isDone) {
-            disable();
-        }
     }
 
     public boolean isActive() {

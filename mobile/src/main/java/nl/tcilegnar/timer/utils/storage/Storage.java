@@ -76,6 +76,11 @@ public class Storage extends SharedPrefs {
                 return dayEditorItem;
             }
         }
-        return DayEditorItem.Start; // Default
+        return null; // Default
+    }
+
+    public void deleteActiveDayEditor() {
+        String key = Key.ActiveDayEditor.name();
+        save(key, "none");
     }
 }
