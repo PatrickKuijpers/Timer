@@ -1,5 +1,7 @@
 package nl.tcilegnar.timer.fragments;
 
+import com.orm.SugarRecord;
+
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import nl.tcilegnar.timer.App;
 import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.adapters.DayEditorAdapter;
 import nl.tcilegnar.timer.dialogs.TimePickerFragment;
@@ -27,15 +27,16 @@ import nl.tcilegnar.timer.fragments.dialogs.TotalTimeValidationErrorDialog;
 import nl.tcilegnar.timer.fragments.dialogs.WorkingDayTimeValidationErrorDialog;
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
 import nl.tcilegnar.timer.utils.Log;
-import nl.tcilegnar.timer.utils.database.DatabaseUtil;
+import nl.tcilegnar.timer.utils.database.DatabaseSaveUtil;
 import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static nl.tcilegnar.timer.views.DayEditorItemView.INVALID_TIME;
 import static nl.tcilegnar.timer.views.DayEditorItemView.NO_TIME;
 import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
 
 public class DayEditorFragment extends Fragment implements TimePickerDialogListener, TimeChangedListener {
+    private final String TAG = this.getClass().getSimpleName();
+
     private ListView dayEditorList;
     private DayEditorAdapter dayEditorAdapter;
     private TextView totalValueView;
@@ -151,17 +152,12 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isSaved = saveCurrentDayValues();
-
-                if (isSaved) {
-                    resetCurrentDay();
-                }
+                saveCurrentDayValues();
             }
         });
     }
 
-    private boolean saveCurrentDayValues() {
-        boolean isSaved = false;
+    private void saveCurrentDayValues() {
         try {
             List<Calendar> times = new ArrayList<>();
             times.add(DayEditorItem.Start.getCurrentTime());
@@ -170,26 +166,35 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
             times.add(DayEditorItem.End.getCurrentTime());
             Calendar currentDay = getCurrentDay();
             CurrentDayMillis currentDayMillis = new CurrentDayMillis(currentDay, times);
-            Log.d(this.getClass().getSimpleName(), currentDayMillis.toString());
+            Log.d(TAG, currentDayMillis.toString());
 
-            DatabaseUtil util = new DatabaseUtil(new DatabaseUtil.AsyncResponse() {
+            DatabaseSaveUtil util = new DatabaseSaveUtil(new DatabaseSaveUtil.AsyncResponse() {
                 @Override
-                public void processFinish(Boolean success) {
-                    if (!success) {
-                        Toast.makeText(App.getContext(), "Could not save values, invalid input!", LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(App.getContext(), "Saved success!", LENGTH_SHORT).show();
+                public void processFinish(Long savedId, boolean success) {
+                    if (success) {
+                        Log.i(TAG, "new: " + savedId);
+                        Log.i(TAG, "---");
+                        logAll();
+                        resetCurrentDay();
                     }
-                    //                        isSaved = success; // TODO: async, dus geen return!
                 }
             });
             util.execute(currentDayMillis);
-
-            isSaved = true;
         } catch (DayEditorItem.TimeNotSetException e) {
             e.printStackTrace();
         }
-        return isSaved;
+    }
+
+    private void logAll() {
+        try {
+            List<CurrentDayMillis> currentDayMillisList = SugarRecord.listAll(CurrentDayMillis.class);
+            Log.i(TAG, "listAll: " + currentDayMillisList.size());
+            for (CurrentDayMillis currentDayMillis : currentDayMillisList) {
+                Log.i(TAG, currentDayMillis.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Calendar getCurrentDay() throws DayEditorItem.TimeNotSetException {
