@@ -1,18 +1,32 @@
 package nl.tcilegnar.timer;
 
-import android.app.Application;
+import com.orm.SugarApp;
+
 import android.content.Context;
 
-public class App extends Application {
+public class App extends SugarApp {
     private static Context context;
 
     @Override
     public void onCreate() {
-        super.onCreate();
+        if (callSuper()) {
+            super.onCreate();
+        }
         context = getApplicationContext();
     }
 
     public static Context getContext() {
         return context;
+    }
+
+    @Override
+    public void onTerminate() {
+        if (callSuper()) {
+            super.onTerminate();
+        }
+    }
+
+    protected boolean callSuper() {
+        return true;
     }
 }
