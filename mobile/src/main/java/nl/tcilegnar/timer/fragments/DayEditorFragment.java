@@ -27,6 +27,7 @@ import nl.tcilegnar.timer.fragments.dialogs.TotalTimeValidationErrorDialog;
 import nl.tcilegnar.timer.fragments.dialogs.WorkingDayTimeValidationErrorDialog;
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
 import nl.tcilegnar.timer.utils.Log;
+import nl.tcilegnar.timer.utils.database.DatabaseUtil;
 import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
 
 import static android.widget.Toast.LENGTH_SHORT;
@@ -154,30 +155,41 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
 
                 if (isSaved) {
                     resetCurrentDay();
-                } else {
-                    Toast.makeText(App.getContext(), "Could not save values, invalid input!", LENGTH_SHORT).show();
                 }
-            }
-
-            private boolean saveCurrentDayValues() {
-                boolean isSaved = false;
-                try {
-                    List<Calendar> times = new ArrayList<>();
-                    times.add(DayEditorItem.Start.getCurrentTime());
-                    times.add(DayEditorItem.BreakStart.getCurrentTime());
-                    times.add(DayEditorItem.BreakEnd.getCurrentTime());
-                    times.add(DayEditorItem.End.getCurrentTime());
-                    Calendar currentDay = getCurrentDay();
-                    CurrentDayMillis currentDayMillis = new CurrentDayMillis(currentDay, times);
-                    currentDayMillis.save();
-                    Log.d(this.getClass().getSimpleName(), currentDayMillis.toString());
-                    isSaved = true;
-                } catch (DayEditorItem.TimeNotSetException e) {
-                    e.printStackTrace();
-                }
-                return isSaved;
             }
         });
+    }
+
+    private boolean saveCurrentDayValues() {
+        boolean isSaved = false;
+        try {
+            List<Calendar> times = new ArrayList<>();
+            times.add(DayEditorItem.Start.getCurrentTime());
+            times.add(DayEditorItem.BreakStart.getCurrentTime());
+            times.add(DayEditorItem.BreakEnd.getCurrentTime());
+            times.add(DayEditorItem.End.getCurrentTime());
+            Calendar currentDay = getCurrentDay();
+            CurrentDayMillis currentDayMillis = new CurrentDayMillis(currentDay, times);
+            Log.d(this.getClass().getSimpleName(), currentDayMillis.toString());
+
+            DatabaseUtil util = new DatabaseUtil(new DatabaseUtil.AsyncResponse() {
+                @Override
+                public void processFinish(Boolean success) {
+                    if (!success) {
+                        Toast.makeText(App.getContext(), "Could not save values, invalid input!", LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(App.getContext(), "Saved success!", LENGTH_SHORT).show();
+                    }
+                    //                        isSaved = success; // TODO: async, dus geen return!
+                }
+            });
+            util.execute(currentDayMillis);
+
+            isSaved = true;
+        } catch (DayEditorItem.TimeNotSetException e) {
+            e.printStackTrace();
+        }
+        return isSaved;
     }
 
     private Calendar getCurrentDay() throws DayEditorItem.TimeNotSetException {
