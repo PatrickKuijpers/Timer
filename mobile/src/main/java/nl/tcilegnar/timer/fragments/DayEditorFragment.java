@@ -75,15 +75,22 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         dayEditorAdapter = new DayEditorAdapter(getActivity(), this, this, this);
         dayEditorList.setAdapter(dayEditorAdapter);
 
-        initFab(view);
+        initFabs(view);
     }
 
-    private void initFab(View view) {
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+    private void initFabs(View view) {
+        FloatingActionButton saveButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_save);
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveCurrentDayValues();
+            }
+        });
+        FloatingActionButton clearButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_clear);
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetCurrentDay();
             }
         });
     }
