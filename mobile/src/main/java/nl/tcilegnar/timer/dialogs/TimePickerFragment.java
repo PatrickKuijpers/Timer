@@ -4,26 +4,17 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.Calendar;
 
 import nl.tcilegnar.timer.utils.TimerCalendar;
 
 public class TimePickerFragment extends DialogFragment {
-    private TimePickerDialog.OnTimeSetListener onTimeSetListener;
+    private OnTimeSetListener onTimeSetListener;
     private Calendar timeToShow = TimerCalendar.getCurrentDay();
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -33,7 +24,7 @@ public class TimePickerFragment extends DialogFragment {
                 (getActivity()));
     }
 
-    public void setOnTimeSetListener(TimePickerDialog.OnTimeSetListener onTimeSetListener) {
+    public void setOnTimeSetListener(OnTimeSetListener onTimeSetListener) {
         this.onTimeSetListener = onTimeSetListener;
     }
 

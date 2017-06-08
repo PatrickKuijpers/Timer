@@ -13,6 +13,14 @@ public class TimerCalendar {
         return cal;
     }
 
+    public static Calendar getCalendarWithDate(int year, int month, int dayOfMonth) {
+        Calendar cal = getCalendarCurrentDayWithTime(0, 0);
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        return cal;
+    }
+
     public static Calendar getCalendarCurrentDayWithTime(int hour, int minute) {
         Calendar currentDate = getCurrentDay();
         return getCalendarWithTime(currentDate, hour, minute);

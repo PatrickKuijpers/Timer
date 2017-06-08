@@ -2,13 +2,16 @@ package nl.tcilegnar.timer.fragments;
 
 import com.orm.SugarRecord;
 
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.adapters.DayEditorAdapter;
+import nl.tcilegnar.timer.dialogs.DatePickerFragment;
 import nl.tcilegnar.timer.dialogs.TimePickerFragment;
 import nl.tcilegnar.timer.enums.DayEditorItem;
 import nl.tcilegnar.timer.fragments.dialogs.BreakTimeValidationErrorDialog;
@@ -42,16 +46,19 @@ import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListene
 public class DayEditorFragment extends Fragment implements CurrentDateListener, TimePickerDialogListener,
         TimeChangedListener {
     private final String TAG = this.getClass().getSimpleName();
+    private static final String DATE_PICKER_DIALOG_TAG = "DATE_PICKER_DIALOG_TAG";
 
     private ListView dayEditorList;
     private DayEditorAdapter dayEditorAdapter;
     private TextView totalValueView;
     private TextView totalValueLabelView;
     private TextView currenDayValueView;
+    private FloatingActionButton saveButton;
+    private FloatingActionButton clearButton;
 
     private final Storage storage = new Storage();
     // TODO: voorlopig enkel huidige datum gebruiken ipv evt laden uit storage (voor andere dag?)
-    private final Calendar currentDate = TimerCalendar.getCurrentDay(); // storage.loadDayEditorCurrentDay()
+    private Calendar currentDate = TimerCalendar.getCurrentDay(); // storage.loadDayEditorCurrentDay()
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,23 +78,30 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
         currenDayValueView = (TextView) view.findViewById(R.id.current_day_value);
 
+        saveButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_save);
+        clearButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_clear);
+
         dayEditorList = (ListView) view.findViewById(R.id.day_editor_list);
         dayEditorAdapter = new DayEditorAdapter(getActivity(), this, this, this);
         dayEditorList.setAdapter(dayEditorAdapter);
 
-        initFabs(view);
+        setListeners();
     }
 
-    private void initFabs(View view) {
-        FloatingActionButton saveButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_save);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+    private void setListeners() {
+        currenDayValueView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
+        saveButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveCurrentDayValues();
             }
         });
-        FloatingActionButton clearButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_clear);
-        clearButton.setOnClickListener(new View.OnClickListener() {
+        clearButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 resetCurrentDay();
@@ -96,6 +110,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     }
 
     private void setCurrentDate(Calendar date) {
+        currentDate = date;
         String currentDateString = DateFormatter.format(date, DATE_FORMAT_SPACES_1_JAN_2000);
         currenDayValueView.setText(currentDateString);
         storage.saveDayEditorCurrentDay(date);
@@ -202,6 +217,18 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         } else {
             return TimerCalendar.getCalendarWithCurrentTime(currentDate);
         }
+    }
+
+    public void showDatePickerDialog() {
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setOnDateSetListener(new OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                Calendar newCurrentDate = TimerCalendar.getCalendarWithDate(year, month, dayOfMonth);
+                setCurrentDate(newCurrentDate);
+            }
+        });
+        datePickerFragment.show(getActivity().getFragmentManager(), DATE_PICKER_DIALOG_TAG, currentDate);
     }
 
     private void saveCurrentDayValues() {
