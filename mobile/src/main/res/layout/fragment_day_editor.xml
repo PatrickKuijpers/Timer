@@ -49,20 +49,22 @@
         android:dividerHeight="@dimen/vertical_margin"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/day_editor_button_save"
+        android:id="@+id/day_editor_button_clear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_save"/>
+        android:backgroundTint="@color/red"
+        app:srcCompat="@android:drawable/ic_menu_delete"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/day_editor_button_clear"
+        android:id="@+id/day_editor_button_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_delete"/>
+        android:backgroundTint="@color/green_medium"
+        app:srcCompat="@android:drawable/ic_menu_save"/>
 
 </RelativeLayout>
