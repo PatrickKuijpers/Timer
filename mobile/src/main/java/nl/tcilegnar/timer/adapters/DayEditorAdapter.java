@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import nl.tcilegnar.timer.enums.DayEditorItem;
 import nl.tcilegnar.timer.utils.storage.Storage;
 import nl.tcilegnar.timer.views.DayEditorItemView;
+import nl.tcilegnar.timer.views.DayEditorItemView.CurrentDateListener;
 import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
 
 import static nl.tcilegnar.timer.views.DayEditorItemView.ActiveItemChangeListener;
@@ -17,14 +18,17 @@ import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListene
 
 public class DayEditorAdapter extends BaseAdapter implements ActiveItemChangeListener {
     private final Context activityContext;
+    private final CurrentDateListener currentDateListener;
     private final TimePickerDialogListener timePickerDialogListener;
     private final TimeChangedListener timeChangedListener;
 
     private ArrayList<DayEditorItemView> allDayEditorItemViews = new ArrayList<>();
 
-    public DayEditorAdapter(Context activityContext, TimePickerDialogListener timePickerDialogListener,
-                            TimeChangedListener timeChangedListener) {
+    public DayEditorAdapter(Context activityContext, CurrentDateListener currentDateListener,
+                            TimePickerDialogListener timePickerDialogListener, TimeChangedListener
+                                    timeChangedListener) {
         this.activityContext = activityContext;
+        this.currentDateListener = currentDateListener;
         this.timePickerDialogListener = timePickerDialogListener;
         this.timeChangedListener = timeChangedListener;
     }
@@ -50,8 +54,8 @@ public class DayEditorAdapter extends BaseAdapter implements ActiveItemChangeLis
 
         DayEditorItem dayEditorItem = getItem(position);
         if (convertView == null) {
-            dayEditorItemView = new DayEditorItemView(activityContext, dayEditorItem, timePickerDialogListener,
-                    timeChangedListener, this);
+            dayEditorItemView = new DayEditorItemView(activityContext, dayEditorItem, currentDateListener,
+                    timePickerDialogListener, timeChangedListener, this);
             allDayEditorItemViews.add(dayEditorItemView);
 
             // Om de een of andere rede worden sommige views meerdere keren geinitialiseerd, dus >=

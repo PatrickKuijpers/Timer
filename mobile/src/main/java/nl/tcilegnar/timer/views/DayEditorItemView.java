@@ -24,6 +24,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     public static final int INVALID_TIME = -2;
 
     private final DayEditorItem dayEditorItem;
+    private final CurrentDateListener currentDateListener;
     private final TimePickerDialogListener timePickerDialogListener;
     private final TimeChangedListener timeChangedListener;
     private final ActiveItemChangeListener activeItemChangeListener;
@@ -33,12 +34,13 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     private TextView timeValue;
     private ImageButton timeValueEditButton;
 
-    public DayEditorItemView(Context activityContext, DayEditorItem dayEditorItem, TimePickerDialogListener
-            timePickerDialogListener, TimeChangedListener timeChangedListener, ActiveItemChangeListener
-            activeItemChangeListener) {
+    public DayEditorItemView(Context activityContext, DayEditorItem dayEditorItem, CurrentDateListener
+            currentDateListener, TimePickerDialogListener timePickerDialogListener, TimeChangedListener
+            timeChangedListener, ActiveItemChangeListener activeItemChangeListener) {
         super(activityContext);
         inflate(activityContext, R.layout.day_editor_item_view, this);
         this.dayEditorItem = dayEditorItem;
+        this.currentDateListener = currentDateListener;
         this.timePickerDialogListener = timePickerDialogListener;
         this.timeChangedListener = timeChangedListener;
         this.activeItemChangeListener = activeItemChangeListener;
@@ -95,8 +97,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     @Override
     public void onClick(View view) {
         if (view == imageDone || view == label) {
-            Calendar currentTime = TimerCalendar.getCurrentDate();
-            updateTime(currentTime);
+            updateTime(getCurrentDate());
         } else if (view == timeValue || view == timeValueEditButton) {
             timePickerDialogListener.showTimePickerDialog(this, TIMER_PICKER_DIALOG_TAG);
         }
@@ -124,7 +125,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     }
 
     public void onTimeSet(TimePicker view, int hour, int minute) {
-        Calendar newTime = TimerCalendar.getCurrentDateWithTime(hour, minute);
+        Calendar newTime = TimerCalendar.getCalendarWithTime(getCurrentDate(), hour, minute);
         updateTime(newTime);
     }
 
@@ -145,6 +146,10 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
         setItemDone(false);
     }
 
+    public Calendar getCurrentDate() {
+        return currentDateListener.getCurrentDate();
+    }
+
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + " with item: " + dayEditorItem.name();
@@ -152,6 +157,10 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
 
     public interface TimePickerDialogListener {
         void showTimePickerDialog(TimePickerDialog.OnTimeSetListener onTimeSetListener, String tag);
+    }
+
+    public interface CurrentDateListener {
+        Calendar getCurrentDate();
     }
 
     public interface TimeChangedListener {

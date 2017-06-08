@@ -1,19 +1,26 @@
 package nl.tcilegnar.timer.utils;
 
 import java.util.Calendar;
-import java.util.Locale;
 
 public class TimerCalendar {
-    private static final Locale LOCALE = Locale.GERMANY;
-
-    public static Calendar getCurrentDate() {
-        return Calendar.getInstance(LOCALE);
+    public static Calendar getCurrentDay() {
+        return Calendar.getInstance(MyLocale.getLocale());
     }
 
-    public static Calendar getCurrentDateWithTime(int hour, int minute) {
-        Calendar currentDate = getCurrentDate();
-        currentDate.set(Calendar.HOUR_OF_DAY, hour);
-        currentDate.set(Calendar.MINUTE, minute);
-        return currentDate;
+    public static Calendar getCalendarInMillis(long timeInMillis) {
+        Calendar cal = getCurrentDay();
+        cal.setTimeInMillis(timeInMillis);
+        return cal;
+    }
+
+    public static Calendar getCalendarCurrentDayWithTime(int hour, int minute) {
+        Calendar currentDate = getCurrentDay();
+        return getCalendarWithTime(currentDate, hour, minute);
+    }
+
+    public static Calendar getCalendarWithTime(Calendar cal, int hour, int minute) {
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        return cal;
     }
 }

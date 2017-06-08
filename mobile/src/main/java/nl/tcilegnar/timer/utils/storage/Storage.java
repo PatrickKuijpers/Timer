@@ -1,6 +1,9 @@
 package nl.tcilegnar.timer.utils.storage;
 
+import java.util.Calendar;
+
 import nl.tcilegnar.timer.enums.DayEditorItem;
+import nl.tcilegnar.timer.utils.TimerCalendar;
 
 public class Storage extends SharedPrefs {
     private static final int FALSE = 0;
@@ -13,6 +16,7 @@ public class Storage extends SharedPrefs {
 
     public enum Key {
         // Deze enums nooit veranderen!
+        DayEditorCurrentDay(0),
         DayEditorStartHour(DayEditorItem.DEFAULT_HOUR_VALUE),
         DayEditorStartMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
         DayEditorStartDone(FALSE),
@@ -32,6 +36,17 @@ public class Storage extends SharedPrefs {
         Key(int defaultValue) {
             this.defaultValue = defaultValue;
         }
+    }
+
+    public void saveDayEditorCurrentDay(Calendar calendar) {
+        long value = calendar.getTimeInMillis();
+        save(Key.DayEditorCurrentDay.name(), value);
+    }
+
+    public Calendar loadDayEditorCurrentDay() {
+        Key key = Key.DayEditorCurrentDay;
+        long value = loadLong(key.name(), key.defaultValue);
+        return TimerCalendar.getCalendarInMillis(value);
     }
 
     /**

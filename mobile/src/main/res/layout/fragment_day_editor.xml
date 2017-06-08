@@ -5,31 +5,45 @@
     style="@style/fragment_full_screen_with_scrollview"
     tools:context="nl.tcilegnar.timer.fragments.DayEditorFragment">
 
-    <LinearLayout
-        android:id="@+id/total_container"
+    <RelativeLayout
+        android:id="@+id/total_and_day_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/vertical_margin"
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/total_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/total_label"
-            android:textSize="@dimen/text_size_day_editor"/>
+            android:layout_alignParentEnd="true"
+            android:textSize="@dimen/text_size_day_editor"
+            android:visibility="gone"/>
 
         <TextView
-            android:id="@+id/total_value"
+            android:id="@+id/total_value_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/total_value"
+            android:text="@string/total_label"
+            android:textSize="@dimen/text_size_day_editor"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/current_day_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/total_value_label"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="@dimen/text_size_day_editor"/>
-    </LinearLayout>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/day_editor_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/total_container"
+        android:layout_below="@id/total_and_day_container"
         android:layout_marginTop="@dimen/vertical_margin"
         android:divider="@android:color/transparent"
         android:dividerHeight="@dimen/vertical_margin"/>

@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import nl.tcilegnar.timer.utils.TimerCalendar;
+
 public class CurrentDayMillis extends SugarRecord<CurrentDayMillis> {
     private Long dayInMillis;
     private String timesInMillis;
@@ -37,7 +39,7 @@ public class CurrentDayMillis extends SugarRecord<CurrentDayMillis> {
     }
 
     public Calendar getDay() {
-        return getCalendar(dayInMillis);
+        return TimerCalendar.getCalendarInMillis(dayInMillis);
     }
 
     public List<Long> getTimesMillis() {
@@ -47,15 +49,9 @@ public class CurrentDayMillis extends SugarRecord<CurrentDayMillis> {
     public List<Calendar> getTimes() {
         List<Calendar> times = new ArrayList<>();
         for (Long timeMillis : timesInMillisFromString(timesInMillis)) {
-            times.add(getCalendar(timeMillis));
+            times.add(TimerCalendar.getCalendarInMillis(timeMillis));
         }
         return times;
-    }
-
-    private Calendar getCalendar(Long timeInMillis) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(timeInMillis);
-        return cal;
     }
 
     private List<Long> timesInMillisFromString(String stringFrom) {

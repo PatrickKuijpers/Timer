@@ -25,7 +25,7 @@ public class TimePickerFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Calendar currentTime = TimerCalendar.getCurrentDate();
+        Calendar currentTime = TimerCalendar.getCurrentDay();
         int hour = currentTime.get(Calendar.HOUR_OF_DAY);
         int minute = currentTime.get(Calendar.MINUTE);
 

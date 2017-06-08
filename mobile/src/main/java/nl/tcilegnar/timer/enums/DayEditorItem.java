@@ -91,7 +91,7 @@ public enum DayEditorItem {
         if (hour == DEFAULT_HOUR_VALUE || minute == DEFAULT_MINUTE_VALUE) {
             throw new TimeNotSetException();
         }
-        return TimerCalendar.getCurrentDateWithTime(hour, minute);
+        return TimerCalendar.getCalendarCurrentDayWithTime(hour, minute);
     }
 
     public int getHour() {

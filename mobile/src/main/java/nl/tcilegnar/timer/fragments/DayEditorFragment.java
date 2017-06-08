@@ -15,7 +15,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import nl.tcilegnar.timer.R;
@@ -26,20 +25,33 @@ import nl.tcilegnar.timer.fragments.dialogs.BreakTimeValidationErrorDialog;
 import nl.tcilegnar.timer.fragments.dialogs.TotalTimeValidationErrorDialog;
 import nl.tcilegnar.timer.fragments.dialogs.WorkingDayTimeValidationErrorDialog;
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
+import nl.tcilegnar.timer.utils.DateFormatter;
 import nl.tcilegnar.timer.utils.Log;
+import nl.tcilegnar.timer.utils.MyLocale;
+import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.database.DatabaseSaveUtil;
+import nl.tcilegnar.timer.utils.storage.Storage;
+import nl.tcilegnar.timer.views.DayEditorItemView.CurrentDateListener;
 import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
 
+import static nl.tcilegnar.timer.utils.DateFormatter.DATE_FORMAT_SPACES_1_JAN_2000;
 import static nl.tcilegnar.timer.views.DayEditorItemView.INVALID_TIME;
 import static nl.tcilegnar.timer.views.DayEditorItemView.NO_TIME;
 import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
 
-public class DayEditorFragment extends Fragment implements TimePickerDialogListener, TimeChangedListener {
+public class DayEditorFragment extends Fragment implements CurrentDateListener, TimePickerDialogListener,
+        TimeChangedListener {
     private final String TAG = this.getClass().getSimpleName();
 
     private ListView dayEditorList;
     private DayEditorAdapter dayEditorAdapter;
     private TextView totalValueView;
+    private TextView totalValueLabelView;
+    private TextView currenDayValueView;
+
+    private final Storage storage = new Storage();
+    // TODO: voorlopig enkel huidige datum gebruiken ipv evt laden uit storage (voor andere dag?)
+    private final Calendar currentDate = TimerCalendar.getCurrentDay(); // storage.loadDayEditorCurrentDay()
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,7 +62,36 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
+        setCurrentDate(currentDate);
         setTotalTime();
+    }
+
+    private void initViews(View view) {
+        totalValueView = (TextView) view.findViewById(R.id.total_value);
+        totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
+        currenDayValueView = (TextView) view.findViewById(R.id.current_day_value);
+
+        dayEditorList = (ListView) view.findViewById(R.id.day_editor_list);
+        dayEditorAdapter = new DayEditorAdapter(getActivity(), this, this, this);
+        dayEditorList.setAdapter(dayEditorAdapter);
+
+        initFab(view);
+    }
+
+    private void initFab(View view) {
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveCurrentDayValues();
+            }
+        });
+    }
+
+    private void setCurrentDate(Calendar date) {
+        String currentDateString = DateFormatter.format(date, DATE_FORMAT_SPACES_1_JAN_2000);
+        currenDayValueView.setText(currentDateString);
+        storage.saveDayEditorCurrentDay(date);
     }
 
     private void setTotalTime() {
@@ -61,7 +102,14 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
         // van beide breakTime tijden buiten de workingDayTime tijden liggen
 
         String timeString = getTimeString(workingDayTimeInMinutes, breakTimeInMinutes);
-        totalValueView.setText(timeString);
+        if (!timeString.isEmpty()) {
+            totalValueView.setText(timeString);
+            totalValueView.setVisibility(View.VISIBLE);
+            totalValueLabelView.setVisibility(View.VISIBLE);
+        } else {
+            totalValueView.setVisibility(View.GONE);
+            totalValueLabelView.setVisibility(View.GONE);
+        }
     }
 
     private String getTimeString(int workingDayTimeInMinutes, int breakTimeInMinutes) {
@@ -127,17 +175,7 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
     public static String getReadableTimeStringHoursAndMinutes(int timeInMinutes) {
         int hours = timeInMinutes / 60;
         int minutes = timeInMinutes % 60;
-        return String.format(Locale.getDefault(), "%d:%02d", hours, minutes);
-    }
-
-    private void initViews(View view) {
-        totalValueView = (TextView) view.findViewById(R.id.total_value);
-
-        dayEditorList = (ListView) view.findViewById(R.id.day_editor_list);
-        dayEditorAdapter = new DayEditorAdapter(getActivity(), this, this);
-        dayEditorList.setAdapter(dayEditorAdapter);
-
-        initFab(view);
+        return String.format(MyLocale.getLocaleForTranslationAndSigns(), "%d:%02d", hours, minutes);
     }
 
     @Override
@@ -147,16 +185,6 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
         timePickerFragment.show(getActivity().getFragmentManager(), tag);
     }
 
-    private void initFab(View view) {
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveCurrentDayValues();
-            }
-        });
-    }
-
     private void saveCurrentDayValues() {
         try {
             List<Calendar> times = new ArrayList<>();
@@ -164,16 +192,13 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
             times.add(DayEditorItem.BreakStart.getCurrentTime());
             times.add(DayEditorItem.BreakEnd.getCurrentTime());
             times.add(DayEditorItem.End.getCurrentTime());
-            Calendar currentDay = getCurrentDay();
-            CurrentDayMillis currentDayMillis = new CurrentDayMillis(currentDay, times);
+            CurrentDayMillis currentDayMillis = new CurrentDayMillis(currentDate, times);
             Log.d(TAG, currentDayMillis.toString());
 
             DatabaseSaveUtil util = new DatabaseSaveUtil(new DatabaseSaveUtil.AsyncResponse() {
                 @Override
                 public void processFinish(Long savedId, boolean success) {
                     if (success) {
-                        Log.i(TAG, "new: " + savedId);
-                        Log.i(TAG, "---");
                         logAll();
                         resetCurrentDay();
                     }
@@ -197,18 +222,6 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
         }
     }
 
-    private Calendar getCurrentDay() throws DayEditorItem.TimeNotSetException {
-        // TODO: Current day based on startTime. Should be independant!
-        Calendar startTime = DayEditorItem.Start.getCurrentTime();
-
-        Calendar currentDay = Calendar.getInstance();
-        currentDay.clear();
-        currentDay.set(Calendar.YEAR, startTime.get(Calendar.YEAR));
-        currentDay.set(Calendar.MONTH, startTime.get(Calendar.MONTH));
-        currentDay.set(Calendar.DAY_OF_YEAR, startTime.get(Calendar.DAY_OF_YEAR));
-        return currentDay;
-    }
-
     private void resetCurrentDay() {
         dayEditorAdapter.reset();
     }
@@ -216,5 +229,10 @@ public class DayEditorFragment extends Fragment implements TimePickerDialogListe
     @Override
     public void onTimeChanged() {
         setTotalTime();
+    }
+
+    @Override
+    public Calendar getCurrentDate() {
+        return currentDate;
     }
 }
