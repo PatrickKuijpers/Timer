@@ -25,4 +25,9 @@ public class TimerCalendar {
         cal.set(Calendar.MILLISECOND, 0);
         return cal;
     }
+
+    public static Calendar getCalendarWithCurrentTime(Calendar cal) {
+        Calendar currentDay = getCurrentDay();
+        return getCalendarWithTime(cal, currentDay.get(Calendar.HOUR_OF_DAY), currentDay.get(Calendar.MINUTE));
+    }
 }

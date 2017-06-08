@@ -1,6 +1,6 @@
 package nl.tcilegnar.timer.views;
 
-import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageButton;
@@ -18,7 +18,7 @@ import nl.tcilegnar.timer.utils.TimerCalendar;
 
 import static android.view.View.OnClickListener;
 
-public class DayEditorItemView extends LinearLayout implements OnClickListener, TimePickerDialog.OnTimeSetListener {
+public class DayEditorItemView extends LinearLayout implements OnClickListener, OnTimeSetListener {
     private static final String TIMER_PICKER_DIALOG_TAG = "TIMER_PICKER_DIALOG_TAG";
     public static final int NO_TIME = -1;
     public static final int INVALID_TIME = -2;
@@ -97,9 +97,9 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     @Override
     public void onClick(View view) {
         if (view == imageDone || view == label) {
-            updateTime(getCurrentDate());
+            updateTime(TimerCalendar.getCalendarWithCurrentTime(getCurrentDate()));
         } else if (view == timeValue || view == timeValueEditButton) {
-            timePickerDialogListener.showTimePickerDialog(this, TIMER_PICKER_DIALOG_TAG);
+            timePickerDialogListener.showTimePickerDialog(this, TIMER_PICKER_DIALOG_TAG, dayEditorItem);
         }
     }
 
@@ -156,7 +156,7 @@ public class DayEditorItemView extends LinearLayout implements OnClickListener, 
     }
 
     public interface TimePickerDialogListener {
-        void showTimePickerDialog(TimePickerDialog.OnTimeSetListener onTimeSetListener, String tag);
+        void showTimePickerDialog(OnTimeSetListener onTimeSetListener, String tag, DayEditorItem dayEditorItem);
     }
 
     public interface CurrentDateListener {

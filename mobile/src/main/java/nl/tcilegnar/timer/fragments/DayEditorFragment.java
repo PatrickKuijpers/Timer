@@ -2,7 +2,7 @@ package nl.tcilegnar.timer.fragments;
 
 import com.orm.SugarRecord;
 
-import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -186,10 +186,22 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     }
 
     @Override
-    public void showTimePickerDialog(TimePickerDialog.OnTimeSetListener onTimeSetListener, String tag) {
+    public void showTimePickerDialog(OnTimeSetListener onTimeSetListener, String tag, DayEditorItem dayEditorItem) {
+        Calendar timeInDatePicker = getTimeToShowInTimePickerDialog(dayEditorItem);
+
         TimePickerFragment timePickerFragment = new TimePickerFragment();
         timePickerFragment.setOnTimeSetListener(onTimeSetListener);
-        timePickerFragment.show(getActivity().getFragmentManager(), tag);
+        timePickerFragment.show(getActivity().getFragmentManager(), tag, timeInDatePicker);
+    }
+
+    private Calendar getTimeToShowInTimePickerDialog(DayEditorItem dayEditorItem) {
+        if (dayEditorItem.isDone()) {
+            int hour = dayEditorItem.getHour();
+            int minute = dayEditorItem.getMinute();
+            return TimerCalendar.getCalendarWithTime(getCurrentDate(), hour, minute);
+        } else {
+            return TimerCalendar.getCalendarWithCurrentTime(currentDate);
+        }
     }
 
     private void saveCurrentDayValues() {
