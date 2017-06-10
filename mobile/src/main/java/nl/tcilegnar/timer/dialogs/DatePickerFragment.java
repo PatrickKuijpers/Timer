@@ -13,7 +13,7 @@ import nl.tcilegnar.timer.utils.TimerCalendar;
 
 public class DatePickerFragment extends DialogFragment {
     private OnDateSetListener onDateSetListener;
-    private Calendar dateToShow = TimerCalendar.getCurrentDay();
+    private Calendar dateToShow = TimerCalendar.getCurrentDate();
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

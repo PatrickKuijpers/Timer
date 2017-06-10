@@ -32,12 +32,6 @@ public class DatabaseSaveUtil extends AsyncTask<SugarRecord, Void, Long> {
     @Override
     protected void onPostExecute(Long savedId) {
         listener.processFinish(savedId, isSuccess());
-
-        if (!isSuccess()) {
-            Toast.makeText(App.getContext(), "Could not save values, invalid input!", LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(App.getContext(), "Saved success (id = " + id + ")!", LENGTH_SHORT).show();
-        }
     }
 
     private boolean isSuccess() {

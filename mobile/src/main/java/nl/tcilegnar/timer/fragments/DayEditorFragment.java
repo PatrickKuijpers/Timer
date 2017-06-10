@@ -14,20 +14,24 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import nl.tcilegnar.timer.App;
 import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.adapters.DayEditorAdapter;
 import nl.tcilegnar.timer.dialogs.DatePickerFragment;
 import nl.tcilegnar.timer.dialogs.TimePickerFragment;
 import nl.tcilegnar.timer.enums.DayEditorItem;
 import nl.tcilegnar.timer.fragments.dialogs.BreakTimeValidationErrorDialog;
+import nl.tcilegnar.timer.fragments.dialogs.SaveErrorDialog;
 import nl.tcilegnar.timer.fragments.dialogs.TotalTimeValidationErrorDialog;
 import nl.tcilegnar.timer.fragments.dialogs.WorkingDayTimeValidationErrorDialog;
+import nl.tcilegnar.timer.models.Validation;
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
 import nl.tcilegnar.timer.utils.DateFormatter;
 import nl.tcilegnar.timer.utils.Log;
@@ -38,7 +42,15 @@ import nl.tcilegnar.timer.utils.storage.Storage;
 import nl.tcilegnar.timer.views.DayEditorItemView.CurrentDateListener;
 import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
 
+import static android.widget.Toast.LENGTH_SHORT;
+import static nl.tcilegnar.timer.enums.DayEditorItem.BreakEnd;
+import static nl.tcilegnar.timer.enums.DayEditorItem.BreakStart;
+import static nl.tcilegnar.timer.enums.DayEditorItem.DEFAULT_HOUR_VALUE;
+import static nl.tcilegnar.timer.enums.DayEditorItem.DEFAULT_MINUTE_VALUE;
+import static nl.tcilegnar.timer.enums.DayEditorItem.End;
+import static nl.tcilegnar.timer.enums.DayEditorItem.Start;
 import static nl.tcilegnar.timer.utils.DateFormatter.DATE_FORMAT_SPACES_1_JAN_2000;
+import static nl.tcilegnar.timer.utils.TimerCalendar.getCalendarWithTime;
 import static nl.tcilegnar.timer.views.DayEditorItemView.INVALID_TIME;
 import static nl.tcilegnar.timer.views.DayEditorItemView.NO_TIME;
 import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
@@ -48,7 +60,6 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     private final String TAG = this.getClass().getSimpleName();
     private static final String DATE_PICKER_DIALOG_TAG = "DATE_PICKER_DIALOG_TAG";
 
-    private ListView dayEditorList;
     private DayEditorAdapter dayEditorAdapter;
     private TextView totalValueView;
     private TextView totalValueLabelView;
@@ -58,7 +69,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
     private final Storage storage = new Storage();
     // TODO: voorlopig enkel huidige datum gebruiken ipv evt laden uit storage (voor andere dag?)
-    private Calendar currentDate = TimerCalendar.getCurrentDay(); // storage.loadDayEditorCurrentDay()
+    private Calendar currentDate = TimerCalendar.getCurrentDate(); // storage.loadDayEditorCurrentDay()
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,7 +92,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         saveButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_save);
         clearButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_clear);
 
-        dayEditorList = (ListView) view.findViewById(R.id.day_editor_list);
+        ListView dayEditorList = (ListView) view.findViewById(R.id.day_editor_list);
         dayEditorAdapter = new DayEditorAdapter(getActivity(), this, this, this);
         dayEditorList.setAdapter(dayEditorAdapter);
 
@@ -117,13 +128,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     }
 
     private void setTotalTime() {
-        int workingDayTimeInMinutes = getWorkingDayTimeInMinutes();
-        int breakTimeInMinutes = getBreakTimeInMinutes();
-        // TODO: validatie waarbij tijden workingDayTime vergeleken worden met breakTime
-        // het gaat nu bv. nog fout wanneer de breakTime BUITEN de workingDayTime ligt en groter is, of wanneer een
-        // van beide breakTime tijden buiten de workingDayTime tijden liggen
-
-        String timeString = getTimeString(workingDayTimeInMinutes, breakTimeInMinutes);
+        String timeString = getTotalTimeString();
         if (!timeString.isEmpty()) {
             totalValueView.setText(timeString);
             totalValueView.setVisibility(View.VISIBLE);
@@ -134,7 +139,28 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         }
     }
 
-    private String getTimeString(int workingDayTimeInMinutes, int breakTimeInMinutes) {
+    private String getTotalTimeString() {
+        String timeString = "";
+        try {
+            CurrentDayMillis currentDayMillis = getCurrentDayMillis();
+            Log.d(TAG, currentDayMillis.toString());
+
+            Validation validation = currentDayMillis.getValidation();
+            if (validation.isValid()) {
+                // TODO: kan nu vast makkelijker!
+                int workingDayTimeInMinutes = getWorkingDayTimeInMinutes();
+                int breakTimeInMinutes = getBreakTimeInMinutes();
+
+                timeString = getTotalTimeString(workingDayTimeInMinutes, breakTimeInMinutes);
+            } else {
+                new TotalTimeValidationErrorDialog().show(getActivity());
+            }
+        } catch (DayEditorItem.TimeNotSetException ignored) {
+        }
+        return timeString;
+    }
+
+    private String getTotalTimeString(int workingDayTimeInMinutes, int breakTimeInMinutes) {
         String timeString;
         if (workingDayTimeInMinutes != NO_TIME && workingDayTimeInMinutes != INVALID_TIME && breakTimeInMinutes !=
                 INVALID_TIME) {
@@ -152,31 +178,33 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     }
 
     private int getWorkingDayTimeInMinutes() {
-        try {
-            Calendar startTime = DayEditorItem.Start.getCurrentTime();
-            Calendar endTime = DayEditorItem.End.getCurrentTime();
-            int dateDiff = getDateDiff(startTime, endTime, TimeUnit.MINUTES);
+        if (Start.getHour() != DEFAULT_HOUR_VALUE && End.getHour() != DEFAULT_HOUR_VALUE && Start.getMinute() !=
+                DEFAULT_MINUTE_VALUE && End.getMinute() != DEFAULT_MINUTE_VALUE) {
+            Calendar startOfDay = getCalendarWithTime(currentDate, Start.getHour(), Start.getMinute());
+            Calendar endOfDay = getCalendarWithTime(currentDate, End.getHour(), End.getMinute());
+            int dateDiff = getDateDiff(startOfDay, endOfDay, TimeUnit.MINUTES);
             if (dateDiff < 0) {
                 new WorkingDayTimeValidationErrorDialog().show(getActivity());
                 return INVALID_TIME;
             }
             return dateDiff;
-        } catch (DayEditorItem.TimeNotSetException e) {
+        } else {
             return NO_TIME;
         }
     }
 
     private int getBreakTimeInMinutes() {
-        try {
-            Calendar breakStartTime = DayEditorItem.BreakStart.getCurrentTime();
-            Calendar breakEndTime = DayEditorItem.BreakEnd.getCurrentTime();
+        if (BreakStart.getHour() != DEFAULT_HOUR_VALUE && BreakEnd.getHour() != DEFAULT_HOUR_VALUE && BreakStart
+                .getMinute() != DEFAULT_MINUTE_VALUE && BreakEnd.getMinute() != DEFAULT_MINUTE_VALUE) {
+            Calendar breakStartTime = getCalendarWithTime(currentDate, BreakStart.getHour(), BreakStart.getMinute());
+            Calendar breakEndTime = getCalendarWithTime(currentDate, BreakEnd.getHour(), BreakEnd.getMinute());
             int dateDiff = getDateDiff(breakStartTime, breakEndTime, TimeUnit.MINUTES);
             if (dateDiff < 0) {
                 new BreakTimeValidationErrorDialog().show(getActivity());
                 return INVALID_TIME;
             }
             return dateDiff;
-        } catch (DayEditorItem.TimeNotSetException e) {
+        } else {
             return NO_TIME;
         }
     }
@@ -213,7 +241,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         if (dayEditorItem.isDone()) {
             int hour = dayEditorItem.getHour();
             int minute = dayEditorItem.getMinute();
-            return TimerCalendar.getCalendarWithTime(getCurrentDate(), hour, minute);
+            return getCalendarWithTime(getCurrentDate(), hour, minute);
         } else {
             return TimerCalendar.getCalendarWithCurrentTime(currentDate);
         }
@@ -233,27 +261,39 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
     private void saveCurrentDayValues() {
         try {
-            List<Calendar> times = new ArrayList<>();
-            times.add(DayEditorItem.Start.getCurrentTime());
-            times.add(DayEditorItem.BreakStart.getCurrentTime());
-            times.add(DayEditorItem.BreakEnd.getCurrentTime());
-            times.add(DayEditorItem.End.getCurrentTime());
-            CurrentDayMillis currentDayMillis = new CurrentDayMillis(currentDate, times);
+            CurrentDayMillis currentDayMillis = getCurrentDayMillis();
             Log.d(TAG, currentDayMillis.toString());
 
-            DatabaseSaveUtil util = new DatabaseSaveUtil(new DatabaseSaveUtil.AsyncResponse() {
-                @Override
-                public void processFinish(Long savedId, boolean success) {
-                    if (success) {
-                        logAll();
-                        resetCurrentDay();
+            Validation validation = currentDayMillis.getValidation();
+            if (validation.isValid()) {
+                DatabaseSaveUtil util = new DatabaseSaveUtil(new DatabaseSaveUtil.AsyncResponse() {
+                    @Override
+                    public void processFinish(Long savedId, boolean success) {
+                        if (success) {
+                            Toast.makeText(App.getContext(), "Saved success (id=" + savedId + ")", LENGTH_SHORT).show();
+                            logAll();
+                            resetCurrentDay();
+                        } else {
+                            new SaveErrorDialog("Save failed").show(getActivity());
+                        }
                     }
-                }
-            });
-            util.execute(currentDayMillis);
+                });
+                util.execute(currentDayMillis);
+            } else {
+                new SaveErrorDialog(validation).show(getActivity());
+            }
         } catch (DayEditorItem.TimeNotSetException e) {
-            e.printStackTrace();
+            new SaveErrorDialog(e.getMessage()).show(getActivity());
         }
+    }
+
+    private CurrentDayMillis getCurrentDayMillis() throws DayEditorItem.TimeNotSetException {
+        List<Calendar> times = new ArrayList<>();
+        times.add(Start.getCalendarWithTime(currentDate));
+        times.add(BreakStart.getCalendarWithTime(currentDate));
+        times.add(BreakEnd.getCalendarWithTime(currentDate));
+        times.add(End.getCalendarWithTime(currentDate));
+        return new CurrentDayMillis(currentDate, times);
     }
 
     private void logAll() {

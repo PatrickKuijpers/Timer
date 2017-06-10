@@ -10,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 
 import nl.tcilegnar.timer.R;
+import nl.tcilegnar.timer.models.Validation;
 import nl.tcilegnar.timer.utils.Res;
 
 public abstract class ValidationErrorDialogFragment extends DialogFragment {
@@ -24,9 +25,19 @@ public abstract class ValidationErrorDialogFragment extends DialogFragment {
         positiveButtonText = Res.getString(R.string.ok);
     }
 
-    protected abstract
+    public ValidationErrorDialogFragment(Validation validation) {
+        this(validation.getErrorMessage());
+    }
+
+    public ValidationErrorDialogFragment(String message) {
+        super();
+        titleText = Res.getString(R.string.invalid_input);
+        messageText = message;
+        positiveButtonText = Res.getString(R.string.ok);
+    }
+
     @StringRes
-    int getMessageResId();
+    protected abstract int getMessageResId();
 
     @NonNull
     @Override

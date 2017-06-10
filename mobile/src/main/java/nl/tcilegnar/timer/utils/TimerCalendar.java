@@ -3,12 +3,17 @@ package nl.tcilegnar.timer.utils;
 import java.util.Calendar;
 
 public class TimerCalendar {
-    public static Calendar getCurrentDay() {
+    public static Calendar getCurrent() {
         return Calendar.getInstance(MyLocale.getLocale());
     }
 
+    public static Calendar getCurrentDate() {
+        Calendar cal = Calendar.getInstance(MyLocale.getLocale());
+        return getCalendarWithTime(cal, 0, 0);
+    }
+
     public static Calendar getCalendarInMillis(long timeInMillis) {
-        Calendar cal = getCurrentDay();
+        Calendar cal = getCurrent();
         cal.setTimeInMillis(timeInMillis);
         return cal;
     }
@@ -18,16 +23,15 @@ public class TimerCalendar {
     }
 
     public static Calendar getCalendarWithDate(int year, int month, int dayOfMonth) {
-        Calendar cal = getCalendarCurrentDayWithTime(0, 0);
+        Calendar cal = getCalendarCurrentDateWithTime(0, 0);
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         return cal;
     }
 
-    public static Calendar getCalendarCurrentDayWithTime(int hour, int minute) {
-        Calendar currentDate = getCurrentDay();
-        return getCalendarWithTime(currentDate, hour, minute);
+    public static Calendar getCalendarCurrentDateWithTime(int hour, int minute) {
+        return getCalendarWithTime(getCurrent(), hour, minute);
     }
 
     public static Calendar getCalendarWithTime(Calendar originalCal, int hour, int minute) {
@@ -39,8 +43,8 @@ public class TimerCalendar {
         return cal;
     }
 
-    public static Calendar getCalendarWithCurrentTime(Calendar cal) {
-        Calendar currentDay = getCurrentDay();
-        return getCalendarWithTime(cal, currentDay.get(Calendar.HOUR_OF_DAY), currentDay.get(Calendar.MINUTE));
+    public static Calendar getCalendarWithCurrentTime(Calendar originalCal) {
+        Calendar currentDay = getCurrent();
+        return getCalendarWithTime(originalCal, currentDay.get(Calendar.HOUR_OF_DAY), currentDay.get(Calendar.MINUTE));
     }
 }

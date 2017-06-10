@@ -85,13 +85,13 @@ public enum DayEditorItem {
         enabled = false;
     }
 
-    public Calendar getCurrentTime() throws TimeNotSetException {
+    public Calendar getCalendarWithTime(Calendar currentDate) throws TimeNotSetException {
         int hour = getHour();
         int minute = getMinute();
         if (hour == DEFAULT_HOUR_VALUE || minute == DEFAULT_MINUTE_VALUE) {
             throw new TimeNotSetException();
         }
-        return TimerCalendar.getCalendarCurrentDayWithTime(hour, minute);
+        return TimerCalendar.getCalendarWithTime(currentDate, hour, minute);
     }
 
     public int getHour() {
