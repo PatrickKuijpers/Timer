@@ -2,14 +2,14 @@ package nl.tcilegnar.timer.utils;
 
 import java.util.Calendar;
 
+/** This class is meant to make the use of {@link Calendar} easier, until Android supports Java8 */
 public class TimerCalendar {
     public static Calendar getCurrent() {
         return Calendar.getInstance(MyLocale.getLocale());
     }
 
     public static Calendar getCurrentDate() {
-        Calendar cal = Calendar.getInstance(MyLocale.getLocale());
-        return getCalendarWithTime(cal, 0, 0);
+        return getCalendarWithTime(getCurrent(), 0, 0);
     }
 
     public static Calendar getCalendarInMillis(long timeInMillis) {
@@ -18,6 +18,7 @@ public class TimerCalendar {
         return cal;
     }
 
+    /** A copy with same timezone and time in millis. Because the normal copy method doesn't work as expected */
     private static Calendar getCopyOfCalendar(Calendar cal) {
         return getCalendarInMillis(cal.getTimeInMillis());
     }

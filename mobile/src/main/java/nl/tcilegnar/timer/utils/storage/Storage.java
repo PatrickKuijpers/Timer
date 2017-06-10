@@ -7,7 +7,7 @@ import nl.tcilegnar.timer.utils.TimerCalendar;
 
 public class Storage extends SharedPrefs {
     private static final int FALSE = 0;
-    private static final DayEditorItem NO_ACTIVE_DAY_EDITOR = null;
+    public static final DayEditorItem NO_ACTIVE_DAY_EDITOR = null;
 
     @Override
     protected String fileName() {
@@ -17,7 +17,7 @@ public class Storage extends SharedPrefs {
 
     public enum Key {
         // Deze enums nooit veranderen!
-        DayEditorCurrentDay(0),
+        DayEditorCurrentDate(0),
         DayEditorStartHour(DayEditorItem.DEFAULT_HOUR_VALUE),
         DayEditorStartMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
         DayEditorStartDone(FALSE),
@@ -39,20 +39,15 @@ public class Storage extends SharedPrefs {
         }
     }
 
-    public void saveDayEditorCurrentDay(Calendar calendar) {
+    public void saveDayEditorCurrentDate(Calendar calendar) {
         long value = calendar.getTimeInMillis();
-        save(Key.DayEditorCurrentDay.name(), value);
+        save(Key.DayEditorCurrentDate.name(), value);
     }
 
-    public Calendar loadDayEditorCurrentDay() {
-        if (loadActiveDayEditor() == NO_ACTIVE_DAY_EDITOR) {
-            // No day editor active = no time set: assume you'd like to start over with a new day instead of retreiving
-            return TimerCalendar.getCurrentDate();
-        } else {
-            Key key = Key.DayEditorCurrentDay;
-            long value = loadLong(key.name(), key.defaultValue);
-            return TimerCalendar.getCalendarInMillis(value);
-        }
+    public Calendar loadDayEditorCurrentDate() {
+        Key key = Key.DayEditorCurrentDate;
+        long value = loadLong(key.name(), key.defaultValue);
+        return TimerCalendar.getCalendarInMillis(value);
     }
 
     /**

@@ -31,6 +31,7 @@ import nl.tcilegnar.timer.models.Validation;
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
 import nl.tcilegnar.timer.utils.DateFormatter;
 import nl.tcilegnar.timer.utils.Log;
+import nl.tcilegnar.timer.utils.Res;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 import nl.tcilegnar.timer.utils.database.DatabaseSaveUtil;
@@ -41,6 +42,7 @@ import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
 import static android.widget.Toast.LENGTH_SHORT;
 import static nl.tcilegnar.timer.utils.DateFormatter.DATE_FORMAT_SPACES_1_JAN_2000;
 import static nl.tcilegnar.timer.utils.TimerCalendar.getCalendarWithTime;
+import static nl.tcilegnar.timer.utils.storage.Storage.NO_ACTIVE_DAY_EDITOR;
 import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
 
 public class DayEditorFragment extends Fragment implements CurrentDateListener, TimePickerDialogListener,
@@ -66,8 +68,17 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        setCurrentDate(storage.loadDayEditorCurrentDay());
+        setCurrentDate(getCurrentDateToInitWith());
         setTotalTime();
+    }
+
+    public Calendar getCurrentDateToInitWith() {
+        if (storage.loadActiveDayEditor() == NO_ACTIVE_DAY_EDITOR) {
+            // No day editor active = no time set: assume you'd like to start over with a new day instead of retreiving
+            return TimerCalendar.getCurrentDate();
+        } else {
+            return getCurrentDate();
+        }
     }
 
     private void initViews(View view) {
@@ -107,9 +118,17 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     }
 
     private void setCurrentDate(Calendar date) {
-        storage.saveDayEditorCurrentDay(date);
-        String currentDateString = DateFormatter.format(date, DATE_FORMAT_SPACES_1_JAN_2000);
-        currenDayValueView.setText(currentDateString);
+        storage.saveDayEditorCurrentDate(date);
+        String currentDayString = getCurrentDayString(date);
+        currenDayValueView.setText(currentDayString);
+    }
+
+    private String getCurrentDayString(Calendar date) {
+        String currentDayString = DateFormatter.format(date, DATE_FORMAT_SPACES_1_JAN_2000);
+        if (TimerCalendarUtil.isToday(date)) {
+            currentDayString += " (" + Res.getString(R.string.today) + ")";
+        }
+        return currentDayString;
     }
 
     private void setTotalTime() {
@@ -228,6 +247,6 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
     @Override
     public Calendar getCurrentDate() {
-        return storage.loadDayEditorCurrentDay();
+        return storage.loadDayEditorCurrentDate();
     }
 }

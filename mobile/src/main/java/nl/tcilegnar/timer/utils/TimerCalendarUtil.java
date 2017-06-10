@@ -3,7 +3,11 @@ package nl.tcilegnar.timer.utils;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
+/** Most methods are meant to make the use of {@link Calendar} easier, until Android supports Java8 */
 public class TimerCalendarUtil {
+    public static boolean isToday(Calendar date) {
+        return areSameDay(date, TimerCalendar.getCurrent());
+    }
 
     public static boolean areSameDay(Calendar firstCal, Calendar secondCal) {
         boolean isSameYear = firstCal.get(Calendar.YEAR) == secondCal.get(Calendar.YEAR);

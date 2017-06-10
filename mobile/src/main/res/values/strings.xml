@@ -11,6 +11,8 @@
 
     <string name="ok">OK</string>
 
+    <string name="today">vandaag</string>
+
     <string name="invalid_input">Onjuiste invoer</string>
     <string name="validation_error_message_not_all_times_set">Niet alle benodigde tijden zijn ingevuld</string>
     <string name="validation_error_message_not_all_times_same_day">Niet alle tijden vallen op dezelfde dag (app fout!)</string>
