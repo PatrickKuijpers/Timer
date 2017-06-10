@@ -1,6 +1,7 @@
 package nl.tcilegnar.timer.utils;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class TimerCalendarUtil {
 
@@ -8,5 +9,16 @@ public class TimerCalendarUtil {
         boolean isSameYear = firstCal.get(Calendar.YEAR) == secondCal.get(Calendar.YEAR);
         boolean isSameDay = firstCal.get(Calendar.DAY_OF_YEAR) == secondCal.get(Calendar.DAY_OF_YEAR);
         return isSameYear && isSameDay;
+    }
+
+    public static int getDateDiff(Calendar cal1, Calendar cal2, TimeUnit timeUnit) {
+        long diffInMillis = cal2.getTimeInMillis() - cal1.getTimeInMillis();
+        return (int) timeUnit.convert(diffInMillis, TimeUnit.MILLISECONDS);
+    }
+
+    public static String getReadableTimeStringHoursAndMinutes(int timeInMinutes) {
+        int hours = timeInMinutes / 60;
+        int minutes = timeInMinutes % 60;
+        return String.format(MyLocale.getLocaleForTranslationAndSigns(), "%d:%02d", hours, minutes);
     }
 }

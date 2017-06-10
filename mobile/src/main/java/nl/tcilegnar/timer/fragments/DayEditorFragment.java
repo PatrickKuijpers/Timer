@@ -19,7 +19,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import nl.tcilegnar.timer.App;
 import nl.tcilegnar.timer.R;
@@ -27,16 +26,14 @@ import nl.tcilegnar.timer.adapters.DayEditorAdapter;
 import nl.tcilegnar.timer.dialogs.DatePickerFragment;
 import nl.tcilegnar.timer.dialogs.TimePickerFragment;
 import nl.tcilegnar.timer.enums.DayEditorItem;
-import nl.tcilegnar.timer.fragments.dialogs.BreakTimeValidationErrorDialog;
 import nl.tcilegnar.timer.fragments.dialogs.SaveErrorDialog;
-import nl.tcilegnar.timer.fragments.dialogs.TotalTimeValidationErrorDialog;
-import nl.tcilegnar.timer.fragments.dialogs.WorkingDayTimeValidationErrorDialog;
+import nl.tcilegnar.timer.fragments.dialogs.ValidationErrorDialogFragment;
 import nl.tcilegnar.timer.models.Validation;
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
 import nl.tcilegnar.timer.utils.DateFormatter;
 import nl.tcilegnar.timer.utils.Log;
-import nl.tcilegnar.timer.utils.MyLocale;
 import nl.tcilegnar.timer.utils.TimerCalendar;
+import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 import nl.tcilegnar.timer.utils.database.DatabaseSaveUtil;
 import nl.tcilegnar.timer.utils.storage.Storage;
 import nl.tcilegnar.timer.views.DayEditorItemView.CurrentDateListener;
@@ -45,14 +42,10 @@ import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
 import static android.widget.Toast.LENGTH_SHORT;
 import static nl.tcilegnar.timer.enums.DayEditorItem.BreakEnd;
 import static nl.tcilegnar.timer.enums.DayEditorItem.BreakStart;
-import static nl.tcilegnar.timer.enums.DayEditorItem.DEFAULT_HOUR_VALUE;
-import static nl.tcilegnar.timer.enums.DayEditorItem.DEFAULT_MINUTE_VALUE;
 import static nl.tcilegnar.timer.enums.DayEditorItem.End;
 import static nl.tcilegnar.timer.enums.DayEditorItem.Start;
 import static nl.tcilegnar.timer.utils.DateFormatter.DATE_FORMAT_SPACES_1_JAN_2000;
 import static nl.tcilegnar.timer.utils.TimerCalendar.getCalendarWithTime;
-import static nl.tcilegnar.timer.views.DayEditorItemView.INVALID_TIME;
-import static nl.tcilegnar.timer.views.DayEditorItemView.NO_TIME;
 import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
 
 public class DayEditorFragment extends Fragment implements CurrentDateListener, TimePickerDialogListener,
@@ -147,85 +140,14 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
             Validation validation = currentDayMillis.getValidation();
             if (validation.isValid()) {
-                // TODO: kan nu vast makkelijker!
-                int workingDayTimeInMinutes = getWorkingDayTimeInMinutes();
-                int breakTimeInMinutes = getBreakTimeInMinutes();
-
-                timeString = getTotalTimeString(workingDayTimeInMinutes, breakTimeInMinutes);
+                int totalTimeInMinutes = currentDayMillis.getTotalTimeInMinutes();
+                timeString = TimerCalendarUtil.getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
             } else {
-                new TotalTimeValidationErrorDialog().show(getActivity());
+                new ValidationErrorDialogFragment().show(getActivity());
             }
         } catch (DayEditorItem.TimeNotSetException ignored) {
         }
         return timeString;
-    }
-
-    private String getTotalTimeString(int workingDayTimeInMinutes, int breakTimeInMinutes) {
-        String timeString;
-        if (workingDayTimeInMinutes != NO_TIME && workingDayTimeInMinutes != INVALID_TIME && breakTimeInMinutes !=
-                INVALID_TIME) {
-            int totalTimeInMinutes = getTotalTimeInMinutes(workingDayTimeInMinutes, breakTimeInMinutes);
-            if (totalTimeInMinutes < 0) {
-                new TotalTimeValidationErrorDialog().show(getActivity());
-                timeString = "";
-            } else {
-                timeString = getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
-            }
-        } else {
-            timeString = "";
-        }
-        return timeString;
-    }
-
-    private int getWorkingDayTimeInMinutes() {
-        if (Start.getHour() != DEFAULT_HOUR_VALUE && End.getHour() != DEFAULT_HOUR_VALUE && Start.getMinute() !=
-                DEFAULT_MINUTE_VALUE && End.getMinute() != DEFAULT_MINUTE_VALUE) {
-            Calendar startOfDay = getCalendarWithTime(currentDate, Start.getHour(), Start.getMinute());
-            Calendar endOfDay = getCalendarWithTime(currentDate, End.getHour(), End.getMinute());
-            int dateDiff = getDateDiff(startOfDay, endOfDay, TimeUnit.MINUTES);
-            if (dateDiff < 0) {
-                new WorkingDayTimeValidationErrorDialog().show(getActivity());
-                return INVALID_TIME;
-            }
-            return dateDiff;
-        } else {
-            return NO_TIME;
-        }
-    }
-
-    private int getBreakTimeInMinutes() {
-        if (BreakStart.getHour() != DEFAULT_HOUR_VALUE && BreakEnd.getHour() != DEFAULT_HOUR_VALUE && BreakStart
-                .getMinute() != DEFAULT_MINUTE_VALUE && BreakEnd.getMinute() != DEFAULT_MINUTE_VALUE) {
-            Calendar breakStartTime = getCalendarWithTime(currentDate, BreakStart.getHour(), BreakStart.getMinute());
-            Calendar breakEndTime = getCalendarWithTime(currentDate, BreakEnd.getHour(), BreakEnd.getMinute());
-            int dateDiff = getDateDiff(breakStartTime, breakEndTime, TimeUnit.MINUTES);
-            if (dateDiff < 0) {
-                new BreakTimeValidationErrorDialog().show(getActivity());
-                return INVALID_TIME;
-            }
-            return dateDiff;
-        } else {
-            return NO_TIME;
-        }
-    }
-
-    private int getTotalTimeInMinutes(int workingDayTimeInMinutes, int breakTimeInMinutes) {
-        if (breakTimeInMinutes != NO_TIME) {
-            return workingDayTimeInMinutes - breakTimeInMinutes;
-        } else {
-            return workingDayTimeInMinutes;
-        }
-    }
-
-    public static int getDateDiff(Calendar cal1, Calendar cal2, TimeUnit timeUnit) {
-        long diffInMillis = cal2.getTimeInMillis() - cal1.getTimeInMillis();
-        return (int) timeUnit.convert(diffInMillis, TimeUnit.MILLISECONDS);
-    }
-
-    public static String getReadableTimeStringHoursAndMinutes(int timeInMinutes) {
-        int hours = timeInMinutes / 60;
-        int minutes = timeInMinutes % 60;
-        return String.format(MyLocale.getLocaleForTranslationAndSigns(), "%d:%02d", hours, minutes);
     }
 
     @Override

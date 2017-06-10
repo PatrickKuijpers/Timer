@@ -7,13 +7,26 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import nl.tcilegnar.timer.R;
+import nl.tcilegnar.timer.enums.DayEditorItem;
 import nl.tcilegnar.timer.models.Validation;
 import nl.tcilegnar.timer.utils.TimerCalendar;
+import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 
 import static nl.tcilegnar.timer.utils.TimerCalendarUtil.areSameDay;
 
+/**
+ * {@link CurrentDayMillis} contains a date and several times within that same date. These times should always be in
+ * chronological order
+ * <p>
+ * Assumptions for {@link #timesInMillis}:
+ * 1) These times are chronological and contains an equal number of values
+ * 2) They will always contain times from {@link DayEditorItem#Start} and {@link DayEditorItem#End}
+ * 3) In between, there might be several times from {@link DayEditorItem#BreakStart} and {@link DayEditorItem#BreakEnd})
+ * </p>
+ */
 public class CurrentDayMillis extends SugarRecord<CurrentDayMillis> {
     private long dayInMillis;
     private String timesInMillis;
@@ -27,6 +40,7 @@ public class CurrentDayMillis extends SugarRecord<CurrentDayMillis> {
         for (Calendar time : times) {
             timesInMillis.add(time.getTimeInMillis());
         }
+        // TODO: is ordering of times necessary here?
         saveValues(day.getTimeInMillis(), timesInMillis);
     }
 
@@ -74,6 +88,19 @@ public class CurrentDayMillis extends SugarRecord<CurrentDayMillis> {
         return list;
     }
 
+    public int getTotalTimeInMinutes() {
+        int totalTimeInMinutes = 0;
+        List<Calendar> times = getTimes();
+        for (int i = 1; i < times.size(); i += 2) {     // Loop through all times
+            Calendar previousTime = times.get(i - 1);   // Previous time (start of day or end of a break)
+            Calendar time = times.get(i);               // Time to compare to (start of a break or end of day)
+
+            // Calculate difference of these times (so never between breaks) and add to total time
+            totalTimeInMinutes += TimerCalendarUtil.getDateDiff(previousTime, time, TimeUnit.MINUTES);
+        }
+        return totalTimeInMinutes;
+    }
+
     public Validation getValidation() {
         Validation validation = new Validation();
         List<Long> timesMillis = getTimesMillis();
@@ -84,6 +111,8 @@ public class CurrentDayMillis extends SugarRecord<CurrentDayMillis> {
             validation.setErrorMessage(R.string.validation_error_message_not_all_times_same_day);
         } else if (!areConsecutiveTimesLater(timesMillis)) {
             validation.setErrorMessage(R.string.validation_error_message_consecutive_times_not_later);
+        } else if (getTotalTimeInMinutes() < 0) {
+            validation.setErrorMessage(R.string.validation_error_message_total_time_negative);
         }
         return validation;
     }

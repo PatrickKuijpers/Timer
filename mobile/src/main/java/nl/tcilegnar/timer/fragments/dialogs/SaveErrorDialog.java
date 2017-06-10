@@ -5,7 +5,7 @@ import nl.tcilegnar.timer.models.Validation;
 
 public class SaveErrorDialog extends ValidationErrorDialogFragment {
     public SaveErrorDialog() {
-        super();
+        super(R.string.error_message_save_dialog);
     }
 
     public SaveErrorDialog(Validation validation) {
@@ -14,10 +14,5 @@ public class SaveErrorDialog extends ValidationErrorDialogFragment {
 
     public SaveErrorDialog(String errorMessage) {
         super(errorMessage);
-    }
-
-    @Override
-    protected int getMessageResId() {
-        return R.string.save_error_dialog_message;
     }
 }

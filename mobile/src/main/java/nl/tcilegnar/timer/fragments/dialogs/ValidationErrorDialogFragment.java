@@ -13,20 +13,21 @@ import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.models.Validation;
 import nl.tcilegnar.timer.utils.Res;
 
-public abstract class ValidationErrorDialogFragment extends DialogFragment {
+public class ValidationErrorDialogFragment extends DialogFragment {
     private String titleText;
     private String messageText;
     private String positiveButtonText;
 
     public ValidationErrorDialogFragment() {
-        super();
-        titleText = Res.getString(R.string.invalid_input);
-        messageText = Res.getString(getMessageResId());
-        positiveButtonText = Res.getString(R.string.ok);
+        this("");
     }
 
     public ValidationErrorDialogFragment(Validation validation) {
         this(validation.getErrorMessage());
+    }
+
+    public ValidationErrorDialogFragment(@StringRes int messageResId) {
+        this(Res.getString(messageResId));
     }
 
     public ValidationErrorDialogFragment(String message) {
@@ -35,9 +36,6 @@ public abstract class ValidationErrorDialogFragment extends DialogFragment {
         messageText = message;
         positiveButtonText = Res.getString(R.string.ok);
     }
-
-    @StringRes
-    protected abstract int getMessageResId();
 
     @NonNull
     @Override
