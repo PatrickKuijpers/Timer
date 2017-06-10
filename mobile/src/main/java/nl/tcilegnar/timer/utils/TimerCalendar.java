@@ -13,6 +13,10 @@ public class TimerCalendar {
         return cal;
     }
 
+    private static Calendar getCopyOfCalendar(Calendar cal) {
+        return getCalendarInMillis(cal.getTimeInMillis());
+    }
+
     public static Calendar getCalendarWithDate(int year, int month, int dayOfMonth) {
         Calendar cal = getCalendarCurrentDayWithTime(0, 0);
         cal.set(Calendar.YEAR, year);
@@ -26,7 +30,8 @@ public class TimerCalendar {
         return getCalendarWithTime(currentDate, hour, minute);
     }
 
-    public static Calendar getCalendarWithTime(Calendar cal, int hour, int minute) {
+    public static Calendar getCalendarWithTime(Calendar originalCal, int hour, int minute) {
+        Calendar cal = getCopyOfCalendar(originalCal);
         cal.set(Calendar.HOUR_OF_DAY, hour);
         cal.set(Calendar.MINUTE, minute);
         cal.set(Calendar.SECOND, 0);
