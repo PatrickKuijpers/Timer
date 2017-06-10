@@ -15,6 +15,10 @@ import nl.tcilegnar.timer.models.Validation;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 
+import static nl.tcilegnar.timer.enums.DayEditorItem.BreakEnd;
+import static nl.tcilegnar.timer.enums.DayEditorItem.BreakStart;
+import static nl.tcilegnar.timer.enums.DayEditorItem.End;
+import static nl.tcilegnar.timer.enums.DayEditorItem.Start;
 import static nl.tcilegnar.timer.utils.TimerCalendarUtil.areSameDay;
 
 /**
@@ -35,13 +39,23 @@ public class CurrentDayMillis extends SugarRecord<CurrentDayMillis> {
         // Empty constructor required for SugarRecord!
     }
 
-    public CurrentDayMillis(Calendar day, List<Calendar> times) {
+    public CurrentDayMillis(Calendar day) throws DayEditorItem.TimeNotSetException {
         List<Long> timesInMillis = new ArrayList<>();
+        List<Calendar> times = initTimes(day);
         for (Calendar time : times) {
             timesInMillis.add(time.getTimeInMillis());
         }
-        // TODO: is ordering of times necessary here?
         saveValues(day.getTimeInMillis(), timesInMillis);
+    }
+
+    /** Times based on saved times in Prefs. Order should not be changed! */
+    private List<Calendar> initTimes(Calendar day) throws DayEditorItem.TimeNotSetException {
+        List<Calendar> times = new ArrayList<>();
+        times.add(Start.getCalendarWithTime(day));
+        times.add(BreakStart.getCalendarWithTime(day));
+        times.add(BreakEnd.getCalendarWithTime(day));
+        times.add(End.getCalendarWithTime(day));
+        return times;
     }
 
     private void saveValues(long dayInMillis, List<Long> timesInMillis) {

@@ -7,6 +7,7 @@ import nl.tcilegnar.timer.utils.TimerCalendar;
 
 public class Storage extends SharedPrefs {
     private static final int FALSE = 0;
+    private static final DayEditorItem NO_ACTIVE_DAY_EDITOR = null;
 
     @Override
     protected String fileName() {
@@ -44,9 +45,14 @@ public class Storage extends SharedPrefs {
     }
 
     public Calendar loadDayEditorCurrentDay() {
-        Key key = Key.DayEditorCurrentDay;
-        long value = loadLong(key.name(), key.defaultValue);
-        return TimerCalendar.getCalendarInMillis(value);
+        if (loadActiveDayEditor() == NO_ACTIVE_DAY_EDITOR) {
+            // No day editor active = no time set: assume you'd like to start over with a new day instead of retreiving
+            return TimerCalendar.getCurrentDate();
+        } else {
+            Key key = Key.DayEditorCurrentDay;
+            long value = loadLong(key.name(), key.defaultValue);
+            return TimerCalendar.getCalendarInMillis(value);
+        }
     }
 
     /**
@@ -91,7 +97,7 @@ public class Storage extends SharedPrefs {
                 return dayEditorItem;
             }
         }
-        return null; // Default
+        return NO_ACTIVE_DAY_EDITOR;
     }
 
     public void deleteActiveDayEditor() {
