@@ -1,6 +1,15 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="horizontal_margin_small">8dp</dimen>
+    <dimen name="vertical_margin_small">8dp</dimen>
+    <dimen name="horizontal_margin">16dp</dimen>
+    <dimen name="vertical_margin">16dp</dimen>
+    <dimen name="horizontal_margin_big">32dp</dimen>
+    <dimen name="vertical_margin_big">32dp</dimen>
+
+    <dimen name="day_editor_list_horizontal_spacing">@dimen/horizontal_margin</dimen>
+    <dimen name="day_editor_list_item_padding">8dp</dimen>
+
     <dimen name="fab_margin">16dp</dimen>
+
 </resources>

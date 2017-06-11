@@ -1,20 +1,28 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="fragment_full_screen_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="fragment_full_screen" parent="fragment_full_screen_base">
+        <item name="android:paddingTop">@dimen/vertical_margin</item>
+        <item name="android:paddingBottom">@dimen/vertical_margin</item>
+        <item name="android:paddingLeft">@dimen/horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/horizontal_margin</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="fragment_full_screen_with_scrollview" parent="fragment_full_screen_base">
+        <item name="android:paddingLeft">@dimen/horizontal_margin_small</item>
+        <item name="android:paddingRight">@dimen/horizontal_margin_small</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="day_editor_text_view">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/day_editor_list_item_padding</item>
+        <item name="android:background">@drawable/pressable_view</item>
+        <item name="android:textSize">@dimen/text_size_day_editor_list_item</item>
+    </style>
 
 </resources>

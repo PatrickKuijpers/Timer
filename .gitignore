@@ -52,7 +52,7 @@ captures/
 .DS_Store
 
 # Intellij .idea folder
-.idea/*
+*/.idea
 # Intellij .idea folder exceptions:
 !.idea/fileTemplates/
 !.idea/codeStyleSettings.xml

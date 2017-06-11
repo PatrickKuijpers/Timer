@@ -1,4 +1,23 @@
 <resources>
-    <string name="app_name">timer</string>
-    <string name="action_settings">Settings</string>
+
+    <string name="empty_string"/>
+
+    <string name="day_editor_item_start">Start werkdag</string>
+    <string name="day_editor_item_break_start">Start pauze</string>
+    <string name="day_editor_item_break_end">Einde pauze</string>
+    <string name="day_editor_item_end">Einde werkdag</string>
+
+    <string name="total_label">Totaal:&#160;</string>
+
+    <string name="ok">OK</string>
+
+    <string name="today">vandaag</string>
+
+    <string name="invalid_input">Onjuiste invoer</string>
+    <string name="validation_error_message_not_all_times_set">Niet alle benodigde tijden zijn ingevuld</string>
+    <string name="validation_error_message_not_all_times_same_day">Niet alle tijden vallen op dezelfde dag (app fout!)</string>
+    <string name="validation_error_message_consecutive_times_not_later">Opeenvolgende tijden mogen niet vóór de vorige tijd vallen</string>
+    <string name="validation_error_message_total_time_negative">De combinatie van ingevoerde tijden zorgt voor een negatieve totaaltijd</string>
+    <string name="error_message_save_dialog">Kan niet opslaan</string>
+
 </resources>
