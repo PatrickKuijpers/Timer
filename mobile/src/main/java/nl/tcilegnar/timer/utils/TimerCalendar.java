@@ -1,5 +1,6 @@
 package nl.tcilegnar.timer.utils;
 
+import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
 /** This class is meant to make the use of {@link Calendar} easier, until Android supports Java8 */
@@ -47,5 +48,15 @@ public class TimerCalendar {
     public static Calendar getCalendarWithCurrentTime(Calendar originalCal) {
         Calendar currentDay = getCurrent();
         return getCalendarWithTime(originalCal, currentDay.get(Calendar.HOUR_OF_DAY), currentDay.get(Calendar.MINUTE));
+    }
+
+    // TODO (PK): http://stackoverflow.com/questions/43321620/get-a-user-visible-text-for-the-day-of-the-week-correct
+    // -language-using-the-day
+    public static String getDayOfWeekTextShort(int dayOfWeek) {
+        return DateFormatSymbols.getInstance(MyLocale.getLocaleForTranslationAndSigns()).getShortWeekdays()[dayOfWeek];
+    }
+
+    public static String getDayOfWeekTextLong(int dayOfWeek) {
+        return DateFormatSymbols.getInstance(MyLocale.getLocaleForTranslationAndSigns()).getWeekdays()[dayOfWeek];
     }
 }

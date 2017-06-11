@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/fragment_full_screen_with_scrollview"
+    tools:context="nl.tcilegnar.timer.fragments.WeekOverviewFragment">
+
+    <LinearLayout
+        android:id="@+id/week_number_and_dates_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/week_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/week_label"
+            android:textSize="@dimen/text_size_week_overview"/>
+
+        <TextView
+            android:id="@+id/week_number_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_week_overview"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/week_overview_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/week_number_and_dates_container"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="@dimen/vertical_margin"/>
+</RelativeLayout>

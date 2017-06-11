@@ -21,7 +21,6 @@ import static android.view.View.OnClickListener;
 public class DayEditorItemView extends LinearLayout implements OnClickListener, OnTimeSetListener {
     private static final String TIMER_PICKER_DIALOG_TAG = "TIMER_PICKER_DIALOG_TAG";
     public static final int NO_TIME = -1;
-    public static final int INVALID_TIME = -2;
 
     private final DayEditorItem dayEditorItem;
     private final CurrentDateListener currentDateListener;
