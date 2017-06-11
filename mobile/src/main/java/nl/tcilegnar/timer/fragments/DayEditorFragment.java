@@ -59,6 +59,8 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
     private final Storage storage = new Storage();
 
+    private SaveListener saveLisener;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_day_editor, container, false);
@@ -192,6 +194,10 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         datePickerFragment.show(getActivity().getFragmentManager(), DATE_PICKER_DIALOG_TAG, getCurrentDate());
     }
 
+    public void setSaveListener(SaveListener saveListener) {
+        this.saveLisener = saveListener;
+    }
+
     private void saveCurrentDayValues() {
         try {
             CurrentDayMillis currentDayMillis = getCurrentDayMillis();
@@ -206,6 +212,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
                             Toast.makeText(App.getContext(), "Saved success (id=" + savedId + ")", LENGTH_SHORT).show();
                             logAll();
                             resetCurrentDay();
+                            saveLisener.onSaveSuccessful();
                         } else {
                             new SaveErrorDialog("Save failed").show(getActivity());
                         }
@@ -248,5 +255,9 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     @Override
     public Calendar getCurrentDate() {
         return storage.loadDayEditorCurrentDate();
+    }
+
+    public interface SaveListener {
+        void onSaveSuccessful();
     }
 }

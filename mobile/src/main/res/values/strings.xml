@@ -12,6 +12,9 @@
 
     <string name="ok">OK</string>
 
+    <string name="menu_item_day_editor">Invoer werktijden</string>
+    <string name="menu_item_week_overview">Week overzicht</string>
+
     <string name="today">vandaag</string>
 
     <string name="invalid_input">Onjuiste invoer</string>
