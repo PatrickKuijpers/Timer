@@ -51,9 +51,9 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     private static final String DATE_PICKER_DIALOG_TAG = "DATE_PICKER_DIALOG_TAG";
 
     private DayEditorAdapter dayEditorAdapter;
-    private TextView totalValueView;
-    private TextView totalValueLabelView;
     private TextView currenDayValueView;
+    private TextView totalValueLabelView;
+    private TextView totalValueView;
     private FloatingActionButton saveButton;
     private FloatingActionButton clearButton;
 
@@ -70,32 +70,21 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        setCurrentDate(getCurrentDateToInitWith());
-        setTotalTime();
-    }
-
-    public Calendar getCurrentDateToInitWith() {
-        if (storage.loadActiveDayEditor() == NO_ACTIVE_DAY_EDITOR) {
-            // No day editor active = no time set: assume you'd like to start over with a new day instead of retreiving
-            return TimerCalendar.getCurrentDate();
-        } else {
-            return getCurrentDate();
-        }
     }
 
     private void initViews(View view) {
-        totalValueView = (TextView) view.findViewById(R.id.total_value);
-        totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
         currenDayValueView = (TextView) view.findViewById(R.id.current_day_value);
+        totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
+        totalValueView = (TextView) view.findViewById(R.id.total_value);
 
         saveButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_save);
         clearButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_clear);
 
-        ListView dayEditorList = (ListView) view.findViewById(R.id.day_editor_list);
-        dayEditorAdapter = new DayEditorAdapter(getActivity(), this, this, this);
-        dayEditorList.setAdapter(dayEditorAdapter);
-
         setListeners();
+
+        setCurrentDate(getCurrentDateToInitWith());
+        setTotalTime();
+        initDayEditorList(view);
     }
 
     private void setListeners() {
@@ -117,6 +106,15 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
                 resetCurrentDay();
             }
         });
+    }
+
+    public Calendar getCurrentDateToInitWith() {
+        if (storage.loadActiveDayEditor() == NO_ACTIVE_DAY_EDITOR) {
+            // No day editor active = no time set: assume you'd like to start over with a new day instead of retreiving
+            return TimerCalendar.getCurrentDate();
+        } else {
+            return getCurrentDate();
+        }
     }
 
     private void setCurrentDate(Calendar date) {
@@ -161,6 +159,12 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         } catch (DayEditorItem.TimeNotSetException ignored) {
         }
         return timeString;
+    }
+
+    private void initDayEditorList(View view) {
+        ListView dayEditorList = (ListView) view.findViewById(R.id.day_editor_list);
+        dayEditorAdapter = new DayEditorAdapter(getActivity(), this, this, this);
+        dayEditorList.setAdapter(dayEditorAdapter);
     }
 
     @Override

@@ -13,11 +13,14 @@ import java.util.Calendar;
 import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.adapters.WeekOverviewAdapter;
 import nl.tcilegnar.timer.utils.TimerCalendar;
+import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 
 public class WeekOverviewFragment extends Fragment {
     private final Calendar currentDate = TimerCalendar.getCurrent();
 
     private TextView weekNumberValueView;
+    private TextView totalValueLabelView;
+    private TextView totalValueView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,14 +35,33 @@ public class WeekOverviewFragment extends Fragment {
 
     private void initViews(View view) {
         weekNumberValueView = (TextView) view.findViewById(R.id.week_number_value);
+        totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
+        totalValueView = (TextView) view.findViewById(R.id.total_value);
 
         setWeekNumber(currentDate);
+        setTotalTime();
         initWeekOverviewList(view);
     }
 
     private void setWeekNumber(Calendar currentDate) {
         int weekNumber = currentDate.get(Calendar.WEEK_OF_YEAR);
         weekNumberValueView.setText(String.valueOf(weekNumber));
+    }
+
+    private void setTotalTime() {
+        String timeString = getTotalTimeString();
+        if (!timeString.isEmpty()) {
+            totalValueView.setText(timeString);
+            totalValueView.setVisibility(View.VISIBLE);
+            totalValueLabelView.setVisibility(View.VISIBLE);
+        } else {
+            totalValueView.setVisibility(View.GONE);
+            totalValueLabelView.setVisibility(View.GONE);
+        }
+    }
+
+    private String getTotalTimeString() {
+        return TimerCalendarUtil.getReadableTimeStringHoursAndMinutes(0);
     }
 
     private void initWeekOverviewList(View view) {
