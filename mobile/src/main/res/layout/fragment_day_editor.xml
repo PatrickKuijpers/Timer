@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/fab_margin"
-        android:backgroundTint="@color/red"
+        app:backgroundTint="@color/red"
         app:srcCompat="@android:drawable/ic_menu_delete"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -63,7 +63,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/fab_margin"
-        android:backgroundTint="@color/green_medium"
+        app:backgroundTint="@color/green_medium"
         app:srcCompat="@android:drawable/ic_menu_save"/>
 
 </RelativeLayout>
