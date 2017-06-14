@@ -27,6 +27,7 @@ import nl.tcilegnar.timer.dialogs.TimePickerFragment;
 import nl.tcilegnar.timer.enums.DayEditorItem;
 import nl.tcilegnar.timer.fragments.dialogs.SaveErrorDialog;
 import nl.tcilegnar.timer.fragments.dialogs.ValidationErrorDialogFragment;
+import nl.tcilegnar.timer.models.TimerError;
 import nl.tcilegnar.timer.models.Validation;
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
 import nl.tcilegnar.timer.utils.DateFormatter;
@@ -209,22 +210,22 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
             Validation validation = currentDayMillis.getValidation();
             if (validation.isValid()) {
-                DatabaseSaveUtil util = new DatabaseSaveUtil(new DatabaseSaveUtil.AsyncResponse() {
+                new DatabaseSaveUtil(new DatabaseSaveUtil.AsyncResponse() {
                     @Override
-                    public void processFinish(Long savedId, boolean success) {
-                        if (success) {
-                            Toast.makeText(App.getContext(), "Saved success (id=" + savedId + ")", LENGTH_SHORT).show();
-                            logAll();
-                            resetCurrentDay();
-                            saveLisener.onSaveSuccessful();
-                        } else {
-                            new SaveErrorDialog("Save failed").show(getActivity());
-                        }
+                    public void savedSuccesfully(Long savedId) {
+                        Toast.makeText(App.getContext(), "Saved success (id=" + savedId + ")", LENGTH_SHORT).show();
+                        logAll();
+                        resetCurrentDay();
+                        saveLisener.onSaveSuccessful();
                     }
-                });
-                util.execute(currentDayMillis);
+
+                    @Override
+                    public void saveFailed(TimerError error) {
+                        new SaveErrorDialog(error.getMessage()).show(getActivity());
+                    }
+                }).execute(currentDayMillis);
             } else {
-                new SaveErrorDialog(validation).show(getActivity());
+                new SaveErrorDialog(validation.getErrorMessage()).show(getActivity());
             }
         } catch (DayEditorItem.TimeNotSetException e) {
             new SaveErrorDialog(e.getMessage()).show(getActivity());

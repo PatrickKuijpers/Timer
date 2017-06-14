@@ -26,10 +26,6 @@ public class ValidationErrorDialogFragment extends DialogFragment {
         this(validation.getErrorMessage());
     }
 
-    public ValidationErrorDialogFragment(@StringRes int messageResId) {
-        this(Res.getString(messageResId));
-    }
-
     public ValidationErrorDialogFragment(String message) {
         super();
         titleText = Res.getString(R.string.invalid_input);

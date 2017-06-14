@@ -1,6 +1,8 @@
 package nl.tcilegnar.timer.models.database;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Column;
+import com.orm.dsl.Table;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,8 +33,11 @@ import static nl.tcilegnar.timer.utils.TimerCalendarUtil.areSameDay;
  * 3) In between, there might be several times from {@link DayEditorItem#BreakStart} and {@link DayEditorItem#BreakEnd})
  * </p>
  */
-public class CurrentDayMillis extends SugarRecord<CurrentDayMillis> {
+@Table(name = "CURRENT_DAY_MILLIS")
+public class CurrentDayMillis extends SugarRecord {
+    @Column(name = "DAY_IN_MILLIS", unique = true)
     private long dayInMillis;
+    @Column(name = "TIMES_IN_MILLIS")
     private String timesInMillis;
 
     public CurrentDayMillis() {

@@ -3,42 +3,55 @@ package nl.tcilegnar.timer.utils.database;
 import com.orm.SugarRecord;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
-import nl.tcilegnar.timer.App;
+import nl.tcilegnar.timer.models.TimerError;
 
-import static android.widget.Toast.LENGTH_SHORT;
+public class DatabaseSaveUtil extends AsyncTask<Object, Void, Long> {
+    private static final long NOT_SAVED = 0L;
 
-public class DatabaseSaveUtil extends AsyncTask<SugarRecord, Void, Long> {
-    private AsyncResponse listener = null;
-    private Long id;
+    private final AsyncResponse listener;
+    private Long id = NOT_SAVED;
+    private TimerError error = new TimerError();
 
     public DatabaseSaveUtil(AsyncResponse listener) {
         this.listener = listener;
     }
 
     @Override
-    protected Long doInBackground(SugarRecord[] params) {
-        SugarRecord param = params[0];
+    protected Long doInBackground(Object[] params) {
+        Object param = params[0];
         try {
-            param.save();
-            id = param.getId();
+            boolean isSugarEntity = SugarRecord.isSugarEntity(param.getClass());
+            if (isSugarEntity) {
+                SugarRecord sugarRecord = (SugarRecord) param;
+                sugarRecord.save();
+                id = sugarRecord.getId();
+            } else {
+                error = new TimerError("No sugar record");
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            error = new TimerError(e);
         }
         return id;
     }
 
     @Override
     protected void onPostExecute(Long savedId) {
-        listener.processFinish(savedId, isSuccess());
+        if (isSuccess()) {
+            listener.savedSuccesfully(savedId);
+        } else {
+            listener.saveFailed(error);
+        }
     }
 
     private boolean isSuccess() {
-        return id > 0;
+        return id != NOT_SAVED && id > 0;
     }
 
     public interface AsyncResponse {
-        void processFinish(Long savedId, boolean success);
+        void savedSuccesfully(Long savedId);
+
+        void saveFailed(TimerError error);
     }
 }
