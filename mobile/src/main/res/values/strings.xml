@@ -1,6 +1,8 @@
 <resources>
 
     <string name="empty_string"/>
+    
+    <string name="version_unknown">Version unknown</string>
 
     <string name="day_editor_item_start">Start werkdag</string>
     <string name="day_editor_item_break_start">Start pauze</string>

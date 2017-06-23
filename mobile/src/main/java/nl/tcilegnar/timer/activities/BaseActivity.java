@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import nl.tcilegnar.timer.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
+    protected final String LOGTAG = getClass().getSimpleName();
 
     protected class MenuItemId {
         public static final int DAY_EDITOR = 0;

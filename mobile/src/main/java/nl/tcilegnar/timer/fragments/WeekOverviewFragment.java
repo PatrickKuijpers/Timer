@@ -12,6 +12,7 @@ import java.util.Calendar;
 
 import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.adapters.WeekOverviewAdapter;
+import nl.tcilegnar.timer.utils.AppData;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 
@@ -41,6 +42,7 @@ public class WeekOverviewFragment extends Fragment {
         setWeekNumber(currentDate);
         setTotalTime();
         initWeekOverviewList(view);
+        setVersionNumber(view);
     }
 
     private void setWeekNumber(Calendar currentDate) {
@@ -68,5 +70,10 @@ public class WeekOverviewFragment extends Fragment {
         ListView weekOverviewList = (ListView) view.findViewById(R.id.week_overview_list);
         WeekOverviewAdapter weekOverviewAdapter = new WeekOverviewAdapter(getActivity());
         weekOverviewList.setAdapter(weekOverviewAdapter);
+    }
+
+    public void setVersionNumber(View view) {
+        TextView versionNrView = (TextView) view.findViewById(R.id.version_nr);
+        versionNrView.setText(AppData.getAppVersionName());
     }
 }
