@@ -51,4 +51,14 @@
         android:layout_marginTop="@dimen/vertical_margin"
         android:divider="@android:color/transparent"
         android:dividerHeight="@dimen/vertical_margin"/>
+
+    <TextView
+        android:id="@+id/version_nr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="4dp"
+        android:textColor="@color/grey_medium"
+        android:textSize="@dimen/text_size_small"/>
 </RelativeLayout>

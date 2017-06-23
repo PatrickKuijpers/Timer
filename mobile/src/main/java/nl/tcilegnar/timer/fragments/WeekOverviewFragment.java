@@ -12,6 +12,7 @@ import java.util.Calendar;
 
 import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.adapters.WeekOverviewAdapter;
+import nl.tcilegnar.timer.utils.AppData;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 
@@ -34,13 +35,14 @@ public class WeekOverviewFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        weekNumberValueView = (TextView) view.findViewById(R.id.week_number_value);
-        totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
-        totalValueView = (TextView) view.findViewById(R.id.total_value);
+        weekNumberValueView = view.findViewById(R.id.week_number_value);
+        totalValueLabelView = view.findViewById(R.id.total_value_label);
+        totalValueView = view.findViewById(R.id.total_value);
 
         setWeekNumber(currentDate);
         setTotalTime();
         initWeekOverviewList(view);
+        setVersionNumber(view);
     }
 
     private void setWeekNumber(Calendar currentDate) {
@@ -65,8 +67,13 @@ public class WeekOverviewFragment extends Fragment {
     }
 
     private void initWeekOverviewList(View view) {
-        ListView weekOverviewList = (ListView) view.findViewById(R.id.week_overview_list);
+        ListView weekOverviewList = view.findViewById(R.id.week_overview_list);
         WeekOverviewAdapter weekOverviewAdapter = new WeekOverviewAdapter(getActivity());
         weekOverviewList.setAdapter(weekOverviewAdapter);
+    }
+
+    public void setVersionNumber(View view) {
+        TextView versionNrView = view.findViewById(R.id.version_nr);
+        versionNrView.setText(AppData.getAppVersionName());
     }
 }
