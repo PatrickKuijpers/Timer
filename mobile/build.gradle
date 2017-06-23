@@ -7,13 +7,13 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 25
     buildToolsVersion "25.0.3"
 
     defaultConfig {
         applicationId "nl.tcilegnar.timer"
         minSdkVersion 18    // API 4.3  (JELLY_BEAN_MR2)
-        targetSdkVersion 26 // API 7.1  (O)
+        targetSdkVersion 25 // API 7.1  (N_MR1)
         versionCode 3
         versionName "0.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -59,7 +59,7 @@ android {
 
     // Voorkom dat errors van lint builds breken in Jenkins
     lintOptions {
-        abortOnError false
+        abortOnError false // TODO!
     }
 
     /*

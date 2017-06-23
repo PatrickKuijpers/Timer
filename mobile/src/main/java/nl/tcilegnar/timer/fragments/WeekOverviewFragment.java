@@ -35,9 +35,9 @@ public class WeekOverviewFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        weekNumberValueView = view.findViewById(R.id.week_number_value);
-        totalValueLabelView = view.findViewById(R.id.total_value_label);
-        totalValueView = view.findViewById(R.id.total_value);
+        weekNumberValueView = (TextView) view.findViewById(R.id.week_number_value);
+        totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
+        totalValueView = (TextView) view.findViewById(R.id.total_value);
 
         setWeekNumber(currentDate);
         setTotalTime();
@@ -67,13 +67,13 @@ public class WeekOverviewFragment extends Fragment {
     }
 
     private void initWeekOverviewList(View view) {
-        ListView weekOverviewList = view.findViewById(R.id.week_overview_list);
+        ListView weekOverviewList = (ListView) view.findViewById(R.id.week_overview_list);
         WeekOverviewAdapter weekOverviewAdapter = new WeekOverviewAdapter(getActivity());
         weekOverviewList.setAdapter(weekOverviewAdapter);
     }
 
     public void setVersionNumber(View view) {
-        TextView versionNrView = view.findViewById(R.id.version_nr);
+        TextView versionNrView = (TextView) view.findViewById(R.id.version_nr);
         versionNrView.setText(AppData.getAppVersionName());
     }
 }

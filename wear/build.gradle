@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "nl.tcilegnar.timer"
         minSdkVersion 21    // API 5.0  (LOLLIPOP)
-        targetSdkVersion 26 // API 7.1  (O)
+        targetSdkVersion 25 // API 7.1  (N_MR1)
         versionCode 2
         versionName "0.0.2"
     }

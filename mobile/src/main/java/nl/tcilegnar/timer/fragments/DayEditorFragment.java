@@ -75,12 +75,12 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     }
 
     private void initViews(View view) {
-        currenDayValueView = view.findViewById(R.id.current_day_value);
-        totalValueLabelView = view.findViewById(R.id.total_value_label);
-        totalValueView = view.findViewById(R.id.total_value);
+        currenDayValueView = (TextView) view.findViewById(R.id.current_day_value);
+        totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
+        totalValueView = (TextView) view.findViewById(R.id.total_value);
 
-        saveButton = view.findViewById(R.id.day_editor_button_save);
-        clearButton = view.findViewById(R.id.day_editor_button_clear);
+        saveButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_save);
+        clearButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_clear);
 
         setListeners();
 
@@ -164,7 +164,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     }
 
     private void initDayEditorList(View view) {
-        ListView dayEditorList = view.findViewById(R.id.day_editor_list);
+        ListView dayEditorList = (ListView) view.findViewById(R.id.day_editor_list);
         dayEditorAdapter = new DayEditorAdapter(getActivity(), this, this, this);
         dayEditorList.setAdapter(dayEditorAdapter);
     }
