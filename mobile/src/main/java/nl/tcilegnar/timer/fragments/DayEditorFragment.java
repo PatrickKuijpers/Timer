@@ -36,6 +36,7 @@ import nl.tcilegnar.timer.utils.Res;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 import nl.tcilegnar.timer.utils.database.DatabaseSaveUtil;
+import nl.tcilegnar.timer.utils.database.DatabaseSaveUtil.AsyncResponse;
 import nl.tcilegnar.timer.utils.storage.Storage;
 import nl.tcilegnar.timer.views.DayEditorItemView.CurrentDateListener;
 import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
@@ -210,7 +211,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
             Validation validation = currentDayMillis.getValidation();
             if (validation.isValid()) {
-                new DatabaseSaveUtil(new DatabaseSaveUtil.AsyncResponse() {
+                new DatabaseSaveUtil(new AsyncResponse() {
                     @Override
                     public void savedSuccesfully(Long savedId) {
                         Toast.makeText(App.getContext(), "Saved success (id=" + savedId + ")", LENGTH_SHORT).show();
@@ -227,7 +228,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
             } else {
                 new SaveErrorDialog(validation.getErrorMessage()).show(getActivity());
             }
-        } catch (DayEditorItem.TimeNotSetException e) {
+        } catch (Exception e) {
             new SaveErrorDialog(e.getMessage()).show(getActivity());
         }
     }
