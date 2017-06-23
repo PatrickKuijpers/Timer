@@ -7,9 +7,14 @@
     <string name="day_editor_item_break_end">Einde pauze</string>
     <string name="day_editor_item_end">Einde werkdag</string>
 
+    <string name="label_seperator">:&#160;</string>
     <string name="total_label">Totaal:&#160;</string>
+    <string name="week_label">Week:&#160;</string>
 
     <string name="ok">OK</string>
+
+    <string name="menu_item_day_editor">Invoer werktijden</string>
+    <string name="menu_item_week_overview">Week overzicht</string>
 
     <string name="today">vandaag</string>
 

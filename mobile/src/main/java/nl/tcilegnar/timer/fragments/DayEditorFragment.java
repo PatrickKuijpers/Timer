@@ -27,6 +27,7 @@ import nl.tcilegnar.timer.dialogs.TimePickerFragment;
 import nl.tcilegnar.timer.enums.DayEditorItem;
 import nl.tcilegnar.timer.fragments.dialogs.SaveErrorDialog;
 import nl.tcilegnar.timer.fragments.dialogs.ValidationErrorDialogFragment;
+import nl.tcilegnar.timer.models.TimerError;
 import nl.tcilegnar.timer.models.Validation;
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
 import nl.tcilegnar.timer.utils.DateFormatter;
@@ -35,6 +36,7 @@ import nl.tcilegnar.timer.utils.Res;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 import nl.tcilegnar.timer.utils.database.DatabaseSaveUtil;
+import nl.tcilegnar.timer.utils.database.DatabaseSaveUtil.AsyncResponse;
 import nl.tcilegnar.timer.utils.storage.Storage;
 import nl.tcilegnar.timer.views.DayEditorItemView.CurrentDateListener;
 import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
@@ -51,13 +53,15 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     private static final String DATE_PICKER_DIALOG_TAG = "DATE_PICKER_DIALOG_TAG";
 
     private DayEditorAdapter dayEditorAdapter;
-    private TextView totalValueView;
-    private TextView totalValueLabelView;
     private TextView currenDayValueView;
+    private TextView totalValueLabelView;
+    private TextView totalValueView;
     private FloatingActionButton saveButton;
     private FloatingActionButton clearButton;
 
     private final Storage storage = new Storage();
+
+    private SaveListener saveLisener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,32 +72,21 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        setCurrentDate(getCurrentDateToInitWith());
-        setTotalTime();
-    }
-
-    public Calendar getCurrentDateToInitWith() {
-        if (storage.loadActiveDayEditor() == NO_ACTIVE_DAY_EDITOR) {
-            // No day editor active = no time set: assume you'd like to start over with a new day instead of retreiving
-            return TimerCalendar.getCurrentDate();
-        } else {
-            return getCurrentDate();
-        }
     }
 
     private void initViews(View view) {
-        totalValueView = (TextView) view.findViewById(R.id.total_value);
-        totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
         currenDayValueView = (TextView) view.findViewById(R.id.current_day_value);
+        totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
+        totalValueView = (TextView) view.findViewById(R.id.total_value);
 
         saveButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_save);
         clearButton = (FloatingActionButton) view.findViewById(R.id.day_editor_button_clear);
 
-        ListView dayEditorList = (ListView) view.findViewById(R.id.day_editor_list);
-        dayEditorAdapter = new DayEditorAdapter(getActivity(), this, this, this);
-        dayEditorList.setAdapter(dayEditorAdapter);
-
         setListeners();
+
+        setCurrentDate(getCurrentDateToInitWith());
+        setTotalTime();
+        initDayEditorList(view);
     }
 
     private void setListeners() {
@@ -115,6 +108,15 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
                 resetCurrentDay();
             }
         });
+    }
+
+    public Calendar getCurrentDateToInitWith() {
+        if (storage.loadActiveDayEditor() == NO_ACTIVE_DAY_EDITOR) {
+            // No day editor active = no time set: assume you'd like to start over with a new day instead of retreiving
+            return TimerCalendar.getCurrentDate();
+        } else {
+            return getCurrentDate();
+        }
     }
 
     private void setCurrentDate(Calendar date) {
@@ -161,6 +163,12 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         return timeString;
     }
 
+    private void initDayEditorList(View view) {
+        ListView dayEditorList = (ListView) view.findViewById(R.id.day_editor_list);
+        dayEditorAdapter = new DayEditorAdapter(getActivity(), this, this, this);
+        dayEditorList.setAdapter(dayEditorAdapter);
+    }
+
     @Override
     public void showTimePickerDialog(OnTimeSetListener onTimeSetListener, String tag, DayEditorItem dayEditorItem) {
         Calendar timeInDatePicker = getTimeToShowInTimePickerDialog(dayEditorItem);
@@ -192,6 +200,10 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         datePickerFragment.show(getActivity().getFragmentManager(), DATE_PICKER_DIALOG_TAG, getCurrentDate());
     }
 
+    public void setSaveListener(SaveListener saveListener) {
+        this.saveLisener = saveListener;
+    }
+
     private void saveCurrentDayValues() {
         try {
             CurrentDayMillis currentDayMillis = getCurrentDayMillis();
@@ -199,23 +211,24 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
             Validation validation = currentDayMillis.getValidation();
             if (validation.isValid()) {
-                DatabaseSaveUtil util = new DatabaseSaveUtil(new DatabaseSaveUtil.AsyncResponse() {
+                new DatabaseSaveUtil(new AsyncResponse() {
                     @Override
-                    public void processFinish(Long savedId, boolean success) {
-                        if (success) {
-                            Toast.makeText(App.getContext(), "Saved success (id=" + savedId + ")", LENGTH_SHORT).show();
-                            logAll();
-                            resetCurrentDay();
-                        } else {
-                            new SaveErrorDialog("Save failed").show(getActivity());
-                        }
+                    public void savedSuccesfully(Long savedId) {
+                        Toast.makeText(App.getContext(), "Saved success (id=" + savedId + ")", LENGTH_SHORT).show();
+                        logAll();
+                        resetCurrentDay();
+                        saveLisener.onSaveSuccessful();
                     }
-                });
-                util.execute(currentDayMillis);
+
+                    @Override
+                    public void saveFailed(TimerError error) {
+                        new SaveErrorDialog(error.getMessage()).show(getActivity());
+                    }
+                }).execute(currentDayMillis);
             } else {
-                new SaveErrorDialog(validation).show(getActivity());
+                new SaveErrorDialog(validation.getErrorMessage()).show(getActivity());
             }
-        } catch (DayEditorItem.TimeNotSetException e) {
+        } catch (Exception e) {
             new SaveErrorDialog(e.getMessage()).show(getActivity());
         }
     }
@@ -248,5 +261,9 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     @Override
     public Calendar getCurrentDate() {
         return storage.loadDayEditorCurrentDate();
+    }
+
+    public interface SaveListener {
+        void onSaveSuccessful();
     }
 }

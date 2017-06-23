@@ -1,20 +1,22 @@
 package nl.tcilegnar.timer.activities;
 
-import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 
-import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.fragments.DayEditorFragment;
+import nl.tcilegnar.timer.fragments.DayEditorFragment.SaveListener;
 
 public class DayEditorActivity extends BaseActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (savedInstanceState == null) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.activity_content, new DayEditorFragment()).commit();
-        }
+    @NonNull
+    protected Fragment getInitialFragment() {
+        DayEditorFragment dayEditorFragment = new DayEditorFragment();
+        dayEditorFragment.setSaveListener(new SaveListener() {
+            @Override
+            public void onSaveSuccessful() {
+                startWeekOverviewActivity();
+            }
+        });
+        return dayEditorFragment;
     }
 }

@@ -8,8 +8,7 @@
 
     <application
         android:name=".App"
-        android:allowBackup="true"
-        android:fullBackupContent="true"
+        android:allowBackup="false"
         android:icon="@mipmap/launcher_icon_timer"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -32,13 +31,14 @@
         <activity
             android:name=".activities.DayEditorActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".activities.WeekOverviewActivity"/>
     </application>
 
 </manifest>
