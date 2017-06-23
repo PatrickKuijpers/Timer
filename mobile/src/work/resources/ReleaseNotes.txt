@@ -1,0 +1,2 @@
+Eerste bruikbare versie.
+Je kunt de tijden opslaan, maar nog geen weekoverzicht inzien!
