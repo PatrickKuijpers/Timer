@@ -88,6 +88,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.github.satyan:sugar:1.5' // https://github.com/chennaione/sugar
+    compile 'net.hockeyapp.android:HockeySDK:4.0.0'
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.1'
     testCompile 'org.mockito:mockito-all:1.9.5'

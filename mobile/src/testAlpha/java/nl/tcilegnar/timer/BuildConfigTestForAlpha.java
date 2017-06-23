@@ -8,7 +8,7 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class BuildConfigTestForDebug extends BuildConfigTestForProductFlavor {
+public class BuildConfigTestForAlpha extends BuildConfigTestForProductFlavor {
     private static final String APPLICATION_ID = APPLICATION_ID_WITH_FLAVOR + ".alpha";
 
     @Override
