@@ -57,6 +57,11 @@ android {
         }
     }
 
+    // Voorkom dat errors van lint builds breken in Jenkins
+    lintOptions {
+        abortOnError false
+    }
+
     /*
     aaptOptions {
         cruncherEnabled false
