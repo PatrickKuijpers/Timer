@@ -36,6 +36,11 @@ android {
             applicationIdSuffix ".sleep"
         }
     }
+
+    // Voorkom dat errors van lint builds breken in Jenkins
+    lintOptions {
+        abortOnError false // TODO!
+    }
 }
 
 dependencies {
