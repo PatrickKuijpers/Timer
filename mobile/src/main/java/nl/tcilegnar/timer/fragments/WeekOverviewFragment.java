@@ -62,19 +62,21 @@ public class WeekOverviewFragment extends Fragment {
         setVersionNumber(view);
     }
 
-    private List<CurrentDayMillis> getCurrentDayMillisOfWeek(Calendar currentDate) {
-        String startOfThisWeekMillis = "1497823200000";
-        String startOfNextWeekMillis = "1498428000000";
+    private List<CurrentDayMillis> getCurrentDayMillisOfWeek(Calendar date) {
+        String startOfThisWeekMillis = String.valueOf(TimerCalendar.getFirstDayOfWeek(date).getTimeInMillis());
+        String startOfNextWeekMillis = String.valueOf(TimerCalendar.getFirstDayOfNextWeek(date).getTimeInMillis());
+
         Condition firstDayOfWeek = Condition.prop("DAY_IN_MILLIS").eq(startOfThisWeekMillis);
         Condition[] allDaysOfWeekExceptFirstDay = {Condition.prop("DAY_IN_MILLIS").gt(startOfThisWeekMillis),
                 Condition.prop("DAY_IN_MILLIS").lt(startOfNextWeekMillis)};
-        List<CurrentDayMillis> currentDayMillisList = Select.from(CurrentDayMillis.class).where
+        
+        List<CurrentDayMillis> currentDayMillisOfWeek = Select.from(CurrentDayMillis.class).where
                 (allDaysOfWeekExceptFirstDay).or(firstDayOfWeek).orderBy("DAY_IN_MILLIS").list();
-        Log.i(TAG, "listAll: " + currentDayMillisList.size() + " entries found");
-        for (CurrentDayMillis currentDayMillis : currentDayMillisList) {
+        Log.i(TAG, "listAll: " + currentDayMillisOfWeek.size() + " entries found");
+        for (CurrentDayMillis currentDayMillis : currentDayMillisOfWeek) {
             Log.v(TAG, "ID: " + currentDayMillis.getId() + " - " + currentDayMillis.toString());
         }
-        return currentDayMillisList;
+        return currentDayMillisOfWeek;
     }
 
     private void setWeekNumber(Calendar currentDate) {

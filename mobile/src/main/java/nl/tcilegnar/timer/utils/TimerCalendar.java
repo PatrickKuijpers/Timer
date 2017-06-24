@@ -20,7 +20,7 @@ public class TimerCalendar {
     }
 
     /** A copy with same timezone and time in millis. Because the normal copy method doesn't work as expected */
-    private static Calendar getCopyOfCalendar(Calendar cal) {
+    public static Calendar getCopyOfCalendar(Calendar cal) {
         return getCalendarInMillis(cal.getTimeInMillis());
     }
 
@@ -58,5 +58,17 @@ public class TimerCalendar {
 
     public static String getDayOfWeekTextLong(int dayOfWeek) {
         return DateFormatSymbols.getInstance(MyLocale.getLocaleForTranslationAndSigns()).getWeekdays()[dayOfWeek];
+    }
+
+    public static Calendar getFirstDayOfWeek(Calendar currentDate) {
+        Calendar cal = TimerCalendar.getCopyOfCalendar(currentDate);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        return cal;
+    }
+
+    public static Calendar getFirstDayOfNextWeek(Calendar currentDate) {
+        Calendar cal = getFirstDayOfWeek(currentDate);
+        cal.add(Calendar.WEEK_OF_YEAR, 1);
+        return cal;
     }
 }
