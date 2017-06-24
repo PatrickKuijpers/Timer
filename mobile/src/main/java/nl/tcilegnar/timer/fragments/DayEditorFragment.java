@@ -1,6 +1,8 @@
 package nl.tcilegnar.timer.fragments;
 
 import com.orm.SugarRecord;
+import com.orm.query.Condition;
+import com.orm.query.Select;
 
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -210,13 +212,27 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
             Validation validation = currentDayMillis.getValidation();
             if (validation.isValid()) {
+                final List<CurrentDayMillis> duplicateEntries = getDuplicateEntries(currentDayMillis);
                 new DatabaseSaveUtil(new AsyncResponse() {
                     @Override
                     public void savedSuccesfully(Long savedId) {
                         Toast.makeText(App.getContext(), "Saved success (id=" + savedId + ")", LENGTH_SHORT).show();
                         logAll();
+                        removeDuplicateEntries(duplicateEntries);
+                        logAll();
                         resetCurrentDay();
                         saveLisener.onSaveSuccessful();
+                    }
+
+                    private void removeDuplicateEntries(List<CurrentDayMillis> duplicateEntries) {
+                        try {
+                            for (CurrentDayMillis duplicateEntry : duplicateEntries) {
+                                duplicateEntry.delete();
+                            }
+                        } catch (Exception e) {
+                            new SaveErrorDialog(Res.getString(R.string
+                                    .error_message_dialog_save_duplciates_could_not_be_removed)).show(getActivity());
+                        }
                     }
 
                     @Override
@@ -230,6 +246,18 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         } catch (Exception e) {
             new SaveErrorDialog(e.getMessage()).show(getActivity());
         }
+    }
+
+    private List<CurrentDayMillis> getDuplicateEntries(CurrentDayMillis newEntry) {
+        long dayMillis = newEntry.getDayMillis();
+        Condition sameDay = Condition.prop("DAY_IN_MILLIS").eq(dayMillis);
+
+        List<CurrentDayMillis> duplicateEntries = Select.from(CurrentDayMillis.class).where(sameDay).list();
+        Log.i(TAG, duplicateEntries.size() + " duplicate entries found");
+        for (CurrentDayMillis duplicateEntry : duplicateEntries) {
+            Log.v(TAG, duplicateEntry.toString());
+        }
+        return duplicateEntries;
     }
 
     private CurrentDayMillis getCurrentDayMillis() throws DayEditorItem.TimeNotSetException {

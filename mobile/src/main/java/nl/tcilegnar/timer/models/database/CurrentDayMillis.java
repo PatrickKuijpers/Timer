@@ -68,7 +68,7 @@ public class CurrentDayMillis extends SugarRecord {
         this.timesInMillis = timesInMillis.toString();
     }
 
-    public Long getDayMillis() {
+    public long getDayMillis() {
         return dayInMillis;
     }
 
