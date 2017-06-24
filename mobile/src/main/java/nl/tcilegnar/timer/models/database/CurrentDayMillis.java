@@ -163,8 +163,13 @@ public class CurrentDayMillis extends SugarRecord {
         return areConsecutiveTimesLater;
     }
 
+    public String getTotalTimeReadableString() {
+        return TimerCalendarUtil.getReadableTimeStringHoursAndMinutes(getTotalTimeInMinutes());
+    }
+
     @Override
     public String toString() {
-        return "CurrentDayMillis{currentDay=" + new Date(dayInMillis) + ", timesInMillis=" + timesInMillis + '}';
+        return "CurrentDayMillis{" + new Date(dayInMillis) + ", timesInMillis=" + timesInMillis + "} & ID=" + getId()
+                + " & totalTime=" + getTotalTimeReadableString();
     }
 }

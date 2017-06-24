@@ -42,8 +42,7 @@ public class DayEditorActivity extends BaseActivity {
                 checkForCrashes(hockeyAppId);
                 checkForUpdates(hockeyAppId);
             } catch (Exception e) {
-                Log.w(LOGTAG, "Helaas geen crash reports & andere handige tools van HockeyApp");
-                e.printStackTrace();
+                Log.i(LOGTAG, "Helaas geen crash reports & andere handige tools van HockeyApp");
             }
         }
     }

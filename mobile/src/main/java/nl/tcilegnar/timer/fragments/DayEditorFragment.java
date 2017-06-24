@@ -153,8 +153,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
             Validation validation = currentDayMillis.getValidation();
             if (validation.isValid()) {
-                int totalTimeInMinutes = currentDayMillis.getTotalTimeInMinutes();
-                timeString = TimerCalendarUtil.getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
+                timeString = currentDayMillis.getTotalTimeReadableString();
             } else {
                 new ValidationErrorDialogFragment().show(getActivity());
             }

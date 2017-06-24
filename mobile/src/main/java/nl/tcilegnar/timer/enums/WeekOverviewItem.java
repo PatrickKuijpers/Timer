@@ -4,7 +4,6 @@ import java.util.Calendar;
 
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
 import nl.tcilegnar.timer.utils.TimerCalendar;
-import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 
 public enum WeekOverviewItem {
     MONDAY(Calendar.MONDAY),
@@ -41,7 +40,6 @@ public enum WeekOverviewItem {
     }
 
     public String getTotalTimeString() {
-        int totalTimeInMinutes = getCurrentDayMillis().getTotalTimeInMinutes();
-        return TimerCalendarUtil.getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
+        return getCurrentDayMillis().getTotalTimeReadableString();
     }
 }
