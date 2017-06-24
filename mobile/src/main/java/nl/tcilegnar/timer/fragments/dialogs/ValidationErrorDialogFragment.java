@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 
@@ -27,8 +26,12 @@ public class ValidationErrorDialogFragment extends DialogFragment {
     }
 
     public ValidationErrorDialogFragment(String message) {
+        this(Res.getString(R.string.invalid_input), message);
+    }
+
+    public ValidationErrorDialogFragment(String title, String message) {
         super();
-        titleText = Res.getString(R.string.invalid_input);
+        titleText = title;
         messageText = message;
         positiveButtonText = Res.getString(R.string.ok);
     }

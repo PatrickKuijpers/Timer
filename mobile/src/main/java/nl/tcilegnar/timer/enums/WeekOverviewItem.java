@@ -2,6 +2,7 @@ package nl.tcilegnar.timer.enums;
 
 import java.util.Calendar;
 
+import nl.tcilegnar.timer.models.database.CurrentDayMillis;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 
 public enum WeekOverviewItem {
@@ -15,6 +16,7 @@ public enum WeekOverviewItem {
 
     private final int dayOfWeekNumberFromCalendar;
     private final String dayOfWeekText;
+    private CurrentDayMillis currentDayMillis;
 
     WeekOverviewItem(int dayOfWeekNumberFromCalendar) {
         this.dayOfWeekNumberFromCalendar = dayOfWeekNumberFromCalendar;
@@ -27,5 +29,17 @@ public enum WeekOverviewItem {
 
     public String getDayOfWeekText() {
         return dayOfWeekText;
+    }
+
+    public CurrentDayMillis getCurrentDayMillis() {
+        return currentDayMillis;
+    }
+
+    public void setCurrentDayMillis(CurrentDayMillis currentDayMillis) {
+        this.currentDayMillis = currentDayMillis;
+    }
+
+    public String getTotalTimeString() {
+        return getCurrentDayMillis().getTotalTimeReadableString();
     }
 }

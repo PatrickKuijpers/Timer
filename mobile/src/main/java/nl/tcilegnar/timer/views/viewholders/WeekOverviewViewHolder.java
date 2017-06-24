@@ -35,6 +35,6 @@ public class WeekOverviewViewHolder extends BaseViewHolder<WeekOverviewItem> {
     @Override
     protected void loadData(WeekOverviewItem weekOverviewItem) {
         dayOfWeekLabel.setText(weekOverviewItem.getDayOfWeekText());
-        dayOfWeekValue.setText("00:00");
+        dayOfWeekValue.setText(weekOverviewItem.getTotalTimeString());
     }
 }

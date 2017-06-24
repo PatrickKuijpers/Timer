@@ -1,7 +1,7 @@
 <resources>
 
     <string name="empty_string"/>
-    
+
     <string name="version_unknown">Version unknown</string>
 
     <string name="day_editor_item_start">Start werkdag</string>
@@ -9,6 +9,7 @@
     <string name="day_editor_item_break_end">Einde pauze</string>
     <string name="day_editor_item_end">Einde werkdag</string>
 
+    <string name="space">&#160;</string>
     <string name="label_seperator">:&#160;</string>
     <string name="total_label">Totaal:&#160;</string>
     <string name="week_label">Week:&#160;</string>
@@ -25,6 +26,9 @@
     <string name="validation_error_message_not_all_times_same_day">Niet alle tijden vallen op dezelfde dag (app fout!)</string>
     <string name="validation_error_message_consecutive_times_not_later">Opeenvolgende tijden mogen niet vóór de vorige tijd vallen</string>
     <string name="validation_error_message_total_time_negative">De combinatie van ingevoerde tijden zorgt voor een negatieve totaaltijd</string>
-    <string name="error_message_save_dialog">Kan niet opslaan</string>
+    <string name="error_message_dialog_save">Kan niet opslaan</string>
+    <string name="error_message_dialog_save_duplciates_could_not_be_removed">Duplicate entries found and could not be deleted</string>
+    <string name="error_title_dialog_load">Kan niet laden</string>
+    <string name="error_message_dialog_load_weeknumber">Kan de gegevens van week %s$1 niet laden</string>
 
 </resources>
