@@ -14,8 +14,8 @@ android {
         applicationId "nl.tcilegnar.timer"
         minSdkVersion 18    // API 4.3  (JELLY_BEAN_MR2)
         targetSdkVersion 25 // API 7.1  (N_MR1)
-        versionCode 3
-        versionName "0.0.3"
+        versionCode 4
+        versionName "0.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
