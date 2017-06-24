@@ -49,7 +49,7 @@ import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListene
 
 public class DayEditorFragment extends Fragment implements CurrentDateListener, TimePickerDialogListener,
         TimeChangedListener {
-    private final String TAG = this.getClass().getSimpleName();
+    private final String TAG = Log.getTag(this);
     private static final String DATE_PICKER_DIALOG_TAG = "DATE_PICKER_DIALOG_TAG";
 
     private DayEditorAdapter dayEditorAdapter;
