@@ -50,10 +50,10 @@ public class WeekOverviewFragment extends Fragment {
 
         setWeekNumber(currentDate);
         try {
-            List<CurrentDayMillis> currentDayMillisList = getCurrentDayMillisList(currentDate);
+            List<CurrentDayMillis> currentDayMillisOfWeek = getCurrentDayMillisOfWeek(currentDate);
 
-            initWeekOverviewList(view, currentDayMillisList);
-            setTotalTime(currentDayMillisList);
+            setTotalTime(currentDayMillisOfWeek);
+            initWeekOverviewList(view, currentDayMillisOfWeek);
         } catch (Exception e) {
             e.printStackTrace();
             new LoadErrorDialog(String.format(Res.getString(R.string.error_message_dialog_load_weeknumber),
@@ -62,7 +62,7 @@ public class WeekOverviewFragment extends Fragment {
         setVersionNumber(view);
     }
 
-    private List<CurrentDayMillis> getCurrentDayMillisList(Calendar currentDate) {
+    private List<CurrentDayMillis> getCurrentDayMillisOfWeek(Calendar currentDate) {
         String startOfThisWeekMillis = "1497823200000";
         String startOfNextWeekMillis = "1498428000000";
         Condition firstDayOfWeek = Condition.prop("DAY_IN_MILLIS").eq(startOfThisWeekMillis);
@@ -82,8 +82,8 @@ public class WeekOverviewFragment extends Fragment {
         weekNumberValueView.setText(String.valueOf(weekNumber));
     }
 
-    private void setTotalTime(List<CurrentDayMillis> currentDayMillisList) {
-        int totalTimeInMinutes = getTotalTimeInMinutes(currentDayMillisList);
+    private void setTotalTime(List<CurrentDayMillis> currentDayMillisOfWeek) {
+        int totalTimeInMinutes = getTotalTimeOfWeekInMinutes(currentDayMillisOfWeek);
         String timeString = getTotalTimeString(totalTimeInMinutes);
         if (!timeString.isEmpty()) {
             totalValueView.setText(timeString);
@@ -95,9 +95,9 @@ public class WeekOverviewFragment extends Fragment {
         }
     }
 
-    private int getTotalTimeInMinutes(List<CurrentDayMillis> currentDayMillisList) {
+    private int getTotalTimeOfWeekInMinutes(List<CurrentDayMillis> currentDayMillisOfWeek) {
         int totalTimeInMinutes = 0;
-        for (CurrentDayMillis currentDayMillis : currentDayMillisList) {
+        for (CurrentDayMillis currentDayMillis : currentDayMillisOfWeek) {
             totalTimeInMinutes += currentDayMillis.getTotalTimeInMinutes();
         }
         return totalTimeInMinutes;
@@ -107,9 +107,9 @@ public class WeekOverviewFragment extends Fragment {
         return TimerCalendarUtil.getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
     }
 
-    private void initWeekOverviewList(View view, List<CurrentDayMillis> currentDayMillisList) {
+    private void initWeekOverviewList(View view, List<CurrentDayMillis> currentDayMillisOfWeek) {
         ListView weekOverviewList = (ListView) view.findViewById(R.id.week_overview_list);
-        WeekOverviewAdapter weekOverviewAdapter = new WeekOverviewAdapter(getActivity());
+        WeekOverviewAdapter weekOverviewAdapter = new WeekOverviewAdapter(getActivity(), currentDayMillisOfWeek);
         weekOverviewList.setAdapter(weekOverviewAdapter);
     }
 

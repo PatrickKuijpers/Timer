@@ -98,13 +98,16 @@ public class CurrentDayMillis extends SugarRecord {
         return times.get(lastIndex);
     }
 
-    private List<Long> timesInMillisFromString(String stringFrom) {
-        List<Long> list = new ArrayList<>();
-        List<String> strings = Arrays.asList(stringFrom.substring(1, stringFrom.length() - 1).split(", "));
-        for (String tempString : strings) {
-            list.add(Long.valueOf(tempString));
+    private List<Long> timesInMillisFromString(String rawString) {
+        List<Long> timesInMillis = new ArrayList<>();
+        boolean isValidRawString = rawString != null && rawString.contains("[") && rawString.contains("]");
+        if (isValidRawString) {
+            List<String> allTimesAsStrings = Arrays.asList(rawString.substring(1, rawString.length() - 1).split(", "));
+            for (String timeAsString : allTimesAsStrings) {
+                timesInMillis.add(Long.valueOf(timeAsString));
+            }
         }
-        return list;
+        return timesInMillis;
     }
 
     public int getTotalTimeInMinutes() {
