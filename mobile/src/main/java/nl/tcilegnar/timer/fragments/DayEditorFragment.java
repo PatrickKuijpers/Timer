@@ -218,20 +218,20 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
                     public void savedSuccesfully(Long savedId) {
                         Toast.makeText(App.getContext(), "Saved success (id=" + savedId + ")", LENGTH_SHORT).show();
                         logAll();
-                        removeDuplicateEntries(duplicateEntries);
-                        logAll();
-                        resetCurrentDay();
-                        saveLisener.onSaveSuccessful();
-                    }
-
-                    private void removeDuplicateEntries(List<CurrentDayMillis> duplicateEntries) {
                         try {
-                            for (CurrentDayMillis duplicateEntry : duplicateEntries) {
-                                duplicateEntry.delete();
-                            }
+                            removeDuplicateEntries(duplicateEntries);
+                            logAll();
+                            resetCurrentDay();
+                            saveLisener.onSaveSuccessful();
                         } catch (Exception e) {
                             new SaveErrorDialog(Res.getString(R.string
                                     .error_message_dialog_save_duplciates_could_not_be_removed)).show(getActivity());
+                        }
+                    }
+
+                    private void removeDuplicateEntries(List<CurrentDayMillis> duplicateEntries) {
+                        for (CurrentDayMillis duplicateEntry : duplicateEntries) {
+                            duplicateEntry.delete();
                         }
                     }
 
