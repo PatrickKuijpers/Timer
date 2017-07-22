@@ -101,7 +101,7 @@ public class WeekOverviewFragment extends Fragment {
     }
 
     private void setTotalTime(Week week) {
-        int totalTimeInMinutes = week.getTotalTime();
+        int totalTimeInMinutes = week.getTotalTimeInMinutes();
         String timeString = getTotalTimeString(totalTimeInMinutes);
         if (!timeString.isEmpty()) {
             totalValueView.setText(timeString);

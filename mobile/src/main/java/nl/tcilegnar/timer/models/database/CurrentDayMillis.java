@@ -44,12 +44,15 @@ public class CurrentDayMillis extends SugarRecord {
         // Empty constructor required for SugarRecord!
     }
 
-    /** TODO improve this: CurrentDayMillis without timesInMillis (for days that are not today) */
+    /**
+     * TODO improve this: CurrentDayMillis without timesInMillis (for days that are not today)
+     * TODO: probably split in CurrentDayMillis and DayMillis?
+     */
     public CurrentDayMillis(long dayInMillis) {
         saveValues(dayInMillis, new ArrayList<Long>());
     }
 
-    /** ODO improve this: CurrentDayMillis with a specific day, where timesInMillis are instantiated (for today) */
+    /** TODO improve this: CurrentDayMillis with a specific day, where timesInMillis are instantiated (for today) */
     public CurrentDayMillis(Calendar day) throws DayEditorItem.TimeNotSetException {
         List<Long> timesInMillis = new ArrayList<>();
         List<Calendar> times = initTimes(day);

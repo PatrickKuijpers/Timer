@@ -31,7 +31,7 @@ public class YearOverviewItem {
         if (totalTimeInMinutes == null) {
             totalTimeInMinutes = 0;
             for (WeekOverviewItem day : week) {
-                totalTimeInMinutes += day.getCurrentDayMillis().getTotalTimeInMinutes();
+                totalTimeInMinutes += day.getDayMillis().getTotalTimeInMinutes();
             }
         }
         return TimerCalendarUtil.getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);

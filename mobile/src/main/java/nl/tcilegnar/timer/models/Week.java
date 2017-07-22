@@ -2,13 +2,12 @@ package nl.tcilegnar.timer.models;
 
 import android.support.annotation.NonNull;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import nl.tcilegnar.timer.enums.WeekOverviewItem;
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
-import nl.tcilegnar.timer.utils.Objects;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 
 public class Week {
@@ -20,34 +19,35 @@ public class Week {
         List<WeekOverviewItem> weekDays = initiateWeekDays(someDateFromWeek, currentDayMillisOfWeek);
         validateWeek(weekNumber, weekDays);
         this.weekNumber = weekNumber;
-        this.weekDays = Objects.requireNonNull(weekDays);
+        this.weekDays = weekDays;
     }
 
     @NonNull
     private List<WeekOverviewItem> initiateWeekDays(Calendar someDateFromWeek, List<CurrentDayMillis>
             currentDayMillisOfWeek) {
-        List<WeekOverviewItem> weekDays = Arrays.asList(WeekOverviewItem.values());
-        for (WeekOverviewItem weekDay : weekDays) {
-            CurrentDayMillis currentDayMillis = getCurrentDayMillis(someDateFromWeek, weekDay, currentDayMillisOfWeek);
-            weekDay.setCurrentDayMillis(currentDayMillis);
+        List<WeekOverviewItem> weekDays = new ArrayList<>();
+        for (WeekOverviewItem weekDay : WeekOverviewItem.values()) {
+            CurrentDayMillis dayMillis = getDayMillis(someDateFromWeek, weekDay, currentDayMillisOfWeek);
+            weekDay.setDayMillis(dayMillis);
+            weekDays.add(weekDay);
         }
         return weekDays;
     }
 
     @NonNull
-    private static CurrentDayMillis getCurrentDayMillis(Calendar someDateFromWeek, WeekOverviewItem
-            requiredWeekOverviewItem, List<CurrentDayMillis> currentDayMillisOfWeek) {
-        int dayOfWeekNumberForRequiredWeekOverViewItem = requiredWeekOverviewItem.getDayOfWeekNumberFromCalendar();
+    private CurrentDayMillis getDayMillis(Calendar someDateFromWeek, WeekOverviewItem requiredWeekDay,
+                                          List<CurrentDayMillis> currentDayMillisOfWeek) {
+        int dayOfWeekNumberForRequiredWeekDay = requiredWeekDay.getDayOfWeekNumberFromCalendar();
         for (CurrentDayMillis currentDayMillis : currentDayMillisOfWeek) {
             int dayOfWeekNumber = currentDayMillis.getDay().get(Calendar.DAY_OF_WEEK);
-            if (dayOfWeekNumberForRequiredWeekOverViewItem == dayOfWeekNumber) {
+            if (dayOfWeekNumberForRequiredWeekDay == dayOfWeekNumber) {
                 return currentDayMillis;
             }
         }
-        return getEmptyCurrentDayMillisFor(someDateFromWeek, dayOfWeekNumberForRequiredWeekOverViewItem);
+        return getEmptyCurrentDayMillisFor(someDateFromWeek, dayOfWeekNumberForRequiredWeekDay);
     }
 
-    private static CurrentDayMillis getEmptyCurrentDayMillisFor(Calendar someDateFromWeek, int dayOfWeekNumber) {
+    private CurrentDayMillis getEmptyCurrentDayMillisFor(Calendar someDateFromWeek, int dayOfWeekNumber) {
         Calendar cal = TimerCalendar.getCopyOfCalendar(someDateFromWeek);
         cal.set(Calendar.DAY_OF_WEEK, dayOfWeekNumber);
         return new CurrentDayMillis(cal.getTimeInMillis());
@@ -72,11 +72,16 @@ public class Week {
         return weekDays;
     }
 
-    public int getTotalTime() {
+    public int getTotalTimeInMinutes() {
         int totalTimeMinutes = 0;
         for (WeekOverviewItem weekDay : weekDays) {
-            totalTimeMinutes += weekDay.getCurrentDayMillis().getTotalTimeInMinutes();
+            totalTimeMinutes += weekDay.getDayMillis().getTotalTimeInMinutes();
         }
         return totalTimeMinutes;
+    }
+
+    @Override
+    public String toString() {
+        return "Week: " + getWeekNumber() + ", TotalTimeInMinutes=" + getTotalTimeInMinutes();
     }
 }

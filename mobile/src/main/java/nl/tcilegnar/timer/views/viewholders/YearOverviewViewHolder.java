@@ -5,9 +5,9 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import nl.tcilegnar.timer.R;
-import nl.tcilegnar.timer.models.Week;
+import nl.tcilegnar.timer.models.WeekOfYear;
 
-public class YearOverviewViewHolder extends BaseViewHolder<Week> {
+public class YearOverviewViewHolder extends BaseViewHolder<WeekOfYear> {
     private TextView dayOfWeekLabel;
     private TextView dayOfWeekValue;
 
@@ -32,8 +32,8 @@ public class YearOverviewViewHolder extends BaseViewHolder<Week> {
     }
 
     @Override
-    public void loadData(Week weekOverviewItem) {
-        dayOfWeekLabel.setText(weekOverviewItem.getWeekNumber());
-        dayOfWeekValue.setText(String.valueOf(weekOverviewItem.getTotalTime()));
+    public void loadData(WeekOfYear weekOfYear) {
+        dayOfWeekLabel.setText(String.valueOf(weekOfYear.getWeekNumber()));
+        dayOfWeekValue.setText(String.valueOf(weekOfYear.getTotalTimeInMinutes()));
     }
 }
