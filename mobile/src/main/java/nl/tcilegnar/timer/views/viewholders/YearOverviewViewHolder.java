@@ -7,16 +7,16 @@ import android.widget.TextView;
 import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.enums.WeekOverviewItem;
 
-public class WeekOverviewViewHolder extends BaseViewHolder<WeekOverviewItem> {
+public class YearOverviewViewHolder extends BaseViewHolder<WeekOverviewItem> {
     private TextView dayOfWeekLabel;
     private TextView dayOfWeekValue;
 
-    public WeekOverviewViewHolder(Context activityContext) {
+    public YearOverviewViewHolder(Context activityContext) {
         super(activityContext);
         initViews();
     }
 
-    public WeekOverviewViewHolder(Context activityContext, AttributeSet attrs) {
+    public YearOverviewViewHolder(Context activityContext, AttributeSet attrs) {
         super(activityContext, attrs);
         initViews();
     }

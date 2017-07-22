@@ -1,4 +1,4 @@
-package nl.tcilegnar.timer.adapters;
+package nl.tcilegnar.timer.views.viewholders;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
@@ -28,7 +28,7 @@ public abstract class BaseViewHolder<T> extends LinearLayout {
     @LayoutRes
     protected abstract int getViewHolderResource();
 
-    protected abstract void loadData(T item);
+    public abstract void loadData(T item);
 
     public int getPosition() {
         return position;

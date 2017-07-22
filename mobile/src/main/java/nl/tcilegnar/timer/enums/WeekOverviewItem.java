@@ -1,5 +1,7 @@
 package nl.tcilegnar.timer.enums;
 
+import android.support.annotation.Nullable;
+
 import java.util.Calendar;
 
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
@@ -17,6 +19,7 @@ public enum WeekOverviewItem {
     private final int dayOfWeekNumberFromCalendar;
     private final String dayOfWeekText;
     private CurrentDayMillis currentDayMillis;
+    private Integer weekNumber;
 
     WeekOverviewItem(int dayOfWeekNumberFromCalendar) {
         this.dayOfWeekNumberFromCalendar = dayOfWeekNumberFromCalendar;
@@ -41,5 +44,14 @@ public enum WeekOverviewItem {
 
     public String getTotalTimeString() {
         return getCurrentDayMillis().getTotalTimeReadableString();
+    }
+
+    @Nullable
+    public Integer getWeekNumber() {
+        return weekNumber;
+    }
+
+    public void setWeekNumber(int weekNumber) {
+        this.weekNumber = weekNumber;
     }
 }

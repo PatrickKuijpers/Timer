@@ -71,4 +71,17 @@ public class TimerCalendar {
         cal.add(Calendar.WEEK_OF_YEAR, 1);
         return cal;
     }
+
+    public static Calendar getFirstDayOfYear(Calendar currentDate) {
+        Calendar cal = TimerCalendar.getCopyOfCalendar(currentDate);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        return cal;
+    }
+
+    public static Calendar getFirstDayOfNextYear(Calendar currentDate) {
+        Calendar cal = getFirstDayOfYear(currentDate);
+        cal.add(Calendar.YEAR, 1);
+        return cal;
+    }
 }
