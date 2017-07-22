@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 public class TimerCalendarTest {
     private static final long MON_17_07_2017_MIDNIGHT_NL = 1500242400000L;
     private static final long SAT_22_07_2017_MIDNIGHT_NL = 1500674400000L;
+    private static final long SUN_23_07_2017_MIDNIGHT_NL = 1500760800000L;
     private static final long MON_24_07_2017_MIDNIGHT_NL = 1500847200000L;
 
     @Test
@@ -30,6 +31,18 @@ public class TimerCalendarTest {
 
         // Assert
         assertEquals(MON_17_07_2017_MIDNIGHT_NL, firstDayOfWeek.getTimeInMillis());
+    }
+
+    @Test
+    public void getLastDayOfWeek() {
+        // Arrange
+        Calendar currentTime = getCurrentTimeDummy();
+
+        // Act
+        Calendar lastDayOfWeek = TimerCalendar.getLastDayOfWeek(currentTime);
+
+        // Assert
+        assertEquals(SUN_23_07_2017_MIDNIGHT_NL, lastDayOfWeek.getTimeInMillis());
     }
 
     @Test

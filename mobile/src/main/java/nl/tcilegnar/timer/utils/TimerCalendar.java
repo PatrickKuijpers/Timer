@@ -67,6 +67,12 @@ public class TimerCalendar {
         return cal;
     }
 
+    public static Calendar getLastDayOfWeek(Calendar currentDate) {
+        Calendar cal = getFirstDayOfWeek(currentDate);
+        cal.add(Calendar.DAY_OF_YEAR, 6);
+        return cal;
+    }
+
     public static Calendar getFirstDayOfNextWeek(Calendar currentDate) {
         Calendar cal = getFirstDayOfWeek(currentDate);
         cal.add(Calendar.WEEK_OF_YEAR, 1);

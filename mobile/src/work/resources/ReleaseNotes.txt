@@ -1,2 +1,1 @@
-- Het is nu mogelijk tijden zonder pauze in te voeren.
-- In het weekoverzicht wordt de eerste maandag van de week nu correct getoond.
+- Een jaaroverzicht is toegevoegd

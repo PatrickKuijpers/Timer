@@ -244,8 +244,10 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
                 new SaveErrorDialog(validation.getErrorMessage()).show(getActivity());
             }
         } catch (DayEditorItem.TimeNotSetException e) {
+            e.printStackTrace();
             new SaveErrorDialog(Res.getString(R.string.validation_error_message_not_all_times_set)).show(getActivity());
         } catch (Exception e) {
+            e.printStackTrace();
             new SaveErrorDialog(e.getMessage()).show(getActivity());
         }
     }

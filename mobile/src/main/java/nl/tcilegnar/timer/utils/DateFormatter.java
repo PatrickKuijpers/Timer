@@ -13,6 +13,7 @@ public class DateFormatter {
     public static final String DAY_OF_WEEK_LONG = "EEEE";
 
     public static final String DATE_FORMAT_SPACES_1_JANUARY = "d MMMM";
+    public static final String DATE_FORMAT_DASHES_1_JAN = "d-MMM";
     public static final String DATE_FORMAT_SPACES_01_JAN_2000 = "dd MMM yyyy";
     public static final String DATE_FORMAT_SPACES_1_JAN_2000 = "d MMM yyyy";
     public static final String DATE_FORMAT_DASHES_2000_01_01 = "yyyy-MM-dd";

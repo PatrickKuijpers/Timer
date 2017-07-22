@@ -44,6 +44,15 @@ public class CurrentDayMillis extends SugarRecord {
         // Empty constructor required for SugarRecord!
     }
 
+    /**
+     * TODO improve this: CurrentDayMillis without timesInMillis (for days that are not today)
+     * TODO: probably split in CurrentDayMillis and DayMillis?
+     */
+    public CurrentDayMillis(long dayInMillis) {
+        saveValues(dayInMillis, new ArrayList<Long>());
+    }
+
+    /** TODO improve this: CurrentDayMillis with a specific day, where timesInMillis are instantiated (for today) */
     public CurrentDayMillis(Calendar day) throws DayEditorItem.TimeNotSetException {
         List<Long> timesInMillis = new ArrayList<>();
         List<Calendar> times = initTimes(day);
@@ -108,7 +117,9 @@ public class CurrentDayMillis extends SugarRecord {
         if (isValidRawString) {
             List<String> allTimesAsStrings = Arrays.asList(rawString.substring(1, rawString.length() - 1).split(", "));
             for (String timeAsString : allTimesAsStrings) {
-                timesInMillis.add(Long.valueOf(timeAsString));
+                if (!timeAsString.isEmpty()) {
+                    timesInMillis.add(Long.valueOf(timeAsString));
+                }
             }
         }
         return timesInMillis;

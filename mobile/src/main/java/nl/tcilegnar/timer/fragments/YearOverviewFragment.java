@@ -18,10 +18,10 @@ import java.util.Calendar;
 import java.util.List;
 
 import nl.tcilegnar.timer.R;
-import nl.tcilegnar.timer.adapters.WeekOverviewAdapter;
 import nl.tcilegnar.timer.adapters.YearOverviewAdapter;
 import nl.tcilegnar.timer.dialogs.DatePickerFragment;
 import nl.tcilegnar.timer.fragments.dialogs.LoadErrorDialog;
+import nl.tcilegnar.timer.models.Year;
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
 import nl.tcilegnar.timer.utils.Log;
 import nl.tcilegnar.timer.utils.Res;
@@ -63,11 +63,12 @@ public class YearOverviewFragment extends Fragment {
     }
 
     private void updateYearValues() {
-        setYearNumber(dateFromYear);
         try {
             List<CurrentDayMillis> currentDayMillisOfYear = getCurrentDayMillisOfYear(dateFromYear);
-            setTotalTime(currentDayMillisOfYear);
-            updateYearOverviewList(currentDayMillisOfYear);
+            Year year = new Year(dateFromYear, currentDayMillisOfYear);
+            setYearNumber(year);
+            setTotalTime(currentDayMillisOfYear); // TODO
+            updateYearOverviewList(year);
         } catch (Exception e) {
             e.printStackTrace();
             new LoadErrorDialog(String.format(Res.getString(R.string.error_message_dialog_load_weeknumber),
@@ -92,9 +93,9 @@ public class YearOverviewFragment extends Fragment {
         return currentDayMillisOfYear;
     }
 
-    private void setYearNumber(Calendar currentDate) {
-        int yearNumber = currentDate.get(Calendar.YEAR);
-        yearValueView.setText(String.valueOf(yearNumber));
+    private void setYearNumber(Year year) {
+        String yearNumberText = String.valueOf(year.getYearNumber());
+        yearValueView.setText(yearNumberText);
     }
 
     private void setTotalTime(List<CurrentDayMillis> currentDayMillisOfYear) {
@@ -120,11 +121,11 @@ public class YearOverviewFragment extends Fragment {
     }
 
     private String getTotalTimeString(int totalTimeInMinutes) {
-        return TimerCalendarUtil.getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
+        return TimerCalendarUtil.getReadableTimeStringHoursAndMinutesLetters(totalTimeInMinutes);
     }
 
-    private void updateYearOverviewList(List<CurrentDayMillis> currentDayMillisOfYear) {
-        YearOverviewAdapter yearOverviewAdapter = new YearOverviewAdapter(getActivity(), currentDayMillisOfYear);
+    private void updateYearOverviewList(Year year) {
+        YearOverviewAdapter yearOverviewAdapter = new YearOverviewAdapter(getActivity(), year);
         yearOverviewList.setAdapter(yearOverviewAdapter);
     }
 

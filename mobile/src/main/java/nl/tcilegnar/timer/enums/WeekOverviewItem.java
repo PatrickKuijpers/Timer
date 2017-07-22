@@ -18,8 +18,7 @@ public enum WeekOverviewItem {
 
     private final int dayOfWeekNumberFromCalendar;
     private final String dayOfWeekText;
-    private CurrentDayMillis currentDayMillis;
-    private Integer weekNumber;
+    private CurrentDayMillis dayMillis;
 
     WeekOverviewItem(int dayOfWeekNumberFromCalendar) {
         this.dayOfWeekNumberFromCalendar = dayOfWeekNumberFromCalendar;
@@ -34,24 +33,21 @@ public enum WeekOverviewItem {
         return dayOfWeekText;
     }
 
-    public CurrentDayMillis getCurrentDayMillis() {
-        return currentDayMillis;
+    public CurrentDayMillis getDayMillis() {
+        return dayMillis;
     }
 
-    public void setCurrentDayMillis(CurrentDayMillis currentDayMillis) {
-        this.currentDayMillis = currentDayMillis;
+    public void setDayMillis(CurrentDayMillis dayMillis) {
+        this.dayMillis = dayMillis;
     }
 
     public String getTotalTimeString() {
-        return getCurrentDayMillis().getTotalTimeReadableString();
+        return getDayMillis().getTotalTimeReadableString();
     }
 
     @Nullable
     public Integer getWeekNumber() {
-        return weekNumber;
-    }
-
-    public void setWeekNumber(int weekNumber) {
-        this.weekNumber = weekNumber;
+        return dayMillis != null && dayMillis.getDay() != null ? dayMillis.getDay().get(Calendar
+                .WEEK_OF_YEAR) : null;
     }
 }

@@ -23,7 +23,7 @@ public class WeekOverviewViewHolder extends BaseViewHolder<WeekOverviewItem> {
 
     private void initViews() {
         dayOfWeekLabel = (TextView) findViewById(R.id.day_of_week_label);
-        dayOfWeekValue = (TextView) findViewById(R.id.day_of_week_value);
+        dayOfWeekValue = (TextView) findViewById(R.id.total_time);
     }
 
     @Override
