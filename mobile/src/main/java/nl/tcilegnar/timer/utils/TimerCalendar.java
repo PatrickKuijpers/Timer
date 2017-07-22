@@ -63,6 +63,7 @@ public class TimerCalendar {
     public static Calendar getFirstDayOfWeek(Calendar currentDate) {
         Calendar cal = TimerCalendar.getCopyOfCalendar(currentDate);
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        cal = getCalendarWithTime(cal, 0, 0);
         return cal;
     }
 
@@ -76,6 +77,7 @@ public class TimerCalendar {
         Calendar cal = TimerCalendar.getCopyOfCalendar(currentDate);
         cal.set(Calendar.MONTH, Calendar.JANUARY);
         cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal = getCalendarWithTime(cal, 0, 0);
         return cal;
     }
 
