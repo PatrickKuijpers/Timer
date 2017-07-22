@@ -2,24 +2,24 @@ package nl.tcilegnar.timer.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.SparseArray;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import nl.tcilegnar.timer.enums.WeekOverviewItem;
+import nl.tcilegnar.timer.models.Week;
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
 import nl.tcilegnar.timer.views.viewholders.YearOverviewViewHolder;
 
-public class YearOverviewAdapter extends BaseArrayAdapter<WeekOverviewItem, YearOverviewViewHolder> {
+public class YearOverviewAdapter extends BaseArrayAdapter<Week, YearOverviewViewHolder> {
     public YearOverviewAdapter(Context activityContext, List<CurrentDayMillis> currentDayMillisOfYear) {
         super(activityContext, getItems(currentDayMillisOfYear));
     }
 
     @NonNull
-    private static List<WeekOverviewItem> getItems(List<CurrentDayMillis> currentDayMillisOfYear) {
-        SparseArray<List<WeekOverviewItem>> weeks = new SparseArray<>();
+    private static List<Week> getItems(List<CurrentDayMillis> currentDayMillisOfYear) {
+        List<Week> weeks = new ArrayList<>();
         //        for (CurrentDayMillis currentDayMillis : currentDayMillisOfYear) {
         //            int weekNumber = currentDayMillis.getDay().get(Calendar.WEEK_OF_YEAR);
         //            List<WeekOverviewItem> week = weeks.get(weekNumber);
@@ -47,7 +47,6 @@ public class YearOverviewAdapter extends BaseArrayAdapter<WeekOverviewItem, Year
         //        }
         //    }
 
-        List<WeekOverviewItem> weekOverviewItems = new ArrayList<>();
         // weekOverviewItems = Arrays.asList(WeekOverviewItem.values());
         //                for(
         //    WeekOverviewItem weekOverviewItem :weekOverviewItems)
@@ -56,7 +55,7 @@ public class YearOverviewAdapter extends BaseArrayAdapter<WeekOverviewItem, Year
         //        CurrentDayMillis currentDayMillis = getCurrentDayMillis(weekOverviewItem, currentDayMillisOfYear);
         //        weekOverviewItem.setCurrentDayMillis(currentDayMillis);
         //    }
-        return weekOverviewItems;
+        return weeks;
     }
 
     @NonNull
