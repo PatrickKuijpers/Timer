@@ -19,7 +19,6 @@ public enum WeekOverviewItem {
     private final int dayOfWeekNumberFromCalendar;
     private final String dayOfWeekText;
     private CurrentDayMillis currentDayMillis;
-    private Integer weekNumber;
 
     WeekOverviewItem(int dayOfWeekNumberFromCalendar) {
         this.dayOfWeekNumberFromCalendar = dayOfWeekNumberFromCalendar;
@@ -48,10 +47,7 @@ public enum WeekOverviewItem {
 
     @Nullable
     public Integer getWeekNumber() {
-        return weekNumber;
-    }
-
-    public void setWeekNumber(int weekNumber) {
-        this.weekNumber = weekNumber;
+        return currentDayMillis != null && currentDayMillis.getDay() != null ? currentDayMillis.getDay().get(Calendar
+                .WEEK_OF_YEAR) : null;
     }
 }
