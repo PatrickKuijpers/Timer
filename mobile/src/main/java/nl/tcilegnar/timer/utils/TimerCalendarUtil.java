@@ -25,4 +25,10 @@ public class TimerCalendarUtil {
         int minutes = timeInMinutes % 60;
         return String.format(MyLocale.getLocaleForTranslationAndSigns(), "%d:%02d", hours, minutes);
     }
+
+    public static String getReadableTimeStringHoursAndMinutesLetters(int timeInMinutes) {
+        int hours = timeInMinutes / 60;
+        int minutes = timeInMinutes % 60;
+        return String.format(MyLocale.getLocaleForTranslationAndSigns(), "%dh %02dm", hours, minutes);
+    }
 }

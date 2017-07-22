@@ -121,7 +121,7 @@ public class YearOverviewFragment extends Fragment {
     }
 
     private String getTotalTimeString(int totalTimeInMinutes) {
-        return TimerCalendarUtil.getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
+        return TimerCalendarUtil.getReadableTimeStringHoursAndMinutesLetters(totalTimeInMinutes);
     }
 
     private void updateYearOverviewList(Year year) {

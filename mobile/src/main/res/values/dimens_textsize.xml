@@ -11,4 +11,5 @@
     <dimen name="text_size_day_editor_list_item">@dimen/text_size_day_editor</dimen>
     <dimen name="text_size_week_overview">@dimen/text_size_big</dimen>
     <dimen name="text_size_week_overview_list_item">@dimen/text_size_day_editor</dimen>
+    <dimen name="text_size_year_overview_list_item">@dimen/text_size_day_editor</dimen>
 </resources>

@@ -4,38 +4,50 @@ import java.util.Calendar;
 import java.util.List;
 
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
+import nl.tcilegnar.timer.utils.DateFormatter;
+import nl.tcilegnar.timer.utils.TimerCalendar;
+
+import static nl.tcilegnar.timer.utils.DateFormatter.DATE_FORMAT_DASHES_1_JAN;
 
 public class WeekOfYear {
-    private final int weekNumber;
+    private final Calendar firstDayOfWeek;
     private final List<CurrentDayMillis> dayMillisOfWeek;
 
-    public WeekOfYear(Calendar someDateFromWeek, List<CurrentDayMillis> dayMillisOfWeek) {
-        int weekNumber = someDateFromWeek.get(Calendar.WEEK_OF_YEAR);
-        validateWeekOfYear(weekNumber, dayMillisOfWeek);
-        this.weekNumber = weekNumber;
+    public WeekOfYear(Calendar firstDayOfWeek, List<CurrentDayMillis> dayMillisOfWeek) {
+        validateWeekOfYear(firstDayOfWeek, dayMillisOfWeek);
+        this.firstDayOfWeek = firstDayOfWeek;
         this.dayMillisOfWeek = dayMillisOfWeek;
     }
 
-    private void validateWeekOfYear(Integer weekNumber, List<CurrentDayMillis> dayMillisOfWeek) {
+    private void validateWeekOfYear(Calendar firstDayOfWeek, List<CurrentDayMillis> dayMillisOfWeek) {
+        int requiredWeekNumber = firstDayOfWeek.get(Calendar.WEEK_OF_YEAR);
         Integer previousYearNumber = null;
         for (CurrentDayMillis dayMillis : dayMillisOfWeek) {
-            int checkWeekNumber = dayMillis.getDay().get(Calendar.WEEK_OF_YEAR);
-            int checkYearNumber = dayMillis.getDay().get(Calendar.YEAR);
-            if (checkWeekNumber != weekNumber) {
+            int weekNumber = dayMillis.getDay().get(Calendar.WEEK_OF_YEAR);
+            int yearNumber = dayMillis.getDay().get(Calendar.YEAR);
+            if (weekNumber != requiredWeekNumber) {
                 throw new IllegalArgumentException("Not all weekDays are from the same week(number)");
-            } else if (previousYearNumber != null && checkYearNumber != previousYearNumber) {
+            } else if (previousYearNumber != null && yearNumber != previousYearNumber) {
                 throw new IllegalArgumentException("Not all weekDays are from the same year(number)");
             }
-            previousYearNumber = checkYearNumber;
+            previousYearNumber = yearNumber;
         }
     }
 
-    public int getWeekNumber() {
-        return weekNumber;
+    public Calendar getFirstDayOfWeek() {
+        return firstDayOfWeek;
+    }
+
+    public Calendar getLastDayOfWeek() {
+        return TimerCalendar.getLastDayOfWeek(firstDayOfWeek);
     }
 
     public List<CurrentDayMillis> getDayMillisOfWeek() {
         return dayMillisOfWeek;
+    }
+
+    public int getWeekNumber() {
+        return firstDayOfWeek.get(Calendar.WEEK_OF_YEAR);
     }
 
     public int getTotalTimeInMinutes() {
@@ -49,5 +61,11 @@ public class WeekOfYear {
     @Override
     public String toString() {
         return "Week: " + getWeekNumber() + ", TotalTimeInMinutes=" + getTotalTimeInMinutes();
+    }
+
+    public String getReadablePeriodOfWeek() {
+        String firstDayOfWeekText = DateFormatter.format(getFirstDayOfWeek(), DATE_FORMAT_DASHES_1_JAN);
+        String lastDayOfWeekText = DateFormatter.format(getLastDayOfWeek(), DATE_FORMAT_DASHES_1_JAN);
+        return firstDayOfWeekText + " t/m " + lastDayOfWeekText;
     }
 }

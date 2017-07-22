@@ -51,8 +51,8 @@ public class Year {
                     }
                 }
             }
-            Calendar cal = TimerCalendar.getCopyOfCalendar(firstDayOfWeek);
-            WeekOfYear weekOfYear = new WeekOfYear(cal, dayMillisOfWeek);
+            Calendar firstDayOfWeekForWeekOfYear = TimerCalendar.getCopyOfCalendar(firstDayOfWeek);
+            WeekOfYear weekOfYear = new WeekOfYear(firstDayOfWeekForWeekOfYear, dayMillisOfWeek);
             allWeeksOfYear.add(weekOfYear);
             Log.d(TAG, "added weekOfYear: " + weekOfYear.toString());
 
