@@ -63,12 +63,27 @@ public class TimerCalendar {
     public static Calendar getFirstDayOfWeek(Calendar currentDate) {
         Calendar cal = TimerCalendar.getCopyOfCalendar(currentDate);
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        cal = getCalendarWithTime(cal, 0, 0);
         return cal;
     }
 
     public static Calendar getFirstDayOfNextWeek(Calendar currentDate) {
         Calendar cal = getFirstDayOfWeek(currentDate);
         cal.add(Calendar.WEEK_OF_YEAR, 1);
+        return cal;
+    }
+
+    public static Calendar getFirstDayOfYear(Calendar currentDate) {
+        Calendar cal = TimerCalendar.getCopyOfCalendar(currentDate);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal = getCalendarWithTime(cal, 0, 0);
+        return cal;
+    }
+
+    public static Calendar getFirstDayOfNextYear(Calendar currentDate) {
+        Calendar cal = getFirstDayOfYear(currentDate);
+        cal.add(Calendar.YEAR, 1);
         return cal;
     }
 }

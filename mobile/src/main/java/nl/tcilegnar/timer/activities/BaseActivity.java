@@ -15,9 +15,10 @@ import nl.tcilegnar.timer.R;
 public abstract class BaseActivity extends AppCompatActivity {
     protected final String LOGTAG = getClass().getSimpleName();
 
-    protected class MenuItemId {
+    private class MenuItemId {
         public static final int DAY_EDITOR = 0;
         public static final int WEEK_OVERVIEW = 1;
+        public static final int YEAR_OVERVIEW = 2;
     }
 
     @Override
@@ -45,6 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         boolean showMenu = super.onCreateOptionsMenu(menu);
         menu.add(0, MenuItemId.DAY_EDITOR, 0, R.string.menu_item_day_editor);
         menu.add(0, MenuItemId.WEEK_OVERVIEW, 1, R.string.menu_item_week_overview);
+        menu.add(0, MenuItemId.YEAR_OVERVIEW, 1, R.string.menu_item_year_overview);
         return showMenu;
     }
 
@@ -53,11 +55,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         boolean handled = true;
         int itemId = item.getItemId();
         switch (itemId) {
-            case DayEditorActivity.MenuItemId.DAY_EDITOR:
+            case MenuItemId.DAY_EDITOR:
                 startDayEditorActivity();
                 break;
-            case DayEditorActivity.MenuItemId.WEEK_OVERVIEW:
+            case MenuItemId.WEEK_OVERVIEW:
                 startWeekOverviewActivity();
+                break;
+            case MenuItemId.YEAR_OVERVIEW:
+                startYearOverviewActivity();
                 break;
             default:
                 handled = false;
@@ -72,6 +77,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void startWeekOverviewActivity() {
         startActivity(WeekOverviewActivity.class);
+    }
+
+    protected void startYearOverviewActivity() {
+        startActivity(YearOverviewActivity.class);
     }
 
     protected void startActivity(Class<? extends BaseActivity> activityClass) {

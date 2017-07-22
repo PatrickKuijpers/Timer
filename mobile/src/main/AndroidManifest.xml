@@ -39,6 +39,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.WeekOverviewActivity"/>
+        <activity android:name=".activities.YearOverviewActivity"/>
     </application>
 
 </manifest>

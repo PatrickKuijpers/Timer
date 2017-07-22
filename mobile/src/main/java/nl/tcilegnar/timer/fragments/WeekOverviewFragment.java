@@ -88,7 +88,7 @@ public class WeekOverviewFragment extends Fragment {
                 (allDaysOfWeekExceptFirstDay).or(firstDayOfWeek).orderBy("DAY_IN_MILLIS").list();
         Log.i(TAG, currentDayMillisOfWeek.size() + " entries found for this week");
         for (CurrentDayMillis currentDayMillis : currentDayMillisOfWeek) {
-            Log.v(TAG, currentDayMillis.toString());
+            Log.v(TAG, currentDayMillis.getDayMillis() + " - " + currentDayMillis.toString());
         }
         return currentDayMillisOfWeek;
     }

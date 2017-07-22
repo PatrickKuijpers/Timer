@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import java.util.List;
 
 import nl.tcilegnar.timer.utils.Res;
+import nl.tcilegnar.timer.views.viewholders.BaseViewHolder;
 
 /**
  * A base arrayAdapter which re-uses views (convertView) and sets basic data on the {@link BaseViewHolder}, like the
