@@ -7,6 +7,7 @@ import com.orm.query.Select;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -69,11 +70,13 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         DAY_DATE
     }
 
-    public static DayEditorFragment newInstance(Calendar dayDate) {
+    public static DayEditorFragment newInstance(@Nullable Calendar dayDate) {
         DayEditorFragment fragment = new DayEditorFragment();
-        Bundle args = new Bundle();
-        args.putLong(Args.DAY_DATE.name(), dayDate.getTimeInMillis());
-        fragment.setArguments(args);
+        if (dayDate != null) { // TODO NonNull fix!
+            Bundle args = new Bundle();
+            args.putLong(Args.DAY_DATE.name(), dayDate.getTimeInMillis());
+            fragment.setArguments(args);
+        }
         return fragment;
     }
 

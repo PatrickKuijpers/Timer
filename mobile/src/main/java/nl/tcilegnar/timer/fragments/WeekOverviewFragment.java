@@ -5,6 +5,7 @@ import com.orm.query.Select;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +49,7 @@ public class WeekOverviewFragment extends Fragment {
         DATE_FROM_WEEK
     }
 
-    public static WeekOverviewFragment newInstance(Calendar dateFromWeek) {
+    public static WeekOverviewFragment newInstance(@NonNull Calendar dateFromWeek) {
         WeekOverviewFragment fragment = new WeekOverviewFragment();
         Bundle args = new Bundle();
         args.putLong(Args.DATE_FROM_WEEK.name(), dateFromWeek.getTimeInMillis());

@@ -5,6 +5,7 @@ import com.orm.query.Select;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +48,7 @@ public class YearOverviewFragment extends Fragment {
         DATE_FROM_YEAR
     }
 
-    public static YearOverviewFragment newInstance(Calendar dateFromYear) {
+    public static YearOverviewFragment newInstance(@NonNull Calendar dateFromYear) {
         YearOverviewFragment fragment = new YearOverviewFragment();
         Bundle args = new Bundle();
         args.putLong(Args.DATE_FROM_YEAR.name(), dateFromYear.getTimeInMillis());

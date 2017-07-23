@@ -22,6 +22,7 @@ public class WeekOverviewActivity extends BaseActivity implements OnDayClickList
         return fragment;
     }
 
+    @NonNull
     private Calendar getDateFromWeek() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
