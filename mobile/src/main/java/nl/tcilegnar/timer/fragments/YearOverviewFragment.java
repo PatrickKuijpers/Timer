@@ -31,8 +31,6 @@ import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 import nl.tcilegnar.timer.views.viewholders.YearOverviewViewHolder;
 
-import static nl.tcilegnar.timer.utils.TimerCalendar.getCurrentDateMidnight;
-
 public class YearOverviewFragment extends Fragment {
     private final String TAG = Log.getTag(this);
     private static final String YEAR_PICKER_DIALOG_TAG = "YEAR_PICKER_DIALOG_TAG";
@@ -180,7 +178,7 @@ public class YearOverviewFragment extends Fragment {
                 setNewDate(TimerCalendar.getCalendarWithDate(year, month, dayOfMonth));
             }
         });
-        datePickerFragment.show(getActivity().getFragmentManager(), YEAR_PICKER_DIALOG_TAG, getCurrentDateMidnight());
+        datePickerFragment.show(getActivity().getFragmentManager(), YEAR_PICKER_DIALOG_TAG, getDateFromYear());
     }
 
     public void setNewDate(Calendar dateFromYear) {
