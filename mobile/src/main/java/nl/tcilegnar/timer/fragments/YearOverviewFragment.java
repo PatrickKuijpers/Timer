@@ -67,7 +67,7 @@ public class YearOverviewFragment extends Fragment {
             List<CurrentDayMillis> currentDayMillisOfYear = getCurrentDayMillisOfYear(dateFromYear);
             Year year = new Year(dateFromYear, currentDayMillisOfYear);
             setYearNumber(year);
-            setTotalTime(currentDayMillisOfYear); // TODO
+            setTotalTime(year);
             updateYearOverviewList(year);
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,9 +98,9 @@ public class YearOverviewFragment extends Fragment {
         yearValueView.setText(yearNumberText);
     }
 
-    private void setTotalTime(List<CurrentDayMillis> currentDayMillisOfYear) {
-        int totalTimeInMinutes = getTotalTimeOfYearInMinutes(currentDayMillisOfYear);
-        String timeString = getTotalTimeString(totalTimeInMinutes);
+    private void setTotalTime(Year year) {
+        int totalTimeInMinutes = year.getTotalTimeInMinutes();
+        String timeString = TimerCalendarUtil.getReadableTimeStringHoursAndMinutesLetters(totalTimeInMinutes);
         if (!timeString.isEmpty()) {
             totalValueView.setText(timeString);
             totalValueView.setVisibility(View.VISIBLE);
@@ -109,19 +109,6 @@ public class YearOverviewFragment extends Fragment {
             totalValueView.setVisibility(View.GONE);
             totalValueLabelView.setVisibility(View.GONE);
         }
-    }
-
-    private int getTotalTimeOfYearInMinutes(List<CurrentDayMillis> currentDayMillisOfYear) {
-        int totalTimeInMinutes = 0;
-        for (CurrentDayMillis currentDayMillis : currentDayMillisOfYear) {
-            totalTimeInMinutes += currentDayMillis.getTotalTimeInMinutes();
-        }
-        totalTimeInMinutes += 40000;
-        return totalTimeInMinutes;
-    }
-
-    private String getTotalTimeString(int totalTimeInMinutes) {
-        return TimerCalendarUtil.getReadableTimeStringHoursAndMinutesLetters(totalTimeInMinutes);
     }
 
     private void updateYearOverviewList(Year year) {
