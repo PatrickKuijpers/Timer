@@ -1,1 +1,10 @@
-- Een jaaroverzicht is toegevoegd
+Nieuwe functies:
+- Navigeren van jaar naar week door op weeknummer te klikken
+- Navigeren van week naar dag door op de dag te klikken (opent nog niet correcte dag!)
+
+Bugfixing:
+- Totale jaartijd klopt nu weer
+- Wijzigen van week of jaar open nu de dialoog op een logischere datum, niet meer de datum van vandaag
+
+Layout:
+- Verduidelijking layout van week & jaar overzichten
