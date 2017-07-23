@@ -80,12 +80,6 @@ public class YearOverviewFragment extends Fragment {
         }
     }
 
-    private void setYearListHeader() {
-        ((TextView) yearOverviewListHeader.findViewById(R.id.week_of_year)).setText("Week");
-        ((TextView) yearOverviewListHeader.findViewById(R.id.total_time)).setText("Totale tijd");
-        ((TextView) yearOverviewListHeader.findViewById(R.id.first_and_last_day_of_week)).setText("Start week");
-    }
-
     private List<CurrentDayMillis> getCurrentDayMillisOfYear(Calendar date) {
         String startOfThisYearMillis = String.valueOf(TimerCalendar.getFirstDayOfYear(date).getTimeInMillis());
         String startOfNextYearMillis = String.valueOf(TimerCalendar.getFirstDayOfNextYear(date).getTimeInMillis());
@@ -119,6 +113,15 @@ public class YearOverviewFragment extends Fragment {
             totalValueView.setVisibility(View.GONE);
             totalValueLabelView.setVisibility(View.GONE);
         }
+    }
+
+    private void setYearListHeader() {
+        ((TextView) yearOverviewListHeader.findViewById(R.id.week_of_year)).setText(Res.getString(R.string
+                .list_header_week));
+        ((TextView) yearOverviewListHeader.findViewById(R.id.total_time)).setText(Res.getString(R.string
+                .list_header_total_time));
+        ((TextView) yearOverviewListHeader.findViewById(R.id.first_and_last_day_of_week)).setText(Res.getString(R
+                .string.list_header_total_start_week));
     }
 
     private void updateYearOverviewList(Year year) {

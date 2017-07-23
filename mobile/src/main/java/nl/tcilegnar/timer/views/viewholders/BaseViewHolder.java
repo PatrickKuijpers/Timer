@@ -12,8 +12,7 @@ public abstract class BaseViewHolder<T> extends LinearLayout {
     private T item;
 
     public BaseViewHolder(Context activityContext) {
-        super(activityContext);
-        init();
+        this(activityContext, null);
     }
 
     public BaseViewHolder(Context activityContext, AttributeSet attrs) {

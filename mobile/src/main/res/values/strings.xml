@@ -15,6 +15,11 @@
     <string name="week_label">Week:&#160;</string>
     <string name="year_label">Jaar:&#160;</string>
 
+    <string name="list_header_day">Dag</string>
+    <string name="list_header_week">Week</string>
+    <string name="list_header_total_time">Totale tijd</string>
+    <string name="list_header_total_start_week">Start week</string>
+
     <string name="ok">OK</string>
 
     <string name="menu_item_day_editor">Invoer werktijden</string>

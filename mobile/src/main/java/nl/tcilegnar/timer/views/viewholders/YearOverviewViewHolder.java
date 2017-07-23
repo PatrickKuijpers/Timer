@@ -14,8 +14,7 @@ public class YearOverviewViewHolder extends BaseViewHolder<WeekOfYear> {
     private TextView totalTimeView;
 
     public YearOverviewViewHolder(Context activityContext) {
-        super(activityContext);
-        initViews();
+        this(activityContext, null);
     }
 
     public YearOverviewViewHolder(Context activityContext, AttributeSet attrs) {

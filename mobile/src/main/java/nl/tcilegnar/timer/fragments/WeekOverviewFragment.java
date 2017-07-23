@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public class WeekOverviewFragment extends Fragment {
     private TextView weekNumberValueView;
     private TextView totalValueLabelView;
     private TextView totalValueView;
+    private LinearLayout weekOverviewListHeader;
     private ListView weekOverviewList;
 
     @Override
@@ -58,6 +60,7 @@ public class WeekOverviewFragment extends Fragment {
         weekNumberValueView = (TextView) view.findViewById(R.id.week_number_value);
         totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
         totalValueView = (TextView) view.findViewById(R.id.total_value);
+        weekOverviewListHeader = (LinearLayout) view.findViewById(R.id.week_overview_list_header);
         weekOverviewList = (ListView) view.findViewById(R.id.week_overview_list);
 
         updateWeekValues();
@@ -70,6 +73,7 @@ public class WeekOverviewFragment extends Fragment {
             Week week = new Week(dateFromWeek, currentDayMillisOfWeek);
             setWeekNumber(week);
             setTotalTime(week);
+            setYearListHeader();
             updateWeekOverviewList(week);
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,7 +106,7 @@ public class WeekOverviewFragment extends Fragment {
 
     private void setTotalTime(Week week) {
         int totalTimeInMinutes = week.getTotalTimeInMinutes();
-        String timeString = getTotalTimeString(totalTimeInMinutes);
+        String timeString = TimerCalendarUtil.getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
         if (!timeString.isEmpty()) {
             totalValueView.setText(timeString);
             totalValueView.setVisibility(View.VISIBLE);
@@ -113,8 +117,11 @@ public class WeekOverviewFragment extends Fragment {
         }
     }
 
-    private String getTotalTimeString(int totalTimeInMinutes) {
-        return TimerCalendarUtil.getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
+    private void setYearListHeader() {
+        ((TextView) weekOverviewListHeader.findViewById(R.id.day_of_week)).setText(Res.getString(R.string
+                .list_header_day));
+        ((TextView) weekOverviewListHeader.findViewById(R.id.total_time)).setText(Res.getString(R.string
+                .list_header_total_time));
     }
 
     private void updateWeekOverviewList(Week week) {
