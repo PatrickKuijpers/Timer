@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,6 +30,7 @@ import nl.tcilegnar.timer.utils.Log;
 import nl.tcilegnar.timer.utils.Res;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
+import nl.tcilegnar.timer.views.viewholders.WeekOverviewViewHolder;
 
 import static nl.tcilegnar.timer.utils.TimerCalendar.getCurrentDate;
 
@@ -41,6 +43,8 @@ public class WeekOverviewFragment extends Fragment {
     private TextView totalValueView;
     private LinearLayout weekOverviewListHeader;
     private ListView weekOverviewList;
+
+    private OnDayClickListener dayClickListener;
 
     public enum Args {
         DATE_FROM_WEEK
@@ -61,6 +65,10 @@ public class WeekOverviewFragment extends Fragment {
 
     private void setDateFromWeek(Calendar dateFromWeek) {
         getArguments().putLong(Args.DATE_FROM_WEEK.name(), dateFromWeek.getTimeInMillis());
+    }
+
+    public void setDayClickListener(OnDayClickListener dayClickListener) {
+        this.dayClickListener = dayClickListener;
     }
 
     @Override
@@ -146,6 +154,13 @@ public class WeekOverviewFragment extends Fragment {
     private void updateWeekOverviewList(Week week) {
         WeekOverviewAdapter weekOverviewAdapter = new WeekOverviewAdapter(getActivity(), week);
         weekOverviewList.setAdapter(weekOverviewAdapter);
+        weekOverviewList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Calendar dateOfDay = ((WeekOverviewViewHolder) view).getItem().getDayMillis().getDay();
+                dayClickListener.onDayClicked(dateOfDay);
+            }
+        });
     }
 
     public void setVersionNumber(View view) {
@@ -176,5 +191,9 @@ public class WeekOverviewFragment extends Fragment {
     public void setNewDate(Calendar dateFromWeek) {
         setDateFromWeek(dateFromWeek);
         updateWeekValues(dateFromWeek);
+    }
+
+    public interface OnDayClickListener {
+        void onDayClicked(Calendar dateOfDay);
     }
 }

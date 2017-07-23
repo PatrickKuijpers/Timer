@@ -7,16 +7,19 @@ import android.support.v4.app.Fragment;
 import java.util.Calendar;
 
 import nl.tcilegnar.timer.fragments.WeekOverviewFragment;
+import nl.tcilegnar.timer.fragments.WeekOverviewFragment.OnDayClickListener;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 
 import static nl.tcilegnar.timer.fragments.WeekOverviewFragment.Args.DATE_FROM_WEEK;
 
-public class WeekOverviewActivity extends BaseActivity {
+public class WeekOverviewActivity extends BaseActivity implements OnDayClickListener {
 
     @NonNull
     protected Fragment getInitialFragment() {
         Calendar dateFromWeek = getDateFromWeek();
-        return WeekOverviewFragment.newInstance(dateFromWeek);
+        WeekOverviewFragment fragment = WeekOverviewFragment.newInstance(dateFromWeek);
+        fragment.setDayClickListener(this);
+        return fragment;
     }
 
     private Calendar getDateFromWeek() {
@@ -27,5 +30,10 @@ public class WeekOverviewActivity extends BaseActivity {
         } else {
             return TimerCalendar.getCurrent();
         }
+    }
+
+    @Override
+    public void onDayClicked(Calendar dateOfDay) {
+        startDayEditorActivity(dateOfDay);
     }
 }

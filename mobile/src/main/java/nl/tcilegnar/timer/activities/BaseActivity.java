@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import java.util.Calendar;
 
 import nl.tcilegnar.timer.R;
+import nl.tcilegnar.timer.fragments.DayEditorFragment;
 import nl.tcilegnar.timer.fragments.WeekOverviewFragment;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -76,7 +77,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void startDayEditorActivity() {
+        startDayEditorActivity(null);
+    }
+
+    protected void startDayEditorActivity(@Nullable Calendar date) {
         Intent intent = getNewActivityIntent(DayEditorActivity.class);
+        if (date != null) {
+            intent.putExtra(DayEditorFragment.Args.DAY_DATE.name(), date.getTimeInMillis());
+        }
         startActivity(intent);
     }
 

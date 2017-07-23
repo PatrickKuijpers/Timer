@@ -65,6 +65,10 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
     private SaveListener saveLisener;
 
+    public enum Args {
+        DAY_DATE
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_day_editor, container, false);
