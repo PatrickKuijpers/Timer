@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,6 +40,7 @@ public class YearOverviewFragment extends Fragment {
     private TextView yearValueView;
     private TextView totalValueLabelView;
     private TextView totalValueView;
+    private LinearLayout yearOverviewListHeader;
     private ListView yearOverviewList;
 
     @Override
@@ -57,6 +59,7 @@ public class YearOverviewFragment extends Fragment {
         yearValueView = (TextView) view.findViewById(R.id.year_value);
         totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
         totalValueView = (TextView) view.findViewById(R.id.total_value);
+        yearOverviewListHeader = (LinearLayout) view.findViewById(R.id.year_overview_list_header);
         yearOverviewList = (ListView) view.findViewById(R.id.year_overview_list);
 
         updateYearValues();
@@ -68,12 +71,19 @@ public class YearOverviewFragment extends Fragment {
             Year year = new Year(dateFromYear, currentDayMillisOfYear);
             setYearNumber(year);
             setTotalTime(year);
+            setYearListHeader();
             updateYearOverviewList(year);
         } catch (Exception e) {
             e.printStackTrace();
             new LoadErrorDialog(String.format(Res.getString(R.string.error_message_dialog_load_weeknumber),
                     dateFromYear.get(Calendar.WEEK_OF_YEAR)));
         }
+    }
+
+    private void setYearListHeader() {
+        ((TextView) yearOverviewListHeader.findViewById(R.id.week_of_year)).setText("Week");
+        ((TextView) yearOverviewListHeader.findViewById(R.id.total_time)).setText("Totale tijd");
+        ((TextView) yearOverviewListHeader.findViewById(R.id.first_and_last_day_of_week)).setText("Start week");
     }
 
     private List<CurrentDayMillis> getCurrentDayMillisOfYear(Calendar date) {

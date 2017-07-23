@@ -64,8 +64,12 @@ public class WeekOfYear {
     }
 
     public String getReadablePeriodOfWeek() {
-        String firstDayOfWeekText = DateFormatter.format(getFirstDayOfWeek(), DATE_FORMAT_DASHES_1_JAN);
+        String firstDayOfWeekText = getReadableStartOfWeek();
         String lastDayOfWeekText = DateFormatter.format(getLastDayOfWeek(), DATE_FORMAT_DASHES_1_JAN);
         return firstDayOfWeekText + " t/m " + lastDayOfWeekText;
+    }
+
+    public String getReadableStartOfWeek() {
+        return DateFormatter.format(getFirstDayOfWeek(), DATE_FORMAT_DASHES_1_JAN);
     }
 }

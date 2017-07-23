@@ -44,12 +44,25 @@
             android:visibility="gone"/>
     </RelativeLayout>
 
+    <include
+        android:id="@+id/year_overview_list_header"
+        layout="@layout/viewholder_year_overview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/year_and_total_value_container"
+        android:layout_marginTop="@dimen/vertical_margin"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/year_overview_list_header"
+        android:background="@color/grey_very_dark"/>
+
     <ListView
         android:id="@+id/year_overview_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/year_and_total_value_container"
-        android:layout_marginTop="@dimen/vertical_margin"
+        android:layout_below="@id/year_overview_list_header"
         android:divider="@android:color/transparent"
         android:dividerHeight="@dimen/vertical_margin"/>
 </RelativeLayout>
