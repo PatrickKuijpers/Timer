@@ -5,12 +5,15 @@ import com.orm.query.Select;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,19 +31,44 @@ import nl.tcilegnar.timer.utils.Log;
 import nl.tcilegnar.timer.utils.Res;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
-
-import static nl.tcilegnar.timer.utils.TimerCalendar.getCurrentDate;
+import nl.tcilegnar.timer.views.viewholders.WeekOverviewViewHolder;
 
 public class WeekOverviewFragment extends Fragment {
     private final String TAG = Log.getTag(this);
     private static final String DATE_PICKER_DIALOG_TAG = "DATE_PICKER_DIALOG_TAG";
 
-    private Calendar dateFromWeek = TimerCalendar.getCurrent();
-
     private TextView weekNumberValueView;
     private TextView totalValueLabelView;
     private TextView totalValueView;
+    private LinearLayout weekOverviewListHeader;
     private ListView weekOverviewList;
+
+    private OnDayClickListener dayClickListener;
+
+    public enum Args {
+        DATE_FROM_WEEK
+    }
+
+    public static WeekOverviewFragment newInstance(@NonNull Calendar dateFromWeek) {
+        WeekOverviewFragment fragment = new WeekOverviewFragment();
+        Bundle args = new Bundle();
+        args.putLong(Args.DATE_FROM_WEEK.name(), dateFromWeek.getTimeInMillis());
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private Calendar getDateFromWeek() {
+        long millis = getArguments().getLong(Args.DATE_FROM_WEEK.name());
+        return TimerCalendar.getCalendarInMillis(millis);
+    }
+
+    private void setDateFromWeek(Calendar dateFromWeek) {
+        getArguments().putLong(Args.DATE_FROM_WEEK.name(), dateFromWeek.getTimeInMillis());
+    }
+
+    public void setDayClickListener(OnDayClickListener dayClickListener) {
+        this.dayClickListener = dayClickListener;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,18 +86,20 @@ public class WeekOverviewFragment extends Fragment {
         weekNumberValueView = (TextView) view.findViewById(R.id.week_number_value);
         totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
         totalValueView = (TextView) view.findViewById(R.id.total_value);
+        weekOverviewListHeader = (LinearLayout) view.findViewById(R.id.week_overview_list_header);
         weekOverviewList = (ListView) view.findViewById(R.id.week_overview_list);
 
-        updateWeekValues();
+        updateWeekValues(getDateFromWeek());
         setVersionNumber(view);
     }
 
-    private void updateWeekValues() {
+    private void updateWeekValues(Calendar dateFromWeek) {
         try {
             List<CurrentDayMillis> currentDayMillisOfWeek = getCurrentDayMillisOfWeek(dateFromWeek);
             Week week = new Week(dateFromWeek, currentDayMillisOfWeek);
             setWeekNumber(week);
             setTotalTime(week);
+            setYearListHeader();
             updateWeekOverviewList(week);
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,7 +132,7 @@ public class WeekOverviewFragment extends Fragment {
 
     private void setTotalTime(Week week) {
         int totalTimeInMinutes = week.getTotalTimeInMinutes();
-        String timeString = getTotalTimeString(totalTimeInMinutes);
+        String timeString = TimerCalendarUtil.getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
         if (!timeString.isEmpty()) {
             totalValueView.setText(timeString);
             totalValueView.setVisibility(View.VISIBLE);
@@ -113,13 +143,23 @@ public class WeekOverviewFragment extends Fragment {
         }
     }
 
-    private String getTotalTimeString(int totalTimeInMinutes) {
-        return TimerCalendarUtil.getReadableTimeStringHoursAndMinutes(totalTimeInMinutes);
+    private void setYearListHeader() {
+        ((TextView) weekOverviewListHeader.findViewById(R.id.day_of_week)).setText(Res.getString(R.string
+                .list_header_day));
+        ((TextView) weekOverviewListHeader.findViewById(R.id.total_time)).setText(Res.getString(R.string
+                .list_header_total_time));
     }
 
     private void updateWeekOverviewList(Week week) {
         WeekOverviewAdapter weekOverviewAdapter = new WeekOverviewAdapter(getActivity(), week);
         weekOverviewList.setAdapter(weekOverviewAdapter);
+        weekOverviewList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Calendar dateOfDay = ((WeekOverviewViewHolder) view).getItem().getDayMillis().getDay();
+                dayClickListener.onDayClicked(dateOfDay);
+            }
+        });
     }
 
     public void setVersionNumber(View view) {
@@ -144,11 +184,15 @@ public class WeekOverviewFragment extends Fragment {
                 setNewDate(TimerCalendar.getCalendarWithDate(year, month, dayOfMonth));
             }
         });
-        datePickerFragment.show(getActivity().getFragmentManager(), DATE_PICKER_DIALOG_TAG, getCurrentDate());
+        datePickerFragment.show(getActivity().getFragmentManager(), DATE_PICKER_DIALOG_TAG, getDateFromWeek());
     }
 
     public void setNewDate(Calendar dateFromWeek) {
-        this.dateFromWeek = dateFromWeek;
-        updateWeekValues();
+        setDateFromWeek(dateFromWeek);
+        updateWeekValues(dateFromWeek);
+    }
+
+    public interface OnDayClickListener {
+        void onDayClicked(Calendar dateOfDay);
     }
 }

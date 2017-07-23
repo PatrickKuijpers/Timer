@@ -1,14 +1,40 @@
 package nl.tcilegnar.timer.activities;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
-import nl.tcilegnar.timer.fragments.WeekOverviewFragment;
+import java.util.Calendar;
 
-public class WeekOverviewActivity extends BaseActivity {
+import nl.tcilegnar.timer.fragments.WeekOverviewFragment;
+import nl.tcilegnar.timer.fragments.WeekOverviewFragment.OnDayClickListener;
+import nl.tcilegnar.timer.utils.TimerCalendar;
+
+import static nl.tcilegnar.timer.fragments.WeekOverviewFragment.Args.DATE_FROM_WEEK;
+
+public class WeekOverviewActivity extends BaseActivity implements OnDayClickListener {
 
     @NonNull
     protected Fragment getInitialFragment() {
-        return new WeekOverviewFragment();
+        Calendar dateFromWeek = getDateFromWeek();
+        WeekOverviewFragment fragment = WeekOverviewFragment.newInstance(dateFromWeek);
+        fragment.setDayClickListener(this);
+        return fragment;
+    }
+
+    @NonNull
+    private Calendar getDateFromWeek() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            long dateInMillis = extras.getLong(DATE_FROM_WEEK.name());
+            return TimerCalendar.getCalendarInMillis(dateInMillis);
+        } else {
+            return TimerCalendar.getCurrent();
+        }
+    }
+
+    @Override
+    public void onDayClicked(Calendar dateOfDay) {
+        startDayEditorActivity(dateOfDay);
     }
 }

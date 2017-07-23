@@ -14,8 +14,7 @@ public class YearOverviewViewHolder extends BaseViewHolder<WeekOfYear> {
     private TextView totalTimeView;
 
     public YearOverviewViewHolder(Context activityContext) {
-        super(activityContext);
-        initViews();
+        this(activityContext, null);
     }
 
     public YearOverviewViewHolder(Context activityContext, AttributeSet attrs) {
@@ -25,8 +24,8 @@ public class YearOverviewViewHolder extends BaseViewHolder<WeekOfYear> {
 
     private void initViews() {
         weekOfYearView = (TextView) findViewById(R.id.week_of_year);
-        firstAndLastDayOfWeek = (TextView) findViewById(R.id.first_and_last_day_of_week);
         totalTimeView = (TextView) findViewById(R.id.total_time);
+        firstAndLastDayOfWeek = (TextView) findViewById(R.id.first_and_last_day_of_week);
     }
 
     @Override
@@ -38,7 +37,7 @@ public class YearOverviewViewHolder extends BaseViewHolder<WeekOfYear> {
     public void loadData(WeekOfYear weekOfYear) {
         weekOfYearView.setText(String.valueOf(weekOfYear.getWeekNumber()));
         totalTimeView.setText(getTotalTimeText(weekOfYear));
-        firstAndLastDayOfWeek.setText(weekOfYear.getReadablePeriodOfWeek());
+        firstAndLastDayOfWeek.setText(weekOfYear.getReadableStartOfWeek());
     }
 
     private String getTotalTimeText(WeekOfYear weekOfYear) {

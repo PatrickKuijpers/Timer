@@ -7,6 +7,7 @@ import com.orm.query.Select;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -65,6 +66,27 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
     private SaveListener saveLisener;
 
+    public enum Args {
+        DAY_DATE
+    }
+
+    public static DayEditorFragment newInstance(@NonNull Calendar dayDate) {
+        DayEditorFragment fragment = new DayEditorFragment();
+        Bundle args = new Bundle();
+        args.putLong(Args.DAY_DATE.name(), dayDate.getTimeInMillis());
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private Calendar getDateForDay() { // TODO
+        long millis = getArguments().getLong(Args.DAY_DATE.name());
+        return TimerCalendar.getCalendarInMillis(millis);
+    }
+
+    private void setDateForDay(Calendar date) { // TODO
+        getArguments().putLong(Args.DAY_DATE.name(), date.getTimeInMillis());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_day_editor, container, false);
@@ -115,7 +137,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     public Calendar getCurrentDateToInitWith() {
         if (storage.loadActiveDayEditor() == NO_ACTIVE_DAY_EDITOR) {
             // No day editor active = no time set: assume you'd like to start over with a new day instead of retreiving
-            return TimerCalendar.getCurrentDate();
+            return TimerCalendar.getCurrentDateMidnight();
         } else {
             return getCurrentDate();
         }
@@ -207,7 +229,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
     private void saveCurrentDayValues() {
         try {
-            CurrentDayMillis currentDayMillis = getCurrentDayMillis();
+            final CurrentDayMillis currentDayMillis = getCurrentDayMillis();
             Log.d(TAG, currentDayMillis.toString());
 
             Validation validation = currentDayMillis.getValidation();
@@ -222,7 +244,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
                             removeDuplicateEntries(duplicateEntries);
                             logAll();
                             resetCurrentDay();
-                            saveLisener.onSaveSuccessful();
+                            saveLisener.onSaveSuccessful(currentDayMillis.getDay());
                         } catch (Exception e) {
                             new SaveErrorDialog(Res.getString(R.string
                                     .error_message_dialog_save_duplciates_could_not_be_removed)).show(getActivity());
@@ -295,6 +317,6 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     }
 
     public interface SaveListener {
-        void onSaveSuccessful();
+        void onSaveSuccessful(Calendar someDateFromWeek);
     }
 }

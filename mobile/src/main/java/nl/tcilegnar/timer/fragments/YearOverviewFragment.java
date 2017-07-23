@@ -5,12 +5,15 @@ import com.orm.query.Select;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,19 +30,44 @@ import nl.tcilegnar.timer.utils.Log;
 import nl.tcilegnar.timer.utils.Res;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
-
-import static nl.tcilegnar.timer.utils.TimerCalendar.getCurrentDate;
+import nl.tcilegnar.timer.views.viewholders.YearOverviewViewHolder;
 
 public class YearOverviewFragment extends Fragment {
     private final String TAG = Log.getTag(this);
     private static final String YEAR_PICKER_DIALOG_TAG = "YEAR_PICKER_DIALOG_TAG";
 
-    private Calendar dateFromYear = TimerCalendar.getCurrent();
-
     private TextView yearValueView;
     private TextView totalValueLabelView;
     private TextView totalValueView;
+    private LinearLayout yearOverviewListHeader;
     private ListView yearOverviewList;
+
+    private OnWeekClickListener weekClickListener;
+
+    private enum Args {
+        DATE_FROM_YEAR
+    }
+
+    public static YearOverviewFragment newInstance(@NonNull Calendar dateFromYear) {
+        YearOverviewFragment fragment = new YearOverviewFragment();
+        Bundle args = new Bundle();
+        args.putLong(Args.DATE_FROM_YEAR.name(), dateFromYear.getTimeInMillis());
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private Calendar getDateFromYear() {
+        long millis = getArguments().getLong(Args.DATE_FROM_YEAR.name());
+        return TimerCalendar.getCalendarInMillis(millis);
+    }
+
+    private void setDateFromYear(Calendar dateFromWeek) {
+        getArguments().putLong(Args.DATE_FROM_YEAR.name(), dateFromWeek.getTimeInMillis());
+    }
+
+    public void setWeekClickListener(OnWeekClickListener weekClickListener) {
+        this.weekClickListener = weekClickListener;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,17 +85,19 @@ public class YearOverviewFragment extends Fragment {
         yearValueView = (TextView) view.findViewById(R.id.year_value);
         totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
         totalValueView = (TextView) view.findViewById(R.id.total_value);
+        yearOverviewListHeader = (LinearLayout) view.findViewById(R.id.year_overview_list_header);
         yearOverviewList = (ListView) view.findViewById(R.id.year_overview_list);
 
-        updateYearValues();
+        updateYearValues(getDateFromYear());
     }
 
-    private void updateYearValues() {
+    private void updateYearValues(Calendar dateFromYear) {
         try {
             List<CurrentDayMillis> currentDayMillisOfYear = getCurrentDayMillisOfYear(dateFromYear);
             Year year = new Year(dateFromYear, currentDayMillisOfYear);
             setYearNumber(year);
-            setTotalTime(currentDayMillisOfYear); // TODO
+            setTotalTime(year);
+            setYearListHeader();
             updateYearOverviewList(year);
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,9 +128,9 @@ public class YearOverviewFragment extends Fragment {
         yearValueView.setText(yearNumberText);
     }
 
-    private void setTotalTime(List<CurrentDayMillis> currentDayMillisOfYear) {
-        int totalTimeInMinutes = getTotalTimeOfYearInMinutes(currentDayMillisOfYear);
-        String timeString = getTotalTimeString(totalTimeInMinutes);
+    private void setTotalTime(Year year) {
+        int totalTimeInMinutes = year.getTotalTimeInMinutes();
+        String timeString = TimerCalendarUtil.getReadableTimeStringHoursAndMinutesLetters(totalTimeInMinutes);
         if (!timeString.isEmpty()) {
             totalValueView.setText(timeString);
             totalValueView.setVisibility(View.VISIBLE);
@@ -111,22 +141,25 @@ public class YearOverviewFragment extends Fragment {
         }
     }
 
-    private int getTotalTimeOfYearInMinutes(List<CurrentDayMillis> currentDayMillisOfYear) {
-        int totalTimeInMinutes = 0;
-        for (CurrentDayMillis currentDayMillis : currentDayMillisOfYear) {
-            totalTimeInMinutes += currentDayMillis.getTotalTimeInMinutes();
-        }
-        totalTimeInMinutes += 40000;
-        return totalTimeInMinutes;
-    }
-
-    private String getTotalTimeString(int totalTimeInMinutes) {
-        return TimerCalendarUtil.getReadableTimeStringHoursAndMinutesLetters(totalTimeInMinutes);
+    private void setYearListHeader() {
+        ((TextView) yearOverviewListHeader.findViewById(R.id.week_of_year)).setText(Res.getString(R.string
+                .list_header_week));
+        ((TextView) yearOverviewListHeader.findViewById(R.id.total_time)).setText(Res.getString(R.string
+                .list_header_total_time));
+        ((TextView) yearOverviewListHeader.findViewById(R.id.first_and_last_day_of_week)).setText(Res.getString(R
+                .string.list_header_total_start_week));
     }
 
     private void updateYearOverviewList(Year year) {
         YearOverviewAdapter yearOverviewAdapter = new YearOverviewAdapter(getActivity(), year);
         yearOverviewList.setAdapter(yearOverviewAdapter);
+        yearOverviewList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Calendar firstDayOfWeek = ((YearOverviewViewHolder) view).getItem().getFirstDayOfWeek();
+                weekClickListener.onWeekClicked(firstDayOfWeek);
+            }
+        });
     }
 
     private void initListeners() {
@@ -146,11 +179,15 @@ public class YearOverviewFragment extends Fragment {
                 setNewDate(TimerCalendar.getCalendarWithDate(year, month, dayOfMonth));
             }
         });
-        datePickerFragment.show(getActivity().getFragmentManager(), YEAR_PICKER_DIALOG_TAG, getCurrentDate());
+        datePickerFragment.show(getActivity().getFragmentManager(), YEAR_PICKER_DIALOG_TAG, getDateFromYear());
     }
 
     public void setNewDate(Calendar dateFromYear) {
-        this.dateFromYear = dateFromYear;
-        updateYearValues();
+        setDateFromYear(dateFromYear);
+        updateYearValues(dateFromYear);
+    }
+
+    public interface OnWeekClickListener {
+        void onWeekClicked(Calendar someDateFromWeek);
     }
 }

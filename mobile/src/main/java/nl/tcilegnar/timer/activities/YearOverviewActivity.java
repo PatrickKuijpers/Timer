@@ -3,12 +3,23 @@ package nl.tcilegnar.timer.activities;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
-import nl.tcilegnar.timer.fragments.YearOverviewFragment;
+import java.util.Calendar;
 
-public class YearOverviewActivity extends BaseActivity {
+import nl.tcilegnar.timer.fragments.YearOverviewFragment;
+import nl.tcilegnar.timer.fragments.YearOverviewFragment.OnWeekClickListener;
+import nl.tcilegnar.timer.utils.TimerCalendar;
+
+public class YearOverviewActivity extends BaseActivity implements OnWeekClickListener {
 
     @NonNull
     protected Fragment getInitialFragment() {
-        return new YearOverviewFragment();
+        YearOverviewFragment fragment = YearOverviewFragment.newInstance(TimerCalendar.getCurrent());
+        fragment.setWeekClickListener(this);
+        return fragment;
+    }
+
+    @Override
+    public void onWeekClicked(Calendar someDateFromWeek) {
+        startWeekOverviewActivity(someDateFromWeek);
     }
 }
