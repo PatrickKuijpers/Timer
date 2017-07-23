@@ -69,6 +69,23 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         DAY_DATE
     }
 
+    public static DayEditorFragment newInstance(Calendar dayDate) {
+        DayEditorFragment fragment = new DayEditorFragment();
+        Bundle args = new Bundle();
+        args.putLong(Args.DAY_DATE.name(), dayDate.getTimeInMillis());
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private Calendar getDateFromWeek() {
+        long millis = getArguments().getLong(Args.DAY_DATE.name());
+        return TimerCalendar.getCalendarInMillis(millis);
+    }
+
+    private void setDateFromWeek(Calendar dateFromWeek) {
+        getArguments().putLong(Args.DAY_DATE.name(), dateFromWeek.getTimeInMillis());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_day_editor, container, false);

@@ -15,13 +15,17 @@ import nl.tcilegnar.timer.fragments.DayEditorFragment.SaveListener;
 import nl.tcilegnar.timer.utils.Log;
 import nl.tcilegnar.timer.utils.MyBuildConfig;
 import nl.tcilegnar.timer.utils.MyProperties;
+import nl.tcilegnar.timer.utils.TimerCalendar;
+
+import static nl.tcilegnar.timer.fragments.DayEditorFragment.Args.DAY_DATE;
 
 public class DayEditorActivity extends BaseActivity {
     MyBuildConfig myBuildConfig = new MyBuildConfig();
 
     @NonNull
     protected Fragment getInitialFragment() {
-        DayEditorFragment dayEditorFragment = new DayEditorFragment();
+        Calendar dayDate = getDayDate();
+        DayEditorFragment dayEditorFragment = DayEditorFragment.newInstance(dayDate);
         dayEditorFragment.setSaveListener(new SaveListener() {
             @Override
             public void onSaveSuccessful(Calendar someDateFromWeek) {
@@ -29,6 +33,16 @@ public class DayEditorActivity extends BaseActivity {
             }
         });
         return dayEditorFragment;
+    }
+
+    private Calendar getDayDate() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            long dateInMillis = extras.getLong(DAY_DATE.name());
+            return TimerCalendar.getCalendarInMillis(dateInMillis);
+        } else {
+            return TimerCalendar.getCurrent(); // TODO: middernacht?
+        }
     }
 
     @Override
