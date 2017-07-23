@@ -36,13 +36,32 @@ public class WeekOverviewFragment extends Fragment {
     private final String TAG = Log.getTag(this);
     private static final String DATE_PICKER_DIALOG_TAG = "DATE_PICKER_DIALOG_TAG";
 
-    private Calendar dateFromWeek = TimerCalendar.getCurrent();
-
     private TextView weekNumberValueView;
     private TextView totalValueLabelView;
     private TextView totalValueView;
     private LinearLayout weekOverviewListHeader;
     private ListView weekOverviewList;
+
+    private enum Args {
+        DATE_FROM_WEEK
+    }
+
+    public static WeekOverviewFragment newInstance(Calendar dateFromWeek) {
+        WeekOverviewFragment fragment = new WeekOverviewFragment();
+        Bundle args = new Bundle();
+        args.putLong(Args.DATE_FROM_WEEK.name(), dateFromWeek.getTimeInMillis());
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private Calendar getDateFromWeek() {
+        long millis = getArguments().getLong(Args.DATE_FROM_WEEK.name());
+        return TimerCalendar.getCalendarInMillis(millis);
+    }
+
+    private void setDateFromWeek(Calendar dateFromWeek) {
+        getArguments().putLong(Args.DATE_FROM_WEEK.name(), dateFromWeek.getTimeInMillis());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,11 +82,11 @@ public class WeekOverviewFragment extends Fragment {
         weekOverviewListHeader = (LinearLayout) view.findViewById(R.id.week_overview_list_header);
         weekOverviewList = (ListView) view.findViewById(R.id.week_overview_list);
 
-        updateWeekValues();
+        updateWeekValues(getDateFromWeek());
         setVersionNumber(view);
     }
 
-    private void updateWeekValues() {
+    private void updateWeekValues(Calendar dateFromWeek) {
         try {
             List<CurrentDayMillis> currentDayMillisOfWeek = getCurrentDayMillisOfWeek(dateFromWeek);
             Week week = new Week(dateFromWeek, currentDayMillisOfWeek);
@@ -155,7 +174,7 @@ public class WeekOverviewFragment extends Fragment {
     }
 
     public void setNewDate(Calendar dateFromWeek) {
-        this.dateFromWeek = dateFromWeek;
-        updateWeekValues();
+        setDateFromWeek(dateFromWeek);
+        updateWeekValues(dateFromWeek);
     }
 }

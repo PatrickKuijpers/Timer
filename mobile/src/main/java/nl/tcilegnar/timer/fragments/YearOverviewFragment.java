@@ -35,13 +35,32 @@ public class YearOverviewFragment extends Fragment {
     private final String TAG = Log.getTag(this);
     private static final String YEAR_PICKER_DIALOG_TAG = "YEAR_PICKER_DIALOG_TAG";
 
-    private Calendar dateFromYear = TimerCalendar.getCurrent();
-
     private TextView yearValueView;
     private TextView totalValueLabelView;
     private TextView totalValueView;
     private LinearLayout yearOverviewListHeader;
     private ListView yearOverviewList;
+
+    private enum Args {
+        DATE_FROM_YEAR
+    }
+
+    public static YearOverviewFragment newInstance(Calendar dateFromYear) {
+        YearOverviewFragment fragment = new YearOverviewFragment();
+        Bundle args = new Bundle();
+        args.putLong(Args.DATE_FROM_YEAR.name(), dateFromYear.getTimeInMillis());
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private Calendar getDateFromYear() {
+        long millis = getArguments().getLong(Args.DATE_FROM_YEAR.name());
+        return TimerCalendar.getCalendarInMillis(millis);
+    }
+
+    private void setDateFromYear(Calendar dateFromWeek) {
+        getArguments().putLong(Args.DATE_FROM_YEAR.name(), dateFromWeek.getTimeInMillis());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,10 +81,10 @@ public class YearOverviewFragment extends Fragment {
         yearOverviewListHeader = (LinearLayout) view.findViewById(R.id.year_overview_list_header);
         yearOverviewList = (ListView) view.findViewById(R.id.year_overview_list);
 
-        updateYearValues();
+        updateYearValues(getDateFromYear());
     }
 
-    private void updateYearValues() {
+    private void updateYearValues(Calendar dateFromYear) {
         try {
             List<CurrentDayMillis> currentDayMillisOfYear = getCurrentDayMillisOfYear(dateFromYear);
             Year year = new Year(dateFromYear, currentDayMillisOfYear);
@@ -150,7 +169,7 @@ public class YearOverviewFragment extends Fragment {
     }
 
     public void setNewDate(Calendar dateFromYear) {
-        this.dateFromYear = dateFromYear;
-        updateYearValues();
+        setDateFromYear(dateFromYear);
+        updateYearValues(dateFromYear);
     }
 }
