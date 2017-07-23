@@ -3,6 +3,7 @@ package nl.tcilegnar.timer.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Calendar;
+
 import nl.tcilegnar.timer.R;
+import nl.tcilegnar.timer.fragments.WeekOverviewFragment;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected final String LOGTAG = getClass().getSimpleName();
@@ -72,21 +76,31 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void startDayEditorActivity() {
-        startActivity(DayEditorActivity.class);
+        Intent intent = getNewActivityIntent(DayEditorActivity.class);
+        startActivity(intent);
     }
 
     protected void startWeekOverviewActivity() {
-        startActivity(WeekOverviewActivity.class);
+        startWeekOverviewActivity(null);
+    }
+
+    protected void startWeekOverviewActivity(@Nullable Calendar someDateFromWeek) {
+        Intent intent = getNewActivityIntent(WeekOverviewActivity.class);
+        if (someDateFromWeek != null) {
+            intent.putExtra(WeekOverviewFragment.Args.DATE_FROM_WEEK.name(), someDateFromWeek.getTimeInMillis());
+        }
+        startActivity(intent);
     }
 
     protected void startYearOverviewActivity() {
-        startActivity(YearOverviewActivity.class);
+        Intent intent = getNewActivityIntent(YearOverviewActivity.class);
+        startActivity(intent);
     }
 
-    protected void startActivity(Class<? extends BaseActivity> activityClass) {
+    protected Intent getNewActivityIntent(Class<? extends BaseActivity> activityClass) {
         Intent intent = new Intent(this, activityClass);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        return intent;
     }
 }

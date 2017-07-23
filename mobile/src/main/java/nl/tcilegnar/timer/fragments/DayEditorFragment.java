@@ -207,7 +207,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
 
     private void saveCurrentDayValues() {
         try {
-            CurrentDayMillis currentDayMillis = getCurrentDayMillis();
+            final CurrentDayMillis currentDayMillis = getCurrentDayMillis();
             Log.d(TAG, currentDayMillis.toString());
 
             Validation validation = currentDayMillis.getValidation();
@@ -222,7 +222,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
                             removeDuplicateEntries(duplicateEntries);
                             logAll();
                             resetCurrentDay();
-                            saveLisener.onSaveSuccessful();
+                            saveLisener.onSaveSuccessful(currentDayMillis.getDay());
                         } catch (Exception e) {
                             new SaveErrorDialog(Res.getString(R.string
                                     .error_message_dialog_save_duplciates_could_not_be_removed)).show(getActivity());
@@ -295,6 +295,6 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     }
 
     public interface SaveListener {
-        void onSaveSuccessful();
+        void onSaveSuccessful(Calendar someDateFromWeek);
     }
 }

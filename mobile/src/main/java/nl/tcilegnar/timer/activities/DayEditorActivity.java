@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
+import java.util.Calendar;
+
 import nl.tcilegnar.timer.fragments.DayEditorFragment;
 import nl.tcilegnar.timer.fragments.DayEditorFragment.SaveListener;
 import nl.tcilegnar.timer.utils.Log;
@@ -22,8 +24,8 @@ public class DayEditorActivity extends BaseActivity {
         DayEditorFragment dayEditorFragment = new DayEditorFragment();
         dayEditorFragment.setSaveListener(new SaveListener() {
             @Override
-            public void onSaveSuccessful() {
-                startWeekOverviewActivity();
+            public void onSaveSuccessful(Calendar someDateFromWeek) {
+                startWeekOverviewActivity(someDateFromWeek);
             }
         });
         return dayEditorFragment;

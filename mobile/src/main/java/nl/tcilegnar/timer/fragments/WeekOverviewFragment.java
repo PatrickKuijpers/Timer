@@ -42,7 +42,7 @@ public class WeekOverviewFragment extends Fragment {
     private LinearLayout weekOverviewListHeader;
     private ListView weekOverviewList;
 
-    private enum Args {
+    public enum Args {
         DATE_FROM_WEEK
     }
 

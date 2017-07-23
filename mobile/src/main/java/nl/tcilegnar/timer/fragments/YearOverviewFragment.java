@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -28,6 +29,7 @@ import nl.tcilegnar.timer.utils.Log;
 import nl.tcilegnar.timer.utils.Res;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
+import nl.tcilegnar.timer.views.viewholders.YearOverviewViewHolder;
 
 import static nl.tcilegnar.timer.utils.TimerCalendar.getCurrentDate;
 
@@ -40,6 +42,8 @@ public class YearOverviewFragment extends Fragment {
     private TextView totalValueView;
     private LinearLayout yearOverviewListHeader;
     private ListView yearOverviewList;
+
+    private OnWeekClickListener weekClickListener;
 
     private enum Args {
         DATE_FROM_YEAR
@@ -60,6 +64,10 @@ public class YearOverviewFragment extends Fragment {
 
     private void setDateFromYear(Calendar dateFromWeek) {
         getArguments().putLong(Args.DATE_FROM_YEAR.name(), dateFromWeek.getTimeInMillis());
+    }
+
+    public void setWeekClickListener(OnWeekClickListener weekClickListener) {
+        this.weekClickListener = weekClickListener;
     }
 
     @Override
@@ -146,6 +154,13 @@ public class YearOverviewFragment extends Fragment {
     private void updateYearOverviewList(Year year) {
         YearOverviewAdapter yearOverviewAdapter = new YearOverviewAdapter(getActivity(), year);
         yearOverviewList.setAdapter(yearOverviewAdapter);
+        yearOverviewList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Calendar firstDayOfWeek = ((YearOverviewViewHolder) view).getItem().getFirstDayOfWeek();
+                weekClickListener.onWeekClicked(firstDayOfWeek);
+            }
+        });
     }
 
     private void initListeners() {
@@ -171,5 +186,9 @@ public class YearOverviewFragment extends Fragment {
     public void setNewDate(Calendar dateFromYear) {
         setDateFromYear(dateFromYear);
         updateYearValues(dateFromYear);
+    }
+
+    public interface OnWeekClickListener {
+        void onWeekClicked(Calendar someDateFromWeek);
     }
 }
