@@ -9,7 +9,7 @@ public class TimerCalendar {
         return Calendar.getInstance(MyLocale.getLocale());
     }
 
-    public static Calendar getCurrentDate() {
+    public static Calendar getCurrentDateMidnight() {
         return getCalendarWithTime(getCurrent(), 0, 0);
     }
 

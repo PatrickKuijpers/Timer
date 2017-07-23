@@ -77,13 +77,13 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
         return fragment;
     }
 
-    private Calendar getDateFromWeek() {
+    private Calendar getDateForDay() {
         long millis = getArguments().getLong(Args.DAY_DATE.name());
         return TimerCalendar.getCalendarInMillis(millis);
     }
 
-    private void setDateFromWeek(Calendar dateFromWeek) {
-        getArguments().putLong(Args.DAY_DATE.name(), dateFromWeek.getTimeInMillis());
+    private void setDateForDay(Calendar date) {
+        getArguments().putLong(Args.DAY_DATE.name(), date.getTimeInMillis());
     }
 
     @Override
@@ -136,7 +136,7 @@ public class DayEditorFragment extends Fragment implements CurrentDateListener, 
     public Calendar getCurrentDateToInitWith() {
         if (storage.loadActiveDayEditor() == NO_ACTIVE_DAY_EDITOR) {
             // No day editor active = no time set: assume you'd like to start over with a new day instead of retreiving
-            return TimerCalendar.getCurrentDate();
+            return TimerCalendar.getCurrentDateMidnight();
         } else {
             return getCurrentDate();
         }

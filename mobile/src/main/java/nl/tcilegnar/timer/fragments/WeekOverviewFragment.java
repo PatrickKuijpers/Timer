@@ -32,7 +32,7 @@ import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 import nl.tcilegnar.timer.views.viewholders.WeekOverviewViewHolder;
 
-import static nl.tcilegnar.timer.utils.TimerCalendar.getCurrentDate;
+import static nl.tcilegnar.timer.utils.TimerCalendar.getCurrentDateMidnight;
 
 public class WeekOverviewFragment extends Fragment {
     private final String TAG = Log.getTag(this);
@@ -185,7 +185,7 @@ public class WeekOverviewFragment extends Fragment {
                 setNewDate(TimerCalendar.getCalendarWithDate(year, month, dayOfMonth));
             }
         });
-        datePickerFragment.show(getActivity().getFragmentManager(), DATE_PICKER_DIALOG_TAG, getCurrentDate());
+        datePickerFragment.show(getActivity().getFragmentManager(), DATE_PICKER_DIALOG_TAG, getCurrentDateMidnight());
     }
 
     public void setNewDate(Calendar dateFromWeek) {

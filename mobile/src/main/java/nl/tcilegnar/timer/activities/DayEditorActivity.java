@@ -41,7 +41,7 @@ public class DayEditorActivity extends BaseActivity {
             long dateInMillis = extras.getLong(DAY_DATE.name());
             return TimerCalendar.getCalendarInMillis(dateInMillis);
         } else {
-            return TimerCalendar.getCurrent(); // TODO: middernacht?
+            return null; // TODO: getCurrentDateToInitWith uit fragment
         }
     }
 
