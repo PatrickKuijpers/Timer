@@ -33,9 +33,15 @@ local.properties
 # Android Studio captures folder
 captures/
 
-# Intellij
+# Intellij (.idea does not follow default Android .gitignore)
 *.iml
-# .idea ignores are customized
+*.ipr
+*.iws
+.idea/*
+projectFilesBackup/.idea
+# Intellij .idea folder exceptions:
+!.idea/fileTemplates/
+!.idea/codeStyleSettings.xml
 
 # Keystore files
 *.jks
@@ -44,18 +50,10 @@ captures/
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
 
-# ---
-# Custom ignores:
-# ---
-
 # Mac
 .DS_Store
 
-# Intellij .idea folder
-*/.idea
-# Intellij .idea folder exceptions:
-!.idea/fileTemplates/
-!.idea/codeStyleSettings.xml
+
 
 # ---
 # git rm --cached -r .
