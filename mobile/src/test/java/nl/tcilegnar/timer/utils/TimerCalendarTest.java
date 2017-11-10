@@ -2,7 +2,7 @@ package nl.tcilegnar.timer.utils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import android.support.annotation.NonNull;
@@ -13,7 +13,7 @@ import nl.tcilegnar.timer.BuildConfig;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class TimerCalendarTest {
     private static final long MON_17_07_2017_MIDNIGHT_NL = 1500242400000L;

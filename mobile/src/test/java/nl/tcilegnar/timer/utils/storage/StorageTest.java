@@ -3,7 +3,7 @@ package nl.tcilegnar.timer.utils.storage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import nl.tcilegnar.timer.BuildConfig;
@@ -12,7 +12,7 @@ import static nl.tcilegnar.timer.utils.storage.Storage.Key;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class StorageTest {
     private Storage storage;

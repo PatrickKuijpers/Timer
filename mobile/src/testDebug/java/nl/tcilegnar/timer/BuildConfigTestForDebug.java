@@ -1,12 +1,12 @@
 package nl.tcilegnar.timer;
 
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class BuildConfigTestForDebug extends BuildConfigTestForProductFlavor {
     private static final String APPLICATION_ID = APPLICATION_ID_WITH_FLAVOR + ".dev";

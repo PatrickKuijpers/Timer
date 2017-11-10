@@ -1,7 +1,7 @@
 package nl.tcilegnar.timer.utils;
 
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import nl.tcilegnar.timer.BuildConfig;
@@ -9,7 +9,7 @@ import nl.tcilegnar.timer.BuildConfig;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertFalse;
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class MyBuildConfigTestForAlpha extends MyBuildConfigTest {
     @Override

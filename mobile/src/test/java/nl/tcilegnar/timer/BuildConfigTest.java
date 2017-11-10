@@ -2,12 +2,12 @@ package nl.tcilegnar.timer;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertTrue;
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public abstract class BuildConfigTest {
     protected static final String APPLICATION_ID_BASE = "nl.tcilegnar.timer";
