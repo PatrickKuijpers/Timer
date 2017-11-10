@@ -2,15 +2,15 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "25.0.3"
-
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "nl.tcilegnar.timer"
         minSdkVersion 21    // API 5.0  (LOLLIPOP)
-        targetSdkVersion 25 // API 7.1  (N_MR1)
+        targetSdkVersion 26 // Android 8.0  (Oreo)
         versionCode 2
         versionName "0.0.2"
     }
+
     buildTypes {
         release {
             // https://developer.android.com/studio/build/shrink-code.html
@@ -28,12 +28,16 @@ android {
             versionNameSuffix ".alpha"
         }
     }
+
+    flavorDimensions "type"
     productFlavors {
         work {
             applicationIdSuffix ".work"
+            dimension "type"
         }
         sleep {
             applicationIdSuffix ".sleep"
+            dimension "type"
         }
     }
 
@@ -45,9 +49,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided 'com.google.android.wearable:wearable:2.0.3'
-    compile 'com.google.android.support:wearable:2.0.3'
-    compile 'com.google.android.gms:play-services-wearable:11.0.1'
+    provided 'com.google.android.wearable:wearable:2.1.0'
+    compile 'com.google.android.support:wearable:2.1.0'
+    compile 'com.google.android.gms:play-services-wearable:11.6.0'
     compile('com.android.support:palette-v7:25.3.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })

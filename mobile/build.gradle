@@ -2,22 +2,22 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 // Load keystore
-def keystorePropertiesFile = file("D:\\Keystore\\keystore.properties");
+def keystorePropertiesFile = file("D:\\Keystore\\keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
-
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "nl.tcilegnar.timer"
-        minSdkVersion 18    // API 4.3  (JELLY_BEAN_MR2)
-        targetSdkVersion 25 // API 7.1  (N_MR1)
+        minSdkVersion 18    // Android 4.3  (JELLY_BEAN_MR2)
+        targetSdkVersion 26 // Android 8.0  (Oreo)
         versionCode 7
         versionName "0.0.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     signingConfigs {
         release {
             storeFile file(keystoreProperties['signing.store.file'])
@@ -29,6 +29,7 @@ android {
             storeFile file('../debug.keystore')
         }
     }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release
@@ -48,12 +49,16 @@ android {
             versionNameSuffix ".alpha"
         }
     }
+
+    flavorDimensions "type"
     productFlavors {
         work {
             applicationIdSuffix ".work"
+            dimension "type"
         }
         sleep {
             applicationIdSuffix ".sleep"
+            dimension "type"
         }
     }
 
@@ -85,8 +90,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     // wearApp project(':wear') // Niet included omdat dex dan nodig zal zijn
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
     compile 'com.github.satyan:sugar:1.5' // https://github.com/chennaione/sugar
     compile 'net.hockeyapp.android:HockeySDK:4.0.0'
     testCompile 'junit:junit:4.12'
