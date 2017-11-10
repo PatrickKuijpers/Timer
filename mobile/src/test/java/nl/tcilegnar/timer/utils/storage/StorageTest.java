@@ -49,11 +49,11 @@ public class StorageTest {
     public void saveAndLoadDayEditorHour() {
         // Arrange
         int expectedValue = 11;
-        Key expectedKey = Key.DayEditorStartHour;
+        Key expectedKey = Key.TodayEditorHour;
 
         // Act
         storage.saveTodayEditorHour(expectedKey, expectedValue);
-        int value = storage.loadTodayEditorHour(expectedKey);
+        int value = storage.loadTodayEditorHour(getState());
 
         // Assert
         assertEquals(expectedValue, value);
@@ -62,10 +62,10 @@ public class StorageTest {
     @Test
     public void loadDayEditorHour_DefaultValue() {
         // Arrange
-        Key expectedKey = Key.DayEditorStartHour;
+        Key expectedKey = Key.TodayEditorHour;
 
         // Act
-        int value = storage.loadTodayEditorHour(expectedKey);
+        int value = storage.loadTodayEditorHour(getState());
 
         // Assert
         assertEquals(expectedKey.defaultValue, value);

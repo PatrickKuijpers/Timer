@@ -2,8 +2,10 @@ package nl.tcilegnar.timer.interfaces;
 
 import java.util.Calendar;
 
+import nl.tcilegnar.timer.enums.DayEditorItemState;
+
 public interface IDayEditorItem {
-    Enum getState();
+    DayEditorItemState getState();
 
     boolean isDone();
 

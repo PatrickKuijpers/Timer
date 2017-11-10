@@ -2,25 +2,26 @@ package nl.tcilegnar.timer.models;
 
 import java.util.Calendar;
 
+import nl.tcilegnar.timer.enums.DayEditorItemState;
 import nl.tcilegnar.timer.interfaces.IDayEditorItem;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 
 import static nl.tcilegnar.timer.views.DayEditorItemView.NO_TIME;
 
-public abstract class BaseDayEditorItem<E extends Enum> implements IDayEditorItem {
+public abstract class BaseDayEditorItem implements IDayEditorItem {
     public static final int DEFAULT_HOUR_VALUE = NO_TIME;
     public static final int DEFAULT_MINUTE_VALUE = NO_TIME;
 
-    protected final E state;
+    protected final DayEditorItemState state;
 
     private boolean enabled = true;
 
-    protected BaseDayEditorItem(E state) {
+    protected BaseDayEditorItem(DayEditorItemState state) {
         this.state = state;
     }
 
     @Override
-    public E getState() {
+    public DayEditorItemState getState() {
         return state;
     }
 

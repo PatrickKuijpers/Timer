@@ -4,64 +4,54 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import nl.tcilegnar.timer.enums.TodayEditorItemState;
+import nl.tcilegnar.timer.enums.DayEditorItemState;
 import nl.tcilegnar.timer.interfaces.IDayEditorItem;
-import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.storage.Storage;
 
-public class TodayEditorItem extends BaseDayEditorItem<TodayEditorItemState> {
+public class TodayEditorItem extends BaseDayEditorItem {
     private final Storage storage = new Storage();
 
-    private TodayEditorItem(TodayEditorItemState state) {
+    private TodayEditorItem(DayEditorItemState state) {
         super(state);
     }
 
     public static List<IDayEditorItem> getItemsForAllStates() {
         List<IDayEditorItem> dayEditorItemsForAllStates = new ArrayList<>();
-        for (TodayEditorItemState state : TodayEditorItemState.values()) {
+        for (DayEditorItemState state : DayEditorItemState.values()) {
             dayEditorItemsForAllStates.add(new TodayEditorItem(state));
         }
         return dayEditorItemsForAllStates;
     }
 
-    public static TodayEditorItem get(TodayEditorItemState state) {
+    public static TodayEditorItem get(DayEditorItemState state) {
         return new TodayEditorItem(state);
     }
 
     @Override
     public boolean isDone() {
-        return storage.loadIsTodayEditorDone(state.getTodayEditorDoneKey());
+        return storage.loadIsTodayEditorDone(state);
     }
 
     @Override
     public void setIsDone(boolean isDone) {
-        storage.saveIsTodayEditorDone(state.getTodayEditorDoneKey(), isDone);
+        storage.saveIsTodayEditorDone(state, isDone);
     }
 
     public boolean isActive() {
-        TodayEditorItemState todayEditorItemState = storage.loadActiveTodayEditorItemState();
-        return getState().equals(todayEditorItemState);
+        DayEditorItemState todayEditorItemState = storage.loadActiveTodayEditorItemState();
+        return state.equals(todayEditorItemState);
     }
 
     public void setActive() {
-        storage.saveActiveTodayEditorItemState(getState());
-    }
-
-    public Calendar getCalendarWithTime(Calendar currentDate) throws TimeNotSetException {
-        int hour = getHour();
-        int minute = getMinute();
-        if (hour == DEFAULT_HOUR_VALUE || minute == DEFAULT_MINUTE_VALUE) {
-            throw new TimeNotSetException();
-        }
-        return TimerCalendar.getCalendarWithTime(currentDate, hour, minute);
+        storage.saveActiveTodayEditorItemState(state);
     }
 
     public int getHour() {
-        return storage.loadTodayEditorHour(state.getTodayEditorHourKey());
+        return storage.loadTodayEditorHour(getState());
     }
 
     public int getMinute() {
-        return storage.loadTodayEditorMinute(state.getTodayEditorMinuteKey());
+        return storage.loadTodayEditorMinute(state);
     }
 
     public void setCurrentTime(Calendar currentTime) {
@@ -71,7 +61,7 @@ public class TodayEditorItem extends BaseDayEditorItem<TodayEditorItemState> {
     }
 
     public void setCurrentTime(int hour, int minute) {
-        storage.saveTodayEditorHour(state.getTodayEditorHourKey(), hour);
-        storage.saveTodayEditorMinute(state.getTodayEditorMinuteKey(), minute);
+        storage.saveTodayEditorHour(state, hour);
+        storage.saveTodayEditorMinute(state, minute);
     }
 }

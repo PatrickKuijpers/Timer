@@ -6,7 +6,7 @@ import java.util.List;
 import nl.tcilegnar.timer.enums.DayEditorItemState;
 import nl.tcilegnar.timer.interfaces.IDayEditorItem;
 
-public class DayEditorItem extends BaseDayEditorItem<DayEditorItemState> {
+public class DayEditorItem extends BaseDayEditorItem {
     private int hour = DEFAULT_HOUR_VALUE;
     private int minute = DEFAULT_MINUTE_VALUE;
     private boolean isDone;

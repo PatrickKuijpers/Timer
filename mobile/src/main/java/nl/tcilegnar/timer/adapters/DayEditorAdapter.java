@@ -12,8 +12,6 @@ import java.util.List;
 
 import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.interfaces.IDayEditorItem;
-import nl.tcilegnar.timer.models.DayEditorItem;
-import nl.tcilegnar.timer.models.TodayEditorItem;
 import nl.tcilegnar.timer.utils.storage.Storage;
 import nl.tcilegnar.timer.views.DayEditorItemView;
 import nl.tcilegnar.timer.views.DayEditorItemView.DayEditorListener;
@@ -80,93 +78,44 @@ public class DayEditorAdapter extends ArrayAdapter<IDayEditorItem> implements Ac
 
     // TODO: can probably be improved!
     public void onActiveItemChanged(IDayEditorItem dayEditorItem) {
+        IDayEditorItem start = getDayEditorItemStart();
+        IDayEditorItem breakStart = getDayEditorItemBreakStart();
+        IDayEditorItem breakEnd = getDayEditorItemBreakEnd();
+        IDayEditorItem end = getDayEditorItemEnd();
         if (dayEditorItem == null) {
-            initEnabled();
+            start.enable();
+            breakStart.disable();
+            breakEnd.disable();
+            end.disable();
         } else {
-            if (dayEditorItem instanceof DayEditorItem) {
-                doDayEditorUpdate((DayEditorItem) dayEditorItem);
-            } else if (dayEditorItem instanceof TodayEditorItem) {
-                doTodayEditorUpdate((TodayEditorItem) dayEditorItem);
+            switch (dayEditorItem.getState()) {
+                case Start:
+                    start.disable();
+                    breakStart.enable();
+                    breakEnd.disable();
+                    end.enable();
+                    break;
+                case BreakStart:
+                    start.disable();
+                    breakStart.disable();
+                    breakEnd.enable();
+                    end.disable();
+                    break;
+                case BreakEnd:
+                    start.disable();
+                    breakStart.disable();
+                    breakEnd.disable();
+                    end.enable();
+                    break;
+                case End:
+                    start.disable();
+                    breakStart.disable();
+                    breakEnd.disable();
+                    end.disable();
+                    break;
             }
         }
         updateViews();
-    }
-
-    private void initEnabled() {
-        IDayEditorItem start = getDayEditorItemStart();
-        IDayEditorItem breakStart = getDayEditorItemBreakStart();
-        IDayEditorItem breakEnd = getDayEditorItemBreakEnd();
-        IDayEditorItem end = getDayEditorItemEnd();
-        start.enable();
-        breakStart.disable();
-        breakEnd.disable();
-        end.disable();
-    }
-
-    private void doDayEditorUpdate(DayEditorItem dayEditorItem) {
-        IDayEditorItem start = getDayEditorItemStart();
-        IDayEditorItem breakStart = getDayEditorItemBreakStart();
-        IDayEditorItem breakEnd = getDayEditorItemBreakEnd();
-        IDayEditorItem end = getDayEditorItemEnd();
-        switch (dayEditorItem.getState()) {
-            case Start:
-                start.disable();
-                breakStart.enable();
-                breakEnd.disable();
-                end.enable();
-                break;
-            case BreakStart:
-                start.disable();
-                breakStart.disable();
-                breakEnd.enable();
-                end.disable();
-                break;
-            case BreakEnd:
-                start.disable();
-                breakStart.disable();
-                breakEnd.disable();
-                end.enable();
-                break;
-            case End:
-                start.disable();
-                breakStart.disable();
-                breakEnd.disable();
-                end.disable();
-                break;
-        }
-    }
-
-    private void doTodayEditorUpdate(TodayEditorItem todayEditorItem) {
-        IDayEditorItem start = getDayEditorItemStart();
-        IDayEditorItem breakStart = getDayEditorItemBreakStart();
-        IDayEditorItem breakEnd = getDayEditorItemBreakEnd();
-        IDayEditorItem end = getDayEditorItemEnd();
-        switch (todayEditorItem.getState()) {
-            case Start:
-                start.disable();
-                breakStart.enable();
-                breakEnd.disable();
-                end.enable();
-                break;
-            case BreakStart:
-                start.disable();
-                breakStart.disable();
-                breakEnd.enable();
-                end.disable();
-                break;
-            case BreakEnd:
-                start.disable();
-                breakStart.disable();
-                breakEnd.disable();
-                end.enable();
-                break;
-            case End:
-                start.disable();
-                breakStart.disable();
-                breakEnd.disable();
-                end.disable();
-                break;
-        }
     }
 
     private void updateViews() {

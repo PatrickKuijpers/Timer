@@ -12,8 +12,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import nl.tcilegnar.timer.R;
+import nl.tcilegnar.timer.interfaces.IDayEditorItem;
 import nl.tcilegnar.timer.interfaces.IDayEditorItem.TimeNotSetException;
 import nl.tcilegnar.timer.models.DayEditorItem;
+import nl.tcilegnar.timer.models.TodayEditorItem;
 import nl.tcilegnar.timer.models.Validation;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
@@ -67,14 +69,14 @@ public class CurrentDayMillis extends SugarRecord {
     /** TODO: make sure loop in the right order (start > breaks > end), or else calculations & validation will fail! */
     private List<Calendar> initTimes(Calendar day) throws TimeNotSetException {
         List<Calendar> times = new ArrayList<>();
-        times.add(DayEditorItem.get(Start).getCalendarWithTime(day));
+        times.add(TodayEditorItem.get(Start).getCalendarWithTime(day));
         try {
-            times.add(DayEditorItem.get(BreakStart).getCalendarWithTime(day));
-            times.add(DayEditorItem.get(BreakEnd).getCalendarWithTime(day));
-        } catch (DayEditorItem.TimeNotSetException ignored) {
+            times.add(TodayEditorItem.get(BreakStart).getCalendarWithTime(day));
+            times.add(TodayEditorItem.get(BreakEnd).getCalendarWithTime(day));
+        } catch (IDayEditorItem.TimeNotSetException ignored) {
             // No breaks set is no problem
         }
-        times.add(DayEditorItem.get(End).getCalendarWithTime(day));
+        times.add(TodayEditorItem.get(End).getCalendarWithTime(day));
         return times;
     }
 
