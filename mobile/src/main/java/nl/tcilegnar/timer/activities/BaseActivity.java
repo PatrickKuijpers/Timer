@@ -15,7 +15,9 @@ import java.util.Calendar;
 
 import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.fragments.DayEditorFragment;
-import nl.tcilegnar.timer.fragments.WeekOverviewFragment;
+
+import static nl.tcilegnar.timer.fragments.DayEditorFragment.Args.DAY_DATE;
+import static nl.tcilegnar.timer.fragments.WeekOverviewFragment.Args.DATE_FROM_WEEK;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected final String LOGTAG = getClass().getSimpleName();
@@ -83,7 +85,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void startDayEditorActivity(@Nullable Calendar date) {
         Intent intent = getNewActivityIntent(DayEditorActivity.class);
         if (date != null) {
-            intent.putExtra(DayEditorFragment.Args.DAY_DATE.name(), date.getTimeInMillis());
+            intent.putExtra(DAY_DATE.name(), date.getTimeInMillis());
         }
         startActivity(intent);
     }
@@ -95,7 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void startWeekOverviewActivity(@Nullable Calendar someDateFromWeek) {
         Intent intent = getNewActivityIntent(WeekOverviewActivity.class);
         if (someDateFromWeek != null) {
-            intent.putExtra(WeekOverviewFragment.Args.DATE_FROM_WEEK.name(), someDateFromWeek.getTimeInMillis());
+            intent.putExtra(DATE_FROM_WEEK.name(), someDateFromWeek.getTimeInMillis());
         }
         startActivity(intent);
     }

@@ -82,11 +82,11 @@ public class YearOverviewFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        yearValueView = (TextView) view.findViewById(R.id.year_value);
-        totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
-        totalValueView = (TextView) view.findViewById(R.id.total_value);
-        yearOverviewListHeader = (LinearLayout) view.findViewById(R.id.year_overview_list_header);
-        yearOverviewList = (ListView) view.findViewById(R.id.year_overview_list);
+        yearValueView = view.findViewById(R.id.year_value);
+        totalValueLabelView = view.findViewById(R.id.total_value_label);
+        totalValueView = view.findViewById(R.id.total_value);
+        yearOverviewListHeader = view.findViewById(R.id.year_overview_list_header);
+        yearOverviewList = view.findViewById(R.id.year_overview_list);
 
         updateYearValues(getDateFromYear());
     }

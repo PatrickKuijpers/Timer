@@ -12,13 +12,18 @@ import nl.tcilegnar.timer.utils.TimerCalendar;
 
 import static nl.tcilegnar.timer.fragments.WeekOverviewFragment.Args.DATE_FROM_WEEK;
 
-public class WeekOverviewActivity extends BaseActivity implements OnDayClickListener {
+public class WeekOverviewActivity extends BaseActivity {
 
     @NonNull
     protected Fragment getInitialFragment() {
         Calendar dateFromWeek = getDateFromWeek();
         WeekOverviewFragment fragment = WeekOverviewFragment.newInstance(dateFromWeek);
-        fragment.setDayClickListener(this);
+        fragment.setDayClickListener(new OnDayClickListener() {
+            @Override
+            public void onDayClicked(Calendar dateOfDay) {
+                startDayEditorActivity(dateOfDay);
+            }
+        });
         return fragment;
     }
 
@@ -31,10 +36,5 @@ public class WeekOverviewActivity extends BaseActivity implements OnDayClickList
         } else {
             return TimerCalendar.getCurrent();
         }
-    }
-
-    @Override
-    public void onDayClicked(Calendar dateOfDay) {
-        startDayEditorActivity(dateOfDay);
     }
 }

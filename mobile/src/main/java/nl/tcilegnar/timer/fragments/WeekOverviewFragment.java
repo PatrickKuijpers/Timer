@@ -33,6 +33,8 @@ import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 import nl.tcilegnar.timer.views.viewholders.WeekOverviewViewHolder;
 
+import static nl.tcilegnar.timer.fragments.WeekOverviewFragment.Args.DATE_FROM_WEEK;
+
 public class WeekOverviewFragment extends Fragment {
     private final String TAG = Log.getTag(this);
     private static final String DATE_PICKER_DIALOG_TAG = "DATE_PICKER_DIALOG_TAG";
@@ -52,18 +54,18 @@ public class WeekOverviewFragment extends Fragment {
     public static WeekOverviewFragment newInstance(@NonNull Calendar dateFromWeek) {
         WeekOverviewFragment fragment = new WeekOverviewFragment();
         Bundle args = new Bundle();
-        args.putLong(Args.DATE_FROM_WEEK.name(), dateFromWeek.getTimeInMillis());
+        args.putLong(DATE_FROM_WEEK.name(), dateFromWeek.getTimeInMillis());
         fragment.setArguments(args);
         return fragment;
     }
 
     private Calendar getDateFromWeek() {
-        long millis = getArguments().getLong(Args.DATE_FROM_WEEK.name());
+        long millis = getArguments().getLong(DATE_FROM_WEEK.name());
         return TimerCalendar.getCalendarInMillis(millis);
     }
 
     private void setDateFromWeek(Calendar dateFromWeek) {
-        getArguments().putLong(Args.DATE_FROM_WEEK.name(), dateFromWeek.getTimeInMillis());
+        getArguments().putLong(DATE_FROM_WEEK.name(), dateFromWeek.getTimeInMillis());
     }
 
     public void setDayClickListener(OnDayClickListener dayClickListener) {
@@ -83,11 +85,11 @@ public class WeekOverviewFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        weekNumberValueView = (TextView) view.findViewById(R.id.week_number_value);
-        totalValueLabelView = (TextView) view.findViewById(R.id.total_value_label);
-        totalValueView = (TextView) view.findViewById(R.id.total_value);
-        weekOverviewListHeader = (LinearLayout) view.findViewById(R.id.week_overview_list_header);
-        weekOverviewList = (ListView) view.findViewById(R.id.week_overview_list);
+        weekNumberValueView = view.findViewById(R.id.week_number_value);
+        totalValueLabelView = view.findViewById(R.id.total_value_label);
+        totalValueView = view.findViewById(R.id.total_value);
+        weekOverviewListHeader = view.findViewById(R.id.week_overview_list_header);
+        weekOverviewList = view.findViewById(R.id.week_overview_list);
 
         updateWeekValues(getDateFromWeek());
         setVersionNumber(view);
@@ -163,7 +165,7 @@ public class WeekOverviewFragment extends Fragment {
     }
 
     public void setVersionNumber(View view) {
-        TextView versionNrView = (TextView) view.findViewById(R.id.version_nr);
+        TextView versionNrView = view.findViewById(R.id.version_nr);
         versionNrView.setText(AppData.getAppVersionName());
     }
 
