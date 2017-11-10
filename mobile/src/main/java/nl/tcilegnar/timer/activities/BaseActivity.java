@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import java.util.Calendar;
 
 import nl.tcilegnar.timer.R;
-import nl.tcilegnar.timer.fragments.DayEditorFragment;
 
 import static nl.tcilegnar.timer.fragments.DayEditorFragment.Args.DAY_DATE;
 import static nl.tcilegnar.timer.fragments.WeekOverviewFragment.Args.DATE_FROM_WEEK;

@@ -2,12 +2,15 @@ package nl.tcilegnar.timer.utils.storage;
 
 import java.util.Calendar;
 
-import nl.tcilegnar.timer.enums.DayEditorItem;
+import nl.tcilegnar.timer.enums.DayEditorItemState;
+import nl.tcilegnar.timer.models.DayEditorItem;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 
 public class Storage extends SharedPrefs {
     private static final int FALSE = 0;
-    public static final DayEditorItem NO_ACTIVE_DAY_EDITOR = null;
+    // TODO: make a 5th state, but this state should not be shown in the view (don't init it when getItemsForAllStates)
+    public static final DayEditorItemState NO_ACTIVE_DAY_EDITOR = null;
+    //    public static final TodayEditorItem NO_ACTIVE_TODAY_EDITOR = null;
 
     @Override
     protected String fileName() {
@@ -17,7 +20,20 @@ public class Storage extends SharedPrefs {
 
     public enum Key {
         // Deze enums nooit veranderen!
-        DayEditorCurrentDate(0),
+        TodayEditorCurrentDate(0),
+        TodayEditorStartHour(DayEditorItem.DEFAULT_HOUR_VALUE),
+        TodayEditorStartMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
+        TodayEditorStartDone(FALSE),
+        TodayEditorBreakStartHour(DayEditorItem.DEFAULT_HOUR_VALUE),
+        TodayEditorBreakStartMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
+        TodayEditorBreakStartDone(FALSE),
+        TodayEditorBreakEndHour(DayEditorItem.DEFAULT_HOUR_VALUE),
+        TodayEditorBreakEndMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
+        TodayEditorBreakEndDone(FALSE),
+        TodayEditorEndHour(DayEditorItem.DEFAULT_HOUR_VALUE),
+        TodayEditorEndMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
+        TodayEditorEndDone(FALSE),
+        ActiveTodayEditor(0),
         DayEditorStartHour(DayEditorItem.DEFAULT_HOUR_VALUE),
         DayEditorStartMinute(DayEditorItem.DEFAULT_MINUTE_VALUE),
         DayEditorStartDone(FALSE),
@@ -39,13 +55,13 @@ public class Storage extends SharedPrefs {
         }
     }
 
-    public void saveDayEditorCurrentDate(Calendar calendar) {
+    public void saveTodayEditorCurrentDate(Calendar calendar) {
         long value = calendar.getTimeInMillis();
-        save(Key.DayEditorCurrentDate.name(), value);
+        save(Key.TodayEditorCurrentDate.name(), value);
     }
 
-    public Calendar loadDayEditorCurrentDate() {
-        Key key = Key.DayEditorCurrentDate;
+    public Calendar loadTodayEditorCurrentDate() {
+        Key key = Key.TodayEditorCurrentDate;
         long value = loadLong(key.name(), key.defaultValue);
         return TimerCalendar.getCalendarInMillis(value);
     }
@@ -79,24 +95,45 @@ public class Storage extends SharedPrefs {
         return loadBoolean(key.name(), defaultValue);
     }
 
-    public void saveActiveDayEditor(DayEditorItem dayEditorItem) {
+    public void saveActiveDayEditor(DayEditorItemState dayEditorItemState) {
         String key = Key.ActiveDayEditor.name();
-        save(key, dayEditorItem.name());
+        save(key, dayEditorItemState.name());
     }
 
-    public DayEditorItem loadActiveDayEditor() {
+    public DayEditorItemState loadActiveDayEditorState() {
         String key = Key.ActiveDayEditor.name();
         String dayEditorItemName = loadString(key);
-        for (DayEditorItem dayEditorItem : DayEditorItem.values()) {
-            if (dayEditorItem.name().equals(dayEditorItemName)) {
-                return dayEditorItem;
+        for (DayEditorItemState dayEditorItemState : DayEditorItemState.values()) {
+            if (dayEditorItemState.name().equals(dayEditorItemName)) {
+                return dayEditorItemState;
             }
         }
         return NO_ACTIVE_DAY_EDITOR;
     }
 
+    //    public void saveActiveTodayEditor(TodayEditorItem todayEditorItem) {
+    //        String key = Key.ActiveTodayEditor.name();
+    //        save(key, todayEditorItem.name());
+    //    }
+    //
+    //    public TodayEditorItem loadActiveTodayEditor() {
+    //        String key = Key.ActiveTodayEditor.name();
+    //        String todayEditorItemName = loadString(key);
+    //        for (TodayEditorItem todayEditorItem : TodayEditorItem.values()) {
+    //            if (todayEditorItem.name().equals(todayEditorItemName)) {
+    //                return todayEditorItem;
+    //            }
+    //        }
+    //        return NO_ACTIVE_TODAY_EDITOR;
+    //    }
+
     public void deleteActiveDayEditor() {
         String key = Key.ActiveDayEditor.name();
+        save(key, "none");
+    }
+
+    public void deleteActiveTodayEditor() {
+        String key = Key.ActiveTodayEditor.name();
         save(key, "none");
     }
 }

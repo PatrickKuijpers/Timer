@@ -1,60 +1,50 @@
 package nl.tcilegnar.timer.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import nl.tcilegnar.timer.enums.DayEditorItem;
+import nl.tcilegnar.timer.R;
+import nl.tcilegnar.timer.interfaces.IDayEditorItem;
 import nl.tcilegnar.timer.utils.storage.Storage;
 import nl.tcilegnar.timer.views.DayEditorItemView;
-import nl.tcilegnar.timer.views.DayEditorItemView.CurrentDateListener;
+import nl.tcilegnar.timer.views.DayEditorItemView.DayEditorListener;
 import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
 
 import static nl.tcilegnar.timer.views.DayEditorItemView.ActiveItemChangeListener;
 import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
 
-public class DayEditorAdapter extends BaseAdapter implements ActiveItemChangeListener {
-    private final Context activityContext;
-    private final CurrentDateListener currentDateListener;
+public class DayEditorAdapter extends ArrayAdapter<IDayEditorItem> implements ActiveItemChangeListener {
+    private final List<IDayEditorItem> dayEditorItems;
+    private final DayEditorListener dayEditorListener;
     private final TimePickerDialogListener timePickerDialogListener;
     private final TimeChangedListener timeChangedListener;
 
     private ArrayList<DayEditorItemView> allDayEditorItemViews = new ArrayList<>();
 
-    public DayEditorAdapter(Context activityContext, CurrentDateListener currentDateListener,
-                            TimePickerDialogListener timePickerDialogListener, TimeChangedListener
-                                    timeChangedListener) {
-        this.activityContext = activityContext;
-        this.currentDateListener = currentDateListener;
+    public DayEditorAdapter(Context activityContext, List<IDayEditorItem> dayEditorItems, DayEditorListener
+            dayEditorListener, TimePickerDialogListener timePickerDialogListener, TimeChangedListener
+            timeChangedListener) {
+        super(activityContext, R.layout.day_editor_item_view, dayEditorItems); // TODO: need view here?
+        this.dayEditorItems = dayEditorItems;
+        this.dayEditorListener = dayEditorListener;
         this.timePickerDialogListener = timePickerDialogListener;
         this.timeChangedListener = timeChangedListener;
     }
 
     @Override
-    public int getCount() {
-        return getDayEditorList().length;
-    }
-
-    @Override
-    public DayEditorItem getItem(int i) {
-        return getDayEditorList()[i];
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    @Override
-    public DayEditorItemView getView(int position, View convertView, ViewGroup viewGroup) {
+    @NonNull
+    public DayEditorItemView getView(int position, @Nullable View convertView, @NonNull ViewGroup viewGroup) {
         DayEditorItemView dayEditorItemView;
-
-        DayEditorItem dayEditorItem = getItem(position);
+        IDayEditorItem dayEditorItem = getItem(position);
         if (convertView == null) {
-            dayEditorItemView = new DayEditorItemView(activityContext, dayEditorItem, currentDateListener,
+            dayEditorItemView = new DayEditorItemView(getContext(), dayEditorItem, dayEditorListener,
                     timePickerDialogListener, timeChangedListener, this);
             allDayEditorItemViews.add(dayEditorItemView);
 
@@ -73,7 +63,7 @@ public class DayEditorAdapter extends BaseAdapter implements ActiveItemChangeLis
 
     private void setActivation() {
         boolean isAnyActive = false;
-        for (DayEditorItem dayEditorItem : getDayEditorList()) {
+        for (IDayEditorItem dayEditorItem : dayEditorItems) {
             if (dayEditorItem.isActive()) {
                 onActiveItemChanged(dayEditorItem);
                 isAnyActive = true;
@@ -86,18 +76,18 @@ public class DayEditorAdapter extends BaseAdapter implements ActiveItemChangeLis
         }
     }
 
-    public void onActiveItemChanged(DayEditorItem dayEditorItem) {
-        DayEditorItem start = getDayEditorItemStart();
-        DayEditorItem breakStart = getDayEditorItemBreakStart();
-        DayEditorItem breakEnd = getDayEditorItemBreakEnd();
-        DayEditorItem end = getDayEditorItemEnd();
+    public void onActiveItemChanged(IDayEditorItem dayEditorItem) {
+        IDayEditorItem start = getDayEditorItemStart();
+        IDayEditorItem breakStart = getDayEditorItemBreakStart();
+        IDayEditorItem breakEnd = getDayEditorItemBreakEnd();
+        IDayEditorItem end = getDayEditorItemEnd();
         if (dayEditorItem == null) {
             start.enable();
             breakStart.disable();
             breakEnd.disable();
             end.disable();
         } else {
-            switch (dayEditorItem) {
+            switch (dayEditorItem.getState()) {
                 case Start:
                     start.disable();
                     breakStart.enable();
@@ -133,24 +123,20 @@ public class DayEditorAdapter extends BaseAdapter implements ActiveItemChangeLis
         }
     }
 
-    private DayEditorItem getDayEditorItemStart() {
+    private IDayEditorItem getDayEditorItemStart() {
         return getItem(0);
     }
 
-    private DayEditorItem getDayEditorItemBreakStart() {
+    private IDayEditorItem getDayEditorItemBreakStart() {
         return getItem(1);
     }
 
-    private DayEditorItem getDayEditorItemBreakEnd() {
+    private IDayEditorItem getDayEditorItemBreakEnd() {
         return getItem(2);
     }
 
-    private DayEditorItem getDayEditorItemEnd() {
+    private IDayEditorItem getDayEditorItemEnd() {
         return getItem(3);
-    }
-
-    private DayEditorItem[] getDayEditorList() {
-        return DayEditorItem.values();
     }
 
     public void reset() {

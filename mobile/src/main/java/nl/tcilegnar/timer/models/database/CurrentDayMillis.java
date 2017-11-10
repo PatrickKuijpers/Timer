@@ -12,15 +12,16 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import nl.tcilegnar.timer.R;
-import nl.tcilegnar.timer.enums.DayEditorItem;
+import nl.tcilegnar.timer.interfaces.IDayEditorItem.TimeNotSetException;
+import nl.tcilegnar.timer.models.DayEditorItem;
 import nl.tcilegnar.timer.models.Validation;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 
-import static nl.tcilegnar.timer.enums.DayEditorItem.BreakEnd;
-import static nl.tcilegnar.timer.enums.DayEditorItem.BreakStart;
-import static nl.tcilegnar.timer.enums.DayEditorItem.End;
-import static nl.tcilegnar.timer.enums.DayEditorItem.Start;
+import static nl.tcilegnar.timer.enums.DayEditorItemState.BreakEnd;
+import static nl.tcilegnar.timer.enums.DayEditorItemState.BreakStart;
+import static nl.tcilegnar.timer.enums.DayEditorItemState.End;
+import static nl.tcilegnar.timer.enums.DayEditorItemState.Start;
 import static nl.tcilegnar.timer.utils.TimerCalendarUtil.areSameDay;
 
 /**
@@ -40,6 +41,7 @@ public class CurrentDayMillis extends SugarRecord {
     @Column(name = "TIMES_IN_MILLIS")
     private String timesInMillis;
 
+    @SuppressWarnings("unused")
     public CurrentDayMillis() {
         // Empty constructor required for SugarRecord!
     }
@@ -53,7 +55,7 @@ public class CurrentDayMillis extends SugarRecord {
     }
 
     /** TODO improve this: CurrentDayMillis with a specific day, where timesInMillis are instantiated (for today) */
-    public CurrentDayMillis(Calendar day) throws DayEditorItem.TimeNotSetException {
+    public CurrentDayMillis(Calendar day) throws TimeNotSetException {
         List<Long> timesInMillis = new ArrayList<>();
         List<Calendar> times = initTimes(day);
         for (Calendar time : times) {
@@ -63,16 +65,16 @@ public class CurrentDayMillis extends SugarRecord {
     }
 
     /** Times based on saved times in Prefs. Order should not be changed! */
-    private List<Calendar> initTimes(Calendar day) throws DayEditorItem.TimeNotSetException {
+    private List<Calendar> initTimes(Calendar day) throws TimeNotSetException {
         List<Calendar> times = new ArrayList<>();
-        times.add(Start.getCalendarWithTime(day));
+        times.add(DayEditorItem.get(Start).getCalendarWithTime(day));
         try {
-            times.add(BreakStart.getCalendarWithTime(day));
-            times.add(BreakEnd.getCalendarWithTime(day));
+            times.add(DayEditorItem.get(BreakStart).getCalendarWithTime(day));
+            times.add(DayEditorItem.get(BreakEnd).getCalendarWithTime(day));
         } catch (DayEditorItem.TimeNotSetException ignored) {
             // No breaks set is no problem
         }
-        times.add(End.getCalendarWithTime(day));
+        times.add(DayEditorItem.get(End).getCalendarWithTime(day));
         return times;
     }
 

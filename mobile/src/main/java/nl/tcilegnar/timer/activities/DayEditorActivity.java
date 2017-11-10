@@ -16,8 +16,10 @@ import nl.tcilegnar.timer.utils.Log;
 import nl.tcilegnar.timer.utils.MyBuildConfig;
 import nl.tcilegnar.timer.utils.MyProperties;
 import nl.tcilegnar.timer.utils.TimerCalendar;
+import nl.tcilegnar.timer.utils.storage.Storage;
 
 import static nl.tcilegnar.timer.fragments.DayEditorFragment.Args.DAY_DATE;
+import static nl.tcilegnar.timer.utils.storage.Storage.NO_ACTIVE_DAY_EDITOR;
 
 public class DayEditorActivity extends BaseActivity {
     MyBuildConfig myBuildConfig = new MyBuildConfig();
@@ -42,7 +44,17 @@ public class DayEditorActivity extends BaseActivity {
             long dateInMillis = extras.getLong(DAY_DATE.name());
             return TimerCalendar.getCalendarInMillis(dateInMillis);
         } else {
-            return TimerCalendar.getCurrent(); // TODO: getCurrentDateToInitWith uit DayEditorFragment
+            return getDayFromLastActiveDayEditor();
+        }
+    }
+
+    public static Calendar getDayFromLastActiveDayEditor() {
+        Storage storage = new Storage();
+        if (storage.loadActiveDayEditorState() != NO_ACTIVE_DAY_EDITOR) {
+            return storage.loadTodayEditorCurrentDate();
+        } else {
+            // No day editor active = no time set: assume you'd like to start over with a new day instead of retrieving
+            return TimerCalendar.getCurrentDateMidnight();
         }
     }
 
