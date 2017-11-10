@@ -52,8 +52,8 @@ public class StorageTest {
         Key expectedKey = Key.DayEditorStartHour;
 
         // Act
-        storage.saveDayEditorHour(expectedKey, expectedValue);
-        int value = storage.loadDayEditorHour(expectedKey);
+        storage.saveTodayEditorHour(expectedKey, expectedValue);
+        int value = storage.loadTodayEditorHour(expectedKey);
 
         // Assert
         assertEquals(expectedValue, value);
@@ -65,7 +65,7 @@ public class StorageTest {
         Key expectedKey = Key.DayEditorStartHour;
 
         // Act
-        int value = storage.loadDayEditorHour(expectedKey);
+        int value = storage.loadTodayEditorHour(expectedKey);
 
         // Assert
         assertEquals(expectedKey.defaultValue, value);

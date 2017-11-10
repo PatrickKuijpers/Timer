@@ -64,7 +64,7 @@ public class CurrentDayMillis extends SugarRecord {
         saveValues(day.getTimeInMillis(), timesInMillis);
     }
 
-    /** Times based on saved times in Prefs. Order should not be changed! */
+    /** TODO: make sure loop in the right order (start > breaks > end), or else calculations & validation will fail! */
     private List<Calendar> initTimes(Calendar day) throws TimeNotSetException {
         List<Calendar> times = new ArrayList<>();
         times.add(DayEditorItem.get(Start).getCalendarWithTime(day));

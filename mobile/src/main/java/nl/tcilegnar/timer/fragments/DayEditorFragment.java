@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -33,6 +32,7 @@ import nl.tcilegnar.timer.fragments.dialogs.ValidationErrorDialogFragment;
 import nl.tcilegnar.timer.interfaces.IDayEditorItem;
 import nl.tcilegnar.timer.models.DayEditorItem;
 import nl.tcilegnar.timer.models.TimerError;
+import nl.tcilegnar.timer.models.TodayEditorItem;
 import nl.tcilegnar.timer.models.Validation;
 import nl.tcilegnar.timer.models.database.CurrentDayMillis;
 import nl.tcilegnar.timer.utils.DateFormatter;
@@ -191,11 +191,9 @@ public class DayEditorFragment extends Fragment implements DayEditorListener, Ti
 
     private List<IDayEditorItem> getDayEditorItems(Calendar dayEditorDate) {
         if (TimerCalendarUtil.isToday(dayEditorDate)) {
-            return DayEditorItem.getItemsForAllStates();
-            //            return TodayEditorItem.getItemsForAllStates();
+            return TodayEditorItem.getItemsForAllStates();
         } else {
-            return new ArrayList<>();
-            //            return DayEditorItem.getItemsForAllStates();
+            return DayEditorItem.getItemsForAllStates();
         }
     }
 
