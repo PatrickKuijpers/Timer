@@ -69,14 +69,14 @@ public class CurrentDayMillis extends SugarRecord {
     /** TODO: make sure loop in the right order (start > breaks > end), or else calculations & validation will fail! */
     private List<Calendar> initTimes(Calendar day) throws TimeNotSetException {
         List<Calendar> times = new ArrayList<>();
-        times.add(TodayEditorItem.get(Start).getCalendarWithTime(day));
+        times.add(TodayEditorItem.getInstance(Start).getCalendarWithTime(day));
         try {
-            times.add(TodayEditorItem.get(BreakStart).getCalendarWithTime(day));
-            times.add(TodayEditorItem.get(BreakEnd).getCalendarWithTime(day));
+            times.add(TodayEditorItem.getInstance(BreakStart).getCalendarWithTime(day));
+            times.add(TodayEditorItem.getInstance(BreakEnd).getCalendarWithTime(day));
         } catch (IDayEditorItem.TimeNotSetException ignored) {
             // No breaks set is no problem
         }
-        times.add(TodayEditorItem.get(End).getCalendarWithTime(day));
+        times.add(TodayEditorItem.getInstance(End).getCalendarWithTime(day));
         return times;
     }
 

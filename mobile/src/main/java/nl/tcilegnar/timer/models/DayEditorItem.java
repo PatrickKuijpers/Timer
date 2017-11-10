@@ -18,12 +18,12 @@ public class DayEditorItem extends BaseDayEditorItem {
     public static List<IDayEditorItem> getItemsForAllStates() {
         List<IDayEditorItem> dayEditorItemsForAllStates = new ArrayList<>();
         for (DayEditorItemState state : DayEditorItemState.values()) {
-            dayEditorItemsForAllStates.add(new DayEditorItem(state));
+            dayEditorItemsForAllStates.add(getInstance(state));
         }
         return dayEditorItemsForAllStates;
     }
 
-    public static DayEditorItem get(DayEditorItemState state) {
+    public static DayEditorItem getInstance(DayEditorItemState state) {
         return new DayEditorItem(state);
     }
 

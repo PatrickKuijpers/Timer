@@ -21,7 +21,6 @@ import static nl.tcilegnar.timer.views.DayEditorItemView.ActiveItemChangeListene
 import static nl.tcilegnar.timer.views.DayEditorItemView.TimePickerDialogListener;
 
 public class DayEditorAdapter extends ArrayAdapter<IDayEditorItem> implements ActiveItemChangeListener {
-    private final List<IDayEditorItem> dayEditorItems;
     private final DayEditorListener dayEditorListener;
     private final TimePickerDialogListener timePickerDialogListener;
     private final TimeChangedListener timeChangedListener;
@@ -32,7 +31,6 @@ public class DayEditorAdapter extends ArrayAdapter<IDayEditorItem> implements Ac
             dayEditorListener, TimePickerDialogListener timePickerDialogListener, TimeChangedListener
             timeChangedListener) {
         super(activityContext, R.layout.day_editor_item_view, dayEditorItems); // TODO: need view here?
-        this.dayEditorItems = dayEditorItems;
         this.dayEditorListener = dayEditorListener;
         this.timePickerDialogListener = timePickerDialogListener;
         this.timeChangedListener = timeChangedListener;
@@ -63,8 +61,9 @@ public class DayEditorAdapter extends ArrayAdapter<IDayEditorItem> implements Ac
 
     private void setActivation() {
         boolean isAnyActive = false;
-        for (IDayEditorItem dayEditorItem : dayEditorItems) {
-            if (dayEditorItem.isActive()) {
+        for (int i = 0; i < getCount(); i++) {
+            IDayEditorItem dayEditorItem = getItem(i);
+            if (dayEditorItem != null && dayEditorItem.isActive()) {
                 onActiveItemChanged(dayEditorItem);
                 isAnyActive = true;
                 break;
@@ -76,7 +75,6 @@ public class DayEditorAdapter extends ArrayAdapter<IDayEditorItem> implements Ac
         }
     }
 
-    // TODO: can probably be improved!
     public void onActiveItemChanged(IDayEditorItem dayEditorItem) {
         IDayEditorItem start = getDayEditorItemStart();
         IDayEditorItem breakStart = getDayEditorItemBreakStart();
@@ -141,7 +139,6 @@ public class DayEditorAdapter extends ArrayAdapter<IDayEditorItem> implements Ac
     }
 
     public void reset() {
-        new Storage().deleteActiveTodayEditor();
         onActiveItemChanged(null);
 
         for (DayEditorItemView dayEditorItemView : allDayEditorItemViews) {
