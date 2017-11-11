@@ -30,6 +30,7 @@ import nl.tcilegnar.timer.dialogs.TimePickerFragment;
 import nl.tcilegnar.timer.fragments.dialogs.SaveErrorDialog;
 import nl.tcilegnar.timer.fragments.dialogs.ValidationErrorDialogFragment;
 import nl.tcilegnar.timer.interfaces.IDayEditorItem;
+import nl.tcilegnar.timer.interfaces.IDayEditorItem.TimeNotSetException;
 import nl.tcilegnar.timer.models.DayEditorItem;
 import nl.tcilegnar.timer.models.TimerError;
 import nl.tcilegnar.timer.models.TodayEditorItem;
@@ -181,7 +182,7 @@ public class DayEditorFragment extends Fragment implements DayEditorListener, Ti
             } else {
                 new ValidationErrorDialogFragment().show(getActivity());
             }
-        } catch (DayEditorItem.TimeNotSetException ignored) {
+        } catch (TimeNotSetException ignored) {
         }
         return timeString;
     }
@@ -280,7 +281,7 @@ public class DayEditorFragment extends Fragment implements DayEditorListener, Ti
             } else {
                 new SaveErrorDialog(validation.getErrorMessage()).show(getActivity());
             }
-        } catch (DayEditorItem.TimeNotSetException e) {
+        } catch (TimeNotSetException e) {
             e.printStackTrace();
             new SaveErrorDialog(Res.getString(R.string.validation_error_message_not_all_times_set)).show(getActivity());
         } catch (Exception e) {

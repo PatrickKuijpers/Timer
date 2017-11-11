@@ -1,6 +1,4 @@
-package nl.tcilegnar.dndcharactersheet.Utils;
-
-import nl.tcilegnar.timer.utils.MyBuildConfigTest;
+package nl.tcilegnar.timer.utils;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;

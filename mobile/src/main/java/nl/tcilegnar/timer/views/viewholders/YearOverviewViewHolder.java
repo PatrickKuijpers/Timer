@@ -23,9 +23,9 @@ public class YearOverviewViewHolder extends BaseViewHolder<WeekOfYear> {
     }
 
     private void initViews() {
-        weekOfYearView = (TextView) findViewById(R.id.week_of_year);
-        totalTimeView = (TextView) findViewById(R.id.total_time);
-        firstAndLastDayOfWeek = (TextView) findViewById(R.id.first_and_last_day_of_week);
+        weekOfYearView = findViewById(R.id.week_of_year);
+        totalTimeView = findViewById(R.id.total_time);
+        firstAndLastDayOfWeek = findViewById(R.id.first_and_last_day_of_week);
     }
 
     @Override

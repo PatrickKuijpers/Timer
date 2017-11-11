@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import nl.tcilegnar.timer.R;
+import nl.tcilegnar.timer.enums.DayEditorItemState;
 import nl.tcilegnar.timer.interfaces.IDayEditorItem;
 import nl.tcilegnar.timer.interfaces.IDayEditorItem.TimeNotSetException;
 import nl.tcilegnar.timer.models.DayEditorItem;
@@ -32,8 +33,8 @@ import static nl.tcilegnar.timer.utils.TimerCalendarUtil.areSameDay;
  * <p>
  * Assumptions for {@link #timesInMillis}:
  * 1) These times are chronological and contains an equal number of values
- * 2) They will always contain times from {@link DayEditorItem#Start} and {@link DayEditorItem#End}
- * 3) In between, there might be several times from {@link DayEditorItem#BreakStart} and {@link DayEditorItem#BreakEnd})
+ * 2) They will always contain times from {@link DayEditorItemState#Start} and {@link DayEditorItemState#End}
+ * 3) In between, there might be several times from {@link DayEditorItemState#BreakStart} and {@link DayEditorItemState#BreakEnd})
  * </p>
  */
 @Table(name = "CURRENT_DAY_MILLIS")

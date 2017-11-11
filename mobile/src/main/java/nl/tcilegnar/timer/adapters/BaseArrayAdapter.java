@@ -37,7 +37,7 @@ public abstract class BaseArrayAdapter<T, V extends BaseViewHolder<T>> extends A
     @NonNull
     @Override
     public V getView(int position, View convertView, @NonNull ViewGroup viewGroup) {
-        // Don't call super: layout inflation will be executed by the ViewHolder
+        // noinspection unchecked ... Don't call super: layout inflation will be executed by the ViewHolder
         V viewHolder = getReUsableView((V) convertView);
 
         if (shouldAddTopMarginForFirstItem()) {
@@ -118,7 +118,7 @@ public abstract class BaseArrayAdapter<T, V extends BaseViewHolder<T>> extends A
 
         private int addExtraMarginToFirstItem(int position, int newMargin) {
             if (isFirstItem(position)) {
-                newMargin += (int) Res.getDimension(getTopMarginDimenResForFirstItem());
+                newMargin += Res.getDimension(getTopMarginDimenResForFirstItem());
             }
             return newMargin;
         }

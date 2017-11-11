@@ -22,8 +22,8 @@ public class WeekOverviewViewHolder extends BaseViewHolder<WeekOverviewItem> {
     }
 
     private void initViews() {
-        dayOfWeekLabel = (TextView) findViewById(R.id.day_of_week);
-        dayOfWeekValue = (TextView) findViewById(R.id.total_time);
+        dayOfWeekLabel = findViewById(R.id.day_of_week);
+        dayOfWeekValue = findViewById(R.id.total_time);
     }
 
     @Override
