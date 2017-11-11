@@ -114,36 +114,19 @@ public class DayEditorFragment extends Fragment implements DayEditorListener, Ti
 
         dayEditorListView = view.findViewById(R.id.day_editor_list);
 
-        Calendar dayEditorDate = getDayEditorDate();
-        setCurrentDate(dayEditorDate);
-        updateDayEditorList();
-        setTotalTime(dayEditorDate);
-
+        updateCurrentDate(getDayEditorDate());
         setListeners();
     }
 
-    private void setListeners() {
-        currenDayValueView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePickerDialog();
-            }
-        });
-        saveButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveCurrentDayValues();
-            }
-        });
-        clearButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dayFinishedAndResetCurrentDay();
-            }
-        });
+    /** TODO: Order is important! Can be improved? */
+    private void updateCurrentDate(Calendar newCurrentDate) {
+        setCurrentDate(newCurrentDate);
+        updateDayEditorList();
+        setTotalTime(newCurrentDate);
     }
 
     private void setCurrentDate(Calendar date) {
+        setDayEditorDate(date);
         if (isTodayEditor()) {
             storage.saveTodayEditorCurrentDate(date);
         }
@@ -156,6 +139,19 @@ public class DayEditorFragment extends Fragment implements DayEditorListener, Ti
             currentDayString += " (" + Res.getString(R.string.today) + ")";
         }
         return currentDayString;
+    }
+
+    private void updateDayEditorList() {
+        dayEditorAdapter = new DayEditorAdapter(getActivity(), getDayEditorItems(), this, this, this);
+        dayEditorListView.setAdapter(dayEditorAdapter);
+    }
+
+    private List<IDayEditorItem> getDayEditorItems() {
+        if (isTodayEditor()) {
+            return TodayEditorItem.getItemsForAllStates();
+        } else {
+            return DayEditorItem.getItemsForAllStates();
+        }
     }
 
     private void setTotalTime(Calendar date) {
@@ -187,17 +183,25 @@ public class DayEditorFragment extends Fragment implements DayEditorListener, Ti
         return timeString;
     }
 
-    private void updateDayEditorList() {
-        dayEditorAdapter = new DayEditorAdapter(getActivity(), getDayEditorItems(), this, this, this);
-        dayEditorListView.setAdapter(dayEditorAdapter);
-    }
-
-    private List<IDayEditorItem> getDayEditorItems() {
-        if (isTodayEditor()) {
-            return TodayEditorItem.getItemsForAllStates();
-        } else {
-            return DayEditorItem.getItemsForAllStates();
-        }
+    private void setListeners() {
+        currenDayValueView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
+        saveButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveCurrentDayValues();
+            }
+        });
+        clearButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dayFinishedAndResetCurrentDay();
+            }
+        });
     }
 
     @Override
@@ -229,14 +233,6 @@ public class DayEditorFragment extends Fragment implements DayEditorListener, Ti
             }
         });
         datePickerFragment.show(getActivity().getFragmentManager(), DATE_PICKER_DIALOG_TAG, getDayEditorDate());
-    }
-
-    private void updateCurrentDate(Calendar newCurrentDate) {
-        setDayEditorDate(newCurrentDate);
-        setCurrentDate(newCurrentDate);
-        updateDayEditorList();
-        resetCurrentDay();
-        setTotalTime(newCurrentDate);
     }
 
     public void setSaveListener(SaveListener saveListener) {
@@ -302,8 +298,9 @@ public class DayEditorFragment extends Fragment implements DayEditorListener, Ti
         return duplicateEntries;
     }
 
-    private CurrentDayMillis getDayEditorDateMillis(Calendar date) throws IDayEditorItem.TimeNotSetException {
-        return new CurrentDayMillis(date);
+    private CurrentDayMillis getDayEditorDateMillis(Calendar date) throws TimeNotSetException {
+        List<IDayEditorItem> dayEditorItems = dayEditorAdapter.getAllItems();
+        return new CurrentDayMillis(date, dayEditorItems);
     }
 
     private void logAll() {

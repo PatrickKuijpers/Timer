@@ -47,7 +47,6 @@ public enum WeekOverviewItem {
 
     @Nullable
     public Integer getWeekNumber() {
-        return dayMillis != null && dayMillis.getDay() != null ? dayMillis.getDay().get(Calendar
-                .WEEK_OF_YEAR) : null;
+        return dayMillis != null && dayMillis.getDay() != null ? dayMillis.getDay().get(Calendar.WEEK_OF_YEAR) : null;
     }
 }

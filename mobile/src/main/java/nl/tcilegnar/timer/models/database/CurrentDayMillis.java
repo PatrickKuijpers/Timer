@@ -15,14 +15,10 @@ import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.enums.DayEditorItemState;
 import nl.tcilegnar.timer.interfaces.IDayEditorItem;
 import nl.tcilegnar.timer.interfaces.IDayEditorItem.TimeNotSetException;
-import nl.tcilegnar.timer.models.DayEditorItem;
-import nl.tcilegnar.timer.models.TodayEditorItem;
 import nl.tcilegnar.timer.models.Validation;
 import nl.tcilegnar.timer.utils.TimerCalendar;
 import nl.tcilegnar.timer.utils.TimerCalendarUtil;
 
-import static nl.tcilegnar.timer.enums.DayEditorItemState.BreakEnd;
-import static nl.tcilegnar.timer.enums.DayEditorItemState.BreakStart;
 import static nl.tcilegnar.timer.enums.DayEditorItemState.End;
 import static nl.tcilegnar.timer.enums.DayEditorItemState.Start;
 import static nl.tcilegnar.timer.utils.TimerCalendarUtil.areSameDay;
@@ -58,9 +54,9 @@ public class CurrentDayMillis extends SugarRecord {
     }
 
     /** TODO improve this: CurrentDayMillis with a specific day, where timesInMillis are instantiated (for today) */
-    public CurrentDayMillis(Calendar day) throws TimeNotSetException {
+    public CurrentDayMillis(Calendar day, List<IDayEditorItem> dayEditorItems) throws TimeNotSetException {
         List<Long> timesInMillis = new ArrayList<>();
-        List<Calendar> times = initTimes(day);
+        List<Calendar> times = initTimes(day, dayEditorItems);
         for (Calendar time : times) {
             timesInMillis.add(time.getTimeInMillis());
         }
@@ -68,16 +64,18 @@ public class CurrentDayMillis extends SugarRecord {
     }
 
     /** TODO: make sure loop in the right order (start > breaks > end), or else calculations & validation will fail! */
-    private List<Calendar> initTimes(Calendar day) throws TimeNotSetException {
+    private List<Calendar> initTimes(Calendar day, List<IDayEditorItem> dayEditorItems) throws TimeNotSetException {
         List<Calendar> times = new ArrayList<>();
-        times.add(TodayEditorItem.getInstance(Start).getCalendarWithTime(day));
-        try {
-            times.add(TodayEditorItem.getInstance(BreakStart).getCalendarWithTime(day));
-            times.add(TodayEditorItem.getInstance(BreakEnd).getCalendarWithTime(day));
-        } catch (IDayEditorItem.TimeNotSetException ignored) {
-            // No breaks set is no problem
+        for (IDayEditorItem dayEditorItem : dayEditorItems) {
+            try {
+                times.add(dayEditorItem.getCalendarWithTime(day));
+            } catch (TimeNotSetException e) {
+                // No time set is no problem for all but start & end times
+                if (dayEditorItem.getState() == Start || dayEditorItem.getState() == End) {
+                    throw e;
+                }
+            }
         }
-        times.add(TodayEditorItem.getInstance(End).getCalendarWithTime(day));
         return times;
     }
 

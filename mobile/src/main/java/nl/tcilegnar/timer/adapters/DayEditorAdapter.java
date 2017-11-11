@@ -12,7 +12,7 @@ import java.util.List;
 
 import nl.tcilegnar.timer.R;
 import nl.tcilegnar.timer.interfaces.IDayEditorItem;
-import nl.tcilegnar.timer.utils.storage.Storage;
+import nl.tcilegnar.timer.models.ActiveDayEditorItem;
 import nl.tcilegnar.timer.views.DayEditorItemView;
 import nl.tcilegnar.timer.views.DayEditorItemView.DayEditorListener;
 import nl.tcilegnar.timer.views.DayEditorItemView.TimeChangedListener;
@@ -144,5 +144,13 @@ public class DayEditorAdapter extends ArrayAdapter<IDayEditorItem> implements Ac
         for (DayEditorItemView dayEditorItemView : allDayEditorItemViews) {
             dayEditorItemView.resetTime();
         }
+    }
+
+    public List<IDayEditorItem> getAllItems() {
+        List<IDayEditorItem> allItems = new ArrayList<>();
+        for (int i = 0; i < getCount(); i++) {
+            allItems.add(getItem(i));
+        }
+        return allItems;
     }
 }

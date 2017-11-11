@@ -38,7 +38,7 @@ public class DayEditorItem extends BaseDayEditorItem {
     }
 
     public boolean isActive() {
-        return ActiveDayEditorItem.INSTANCE.getActiveState() == getState();
+        return getState() == ActiveDayEditorItem.INSTANCE.getActiveState();
     }
 
     public void setActive() {
