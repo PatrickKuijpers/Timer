@@ -24,8 +24,7 @@ import static nl.tcilegnar.timer.enums.DayEditorItemState.Start;
 import static nl.tcilegnar.timer.utils.TimerCalendarUtil.areSameDay;
 
 /**
- * {@link CurrentDayMillis} contains a date and several times within that same date. These times should always be in
- * chronological order
+ * {@link CurrentDayMillis} contains a date and several times within that same date. These times should always be in chronological order
  * <p>
  * Assumptions for {@link #timesInMillis}:
  * 1) These times are chronological and contains an equal number of values
@@ -187,7 +186,22 @@ public class CurrentDayMillis extends SugarRecord {
 
     @Override
     public String toString() {
-        return "CurrentDayMillis{" + new Date(dayInMillis) + ", timesInMillis=" + timesInMillis + "} & ID=" + getId()
-                + " & totalTime=" + getTotalTimeReadableString();
+        return "CurrentDayMillis{" + new Date(dayInMillis) + ", timesInMillis=" + timesInMillis + "} & ID=" + getId() + " & totalTime=" + getTotalTimeReadableString();
+    }
+
+    private final static String DELIMITER = ",";
+
+    public String csvString() {
+        StringBuilder sb = new StringBuilder(getId().toString());
+        sb.append(DELIMITER);
+        sb.append(dayInMillis);
+        List<Long> times = timesInMillisFromString(timesInMillis);
+        for (Long time : times) {
+            sb.append(DELIMITER);
+            sb.append(time);
+        }
+        sb.append(DELIMITER);
+        sb.append(getTotalTimeInMinutes());
+        return sb.toString();
     }
 }

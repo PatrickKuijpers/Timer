@@ -102,6 +102,7 @@ public class DayEditorFragment extends Fragment implements DayEditorListener, Ti
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
+        logAll();
     }
 
     private void initViews(View view) {
@@ -307,8 +308,12 @@ public class DayEditorFragment extends Fragment implements DayEditorListener, Ti
         try {
             List<CurrentDayMillis> currentDayMillisList = SugarRecord.listAll(CurrentDayMillis.class);
             Log.i(TAG, "listAll: " + currentDayMillisList.size());
+            StringBuilder sb = new StringBuilder();
             for (CurrentDayMillis currentDayMillis : currentDayMillisList) {
-                Log.i(TAG, currentDayMillis.toString());
+                String str = currentDayMillis.csvString();
+                Log.i(TAG, str);
+                sb.append(str);
+                sb.append("\n");
             }
         } catch (Exception e) {
             e.printStackTrace();
