@@ -139,11 +139,13 @@ public class DayEditorAdapter extends ArrayAdapter<IDayEditorItem> implements Ac
     }
 
     public void reset() {
+        ActiveDayEditorItem.INSTANCE.reset();
         onActiveItemChanged(null);
 
         for (DayEditorItemView dayEditorItemView : allDayEditorItemViews) {
             dayEditorItemView.resetTime();
         }
+        notifyDataSetChanged();
     }
 
     public List<IDayEditorItem> getAllItems() {

@@ -14,4 +14,8 @@ public enum ActiveDayEditorItem {
     public void setActiveState(DayEditorItemState activeState) {
         ActiveDayEditorItem.activeState = activeState;
     }
+
+    public void reset() {
+        setActiveState(DayEditorItemState.Start);
+    }
 }
